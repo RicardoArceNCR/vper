@@ -1,0 +1,74 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Bridge compartido (@theme inline + breakpoints + :root/.dark) — paquete
+   @misitio/ui (ADR 0011), mismo mecanismo que misitio. */
+@import "@misitio/ui/theme-bridge.css";
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased overflow-x-clip;
+  }
+
+  ::selection {
+    background-color: var(--brand-main);
+    color: var(--text-on-brand);
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--background-page);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: var(--radius-sm);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-main);
+  }
+}
+
+/* .wrap, no .container — mismo motivo que misitio: "container" tiene
+   auto-generación propia en Tailwind v4 y colisiona en la cascada. */
+@layer components {
+  .wrap {
+    width: 100%;
+    padding-left: var(--spacing-8);
+    padding-right: var(--spacing-8);
+  }
+}
+
+/* ── Utilidades propias de ESTE proyecto (no viven en el bridge compartido) ── */
+
+/* Cinta de logos infinita (LogoTicker): recuperada del cliente original
+   (vper-media-original-cliente/client/src/index.css) — se había perdido en
+   una refactorización posterior de vper-media-repo y el componente quedó
+   sin animación real. */
+@keyframes ticker {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-ticker {
+  animation: ticker 25s linear infinite;
+}
+
+.animate-ticker:hover {
+  animation-play-state: paused;
+}
