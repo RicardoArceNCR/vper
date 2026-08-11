@@ -5,6 +5,11 @@ Express), construido para mostrarle al cliente el sitio consumiendo el
 design system real de VPER — mismo paquete `@misitio/ui` que usa el proyecto
 `misitio`.
 
+> Nombres: esta carpeta local se llama `vper-media-next`, pero el repo en
+> GitHub y el proyecto en Vercel se llaman `vper` (más corto, sin arrastrar
+> "next" al nombre público). Si ves `git@github.com:RicardoArceNCR/vper.git`
+> como remoto, es el mismo proyecto — no es un repo distinto ni un error.
+
 ## Por qué existe este proyecto
 
 `vper-media-repo` (Vite + Express, scaffold de Manus AI) era un demo válido,
@@ -62,6 +67,64 @@ pnpm build    # build de producción (SSG real de la home)
 pnpm check    # tsc --noEmit
 pnpm lint     # eslint (next/core-web-vitals + next/typescript + prettier)
 ```
+
+## Actualizar `@misitio/ui` a una versión nueva
+
+Cuando se agregue/cambie un token en Figma y se taggee una versión nueva del
+paquete (ver README de `misitio-ui`):
+
+```bash
+pnpm add github:RicardoArceNCR/misitio-ui#vX.Y.Z
+```
+
+Igual que en `misitio`: siempre fijar el tag exacto, nunca la rama por
+defecto — sin eso se pierde el control de versión que es el motivo de que
+el design system sea un paquete y no una copia.
+
+## `vercel.json` — no es boilerplate, no borrar sin leer esto
+
+```json
+{
+  "installCommand": "git config --global url.\"https://github.com/\".insteadOf \"git@github.com:\" && pnpm install"
+}
+```
+
+`pnpm` resuelve `@misitio/ui` (`github:owner/repo#tag`) con un `git clone`
+real —no un tarball por HTTPS— porque ese paquete tiene script `prepare`.
+Ese clone usa por defecto URL SSH (`git@github.com:...`), que falla en el
+build de Vercel (sin llave SSH configurada) con `Host key verification
+failed`, sin importar que `misitio-ui` sea público. Este `installCommand`
+reescribe la URL a HTTPS antes de instalar. Detalle completo y por qué no
+hace falta ningún token: README de `misitio-ui`, sección "Desplegar un
+consumidor", y `misitio/docs/runbooks/nuevo-proyecto-consumidor-design-system.md`.
+
+## Procedencia de los assets
+
+Las ~98 imágenes en `public/images/` (36 MB) se copiaron tal cual de
+`vper-media-repo/client/public/images` — son los mismos archivos, no
+versiones nuevas. Si un asset se ve roto o pixelado, comparar primero
+contra el original en ese repo antes de asumir que se corrompió en el
+puerto.
+
+## Sin CI todavía (a propósito, no un olvido)
+
+No hay `.github/workflows/`. `next.config.ts` ya exige TypeScript y ESLint
+limpios en cada build (`ignoreBuildErrors: false`, `ignoreDuringBuilds:
+false`, mismo criterio que `misitio`), así que un error real sí tumba el
+deploy — pero solo se descubre en el build de Vercel, no antes en un PR.
+Aceptable mientras el proyecto sea un demo de una sola persona sin
+colaboradores; si eso cambia, replicar `.github/workflows/ci.yml` de
+`misitio` es el siguiente paso natural.
+
+## Sin arquitectura `app → modules → core → ui` (a propósito)
+
+`misitio` exige esa separación (`CLAUDE.md`) porque tiene lógica de negocio
+real (`core/gamification`) que debe quedar pura y testeable. `vper` hoy es
+un sitio de marketing sin backend ni reglas de negocio — todo vive plano en
+`src/sections/`, `src/components/`, `src/lib/`. No es que se haya olvidado
+la convención: no hay todavía nada que amerite esa frontera. El día que
+`vper` sume backend real (el formulario de contacto, por ejemplo, dejando
+de ser un `alert()`), ese es el momento de revisar si aplica.
 
 ## Pendiente conocido (no bloqueante)
 
