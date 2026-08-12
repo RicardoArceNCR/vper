@@ -7,6 +7,9 @@
    @misitio/ui (ADR 0011), mismo mecanismo que misitio. */
 @import "@misitio/ui/theme-bridge.css";
 
+/* Identidad de ESTE sitio. Siempre después del bridge — ver brand.css. */
+@import "./brand.css";
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

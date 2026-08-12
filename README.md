@@ -26,22 +26,77 @@ Este proyecto resuelve ambos: consume `@misitio/ui` igual que `misitio` y
 decisión más abajo), y usa App Router con generación estática real
 (`next build` ya pre-renderiza `/` como contenido estático).
 
-## Decisión de marca (importante, para no repetir la pregunta)
+## Identidad de marca (overrides locales, no fork de Figma)
 
-Los tokens `--brand-font-display/-body/-mono` en `@misitio/ui` hoy resuelven
-a las fuentes de `misitio` (League Gothic/Red Hat Display/IBM Plex Mono), no
-a la identidad original de VPER Media (Hanley Pro Block vía Typekit +
-Montserrat). Se decidió **no** hacer fork del Figma ni del pipeline
-`figma-to-sd.py` para esto — la app usa las fuentes de `misitio` por ahora.
-Si el cliente real de VPER insiste en su identidad original, el fix es
-local: pisar `--brand-font-display`/`-body`/`-mono` en `globals.css` +
-cargar Typekit en `layout.tsx`, sin tocar Figma ni el paquete compartido.
+Cada sitio consumidor pisa la marca en un archivo propio — acá es
+`src/app/brand.css`, cargado **después** del bridge. No se duplica Figma
+ni se toca `@misitio/ui`. Eso escala: `misitio`, `vper`, `gobi-cr` cada uno
+con su `brand.css`.
+
+| Rol | Valor VPER | Token |
+|---|---|---|
+| Display | Obviously Wide Blck (self-host) | `--typography-family-display` / `--brand-font-display` |
+| Body | Montserrat (`next/font`) | `--typography-family-body` / `--brand-font-body` |
+| CTA / brand | `#FDBF66` | `--brand-action` (+ hover/press) |
+| Sky / info | `#5EB2E3` | `--brand-sky`, links, focus |
+| Danger | `#D55856` | `--feedback-error-*` |
+| Acento teal | `#74BDB7` | `--brand-leaf`, success |
+
+`brand.css` es el **tablero completo** de tipografía + marca (escalas
+size/weight/leading/tracking + todos los estilos display→code + botón +
+paleta). Tocá un valor, guardá, mirá. Requiere `@misitio/ui` ≥ `v0.1.3`.
+
+**Obviously Wide Blck:** hoy hay una DEMO en
+`public/fonts/ObviouslyWide-Black.woff2` (ver `public/fonts/README.md`).
+Reemplazá ese archivo por la versión licenciada cuando la tengas.
+
+## Runbook: `brand.css` para un cliente nuevo
+
+Cuando este starter se use para otro cliente (`gobi-cr`, etc.), así se
+decide qué entra a `brand.css` y qué no — 4 pasos, verificables sin tener
+que confiar en la palabra de quien los corrió:
+
+1. **Overrides semánticos directos primero.** Con los colores del cliente,
+   pisá directo los tokens que ya se usan (`--brand-*`, `--feedback-*`,
+   `--interaction-*`...) — no escalas todavía. Se encuentran mirando el
+   sitio en dark/light, DevTools → Styles, buscando qué token gana.
+2. **Auditá alcance antes de "arreglar" nada.** Antes de tocar una escala
+   primitiva completa (`--color-familia-NNN`), verificá con grep si algún
+   token semántico *reachable* (consumido por un componente que el sitio
+   realmente renderiza) depende de ella:
+   ```bash
+   grep -n "var(--color-<familia>-" node_modules/@misitio/ui/build/tokens*.css
+   ```
+   Si nada la usa, no la toques — es código muerto: cuesta mantenimiento,
+   no cambia un pixel. Así se descartó `gold`/`amarillo`/`ink` acá.
+3. **Escala completa solo como red de seguridad, nunca como el fix.** Para
+   las familias que sí alimentan algo *reachable*, generá 50→950 manteniendo
+   la curva de *lightness* ORIGINAL del design system (ya calibrada para
+   contraste) y cambiando solo hue/saturación al color de marca — nunca
+   forzando el hex literal en un stop puntual (rompe la monotonía de la
+   curva). Esto no reemplaza los overrides directos del paso 1 — es la
+   malla debajo para lo que el paso 1 no cubre hoy, o lo que un
+   `@misitio/ui` futuro agregue sin que haya que jugar al topo con DevTools
+   otra vez.
+4. **Verificación objetiva, no "se ve bien".** Antes de cerrar:
+   - Confirmá por grep que los overrides directos (paso 1) siguen ganando
+     sobre las escalas nuevas (paso 3) — en `vper` hoy es 0 pixeles
+     cambiados, comprobable, no una opinión.
+   - Calculá el contraste WCAG de los stops que se usarían como texto/ícono
+     contra su fondo típico (AA = 4.5:1). Los de `vper` dan 6.7–11.9:1.
+   - `tsc`/`build` limpios.
+   - Recién ahí, revisión visual en browser — como último paso, no el único.
+
+   Dejá explícito en `brand.css` qué familias quedaron fuera y por qué (ver
+   comentario de la sección 3), para que la próxima sesión no tenga que
+   re-descubrirlo desde cero.
 
 ## Stack
 
 - Next.js 15 (App Router) + React 19 + TypeScript strict
-- Tailwind v4, tokens vía `@misitio/ui` (mismo orden de carga que `misitio`:
-  `tokens.css` → `tokens-dark.css` → `theme-bridge.css`)
+- Tailwind v4, tokens vía `@misitio/ui` (orden:
+  `tokens.css` → `tokens-dark.css` → `theme-bridge.css` → `brand.css`)
+- Identidad VPER en `src/app/brand.css` (colores, fuentes, tracking, leading)
 - `framer-motion` para las animaciones (carrusel del hero, scroll-driven
   work gallery, fade-ins por sección)
 - `Button`/`Input`/`Card` copiados de `misitio` (`src/ui/components/`) —
@@ -132,3 +187,14 @@ de ser un `alert()`), ese es el momento de revisar si aplica.
   `next/image`. Next avisa esto como warning de build, no error — migrar a
   `next/image` es una optimización real de LCP/bandwidth para más adelante,
   no urgente para un demo.
+- `public/fonts/ObviouslyWide-Black.woff2` es una versión **demo** (charset
+  limitado, licencia no apta para producción — ver
+  `public/fonts/README.md`). Bloqueante solo para el deploy final al
+  cliente, no para seguir iterando en local/preview.
+- Las secciones 2-4 de `brand.css` (neutros acromáticos + escalas
+  amber/clay/jade) son un **stopgap local** de un fix que en realidad le
+  corresponde a `@misitio/ui` (bugs reales en los primitivos compartidos,
+  no gusto de VPER — ver ADR pendiente de aprobar en `misitio/docs/decisions/`
+  y el brief técnico correspondiente en `misitio-ui`). El día que el
+  paquete publique la corrección real, actualizar la versión acá y borrar
+  esas secciones en vez de mantener dos versiones de la verdad.

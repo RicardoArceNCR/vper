@@ -6,7 +6,7 @@ import "@misitio/ui/tokens-dark.css"; // 2: .dark
 import "./globals.css"; // 3: tailwind + bridge
 
 import type { Metadata } from "next";
-import { fontBody, fontDisplay, fontMono } from "@ui/lib/fonts";
+import { fontBody, fontMono } from "@ui/lib/fonts";
 
 export const metadata: Metadata = {
   title: "VPER Media — No hacemos marketing, hacemos que tenga sentido.",
@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${fontBody.variable} ${fontDisplay.variable} ${fontMono.variable}`}
+      className={`${fontBody.variable} ${fontMono.variable}`}
       suppressHydrationWarning
     >
       <head>

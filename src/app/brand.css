@@ -1,0 +1,381 @@
+/**
+ * brand.css — tablero de marca de VPER Media
+ *
+ * Propósito: tener TODA la superficie tipográfica + marca lista para
+ * observar y elegir mientras construyes. No es "pisar 434 tokens"; es
+ * el dial board completo de lo que un cliente personaliza:
+ *
+ *   1. Familias
+ *   2. Neutros (acromático — ver justificación abajo)
+ *   3. Escalas de color (amber/clay/jade — propuesta 2026-08-11)
+ *   4. Paleta brand + feedback + links (overrides exactos, ganan siempre)
+ *   5. Escala tipográfica cruda (size / weight / leading / tracking)
+ *   6. Estilos tipográficos (display → overline → code) size+lh+tracking
+ *   7. Tipografía de botón
+ *
+ * ESTADO: esto implementa localmente, como stopgap en vper, los valores
+ * de "Paleta VPER — propuesta de reemplazo de primitivos" (2026-08-11).
+ * La propuesta real vive en Figma + @misitio/ui (colección `primitivos`,
+ * renombre amber/sky/clay/jade, ADR) — acá NO se renombran las custom
+ * properties (siguen siendo --color-main, --color-accent, --color-leaf y
+ * --color-neutral porque son los nombres que ya consume tokens.css y
+ * tokens-dark.css del paquete), solo se les mete el valor de la escala
+ * nueva por ROL:
+ *   main   ← amber (marca/warning)      accent ← clay (danger)
+ *   leaf   ← jade (success/teal marca)   info  ← sin cambio (ya era sky)
+ * Cuando @misitio/ui adopte la propuesta de verdad (Figma → Style
+ * Dictionary → tokens.css con los nombres nuevos), este archivo se
+ * simplifica: se borra la sección 3 entera y listo.
+ *
+ * Cómo usarlo: cambia un valor, guarda, mira. Si un override no se ve,
+ * el componente probablemente usa un arbitrary (`text-[39px]`) o una
+ * clase genérica de Tailwind (`text-4xl`) en vez de `text-display-*` /
+ * `text-h*` / `text-body-*` — ahí el token no participa.
+ *
+ * Carga: DESPUÉS de @misitio/ui/theme-bridge.css (ver globals.css).
+ */
+
+/* Obviously Wide Blck — hoy DEMO (ver public/fonts/README.md). */
+@font-face {
+  font-family: "Obviously Wide Blck";
+  src: url("/fonts/ObviouslyWide-Black.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ═══════════════════════════════════════════════════════════════
+     1. FAMILIAS
+     ═══════════════════════════════════════════════════════════════ */
+  /* display: lo pisamos acá (comercial, @font-face arriba).
+     body/mono: los deja next/font en layout.tsx
+     (--typography-family-body / -mono) — NO redefinirlos acá. */
+  --typography-family-display: "Obviously Wide Blck", sans-serif;
+  --brand-font-display: "Obviously Wide Blck";
+  --brand-font-body: "Montserrat";
+  --brand-font-mono: "IBM Plex Mono";
+
+  /* ═══════════════════════════════════════════════════════════════
+     2. NEUTROS — acromático de punta a punta (croma 0)
+     El neutral original de @misitio/ui es cálido en 50-700 pero salta a
+     azul-tinta en 800-950 (hue ~200°, sat 30-47%) — de ahí el stroke/
+     fondo azul en cards, nav y footer. La propuesta 2026-08-11 no solo
+     corrige esos 3 stops: define TODA la rampa como acromática (sin hue),
+     porque un neutral con tinte de marca dejar de servir como neutral —
+     rompe la jerarquía visual que depende de que fondo/borde/texto no
+     compitan en color con nada. Se reemplaza la escala completa, no solo
+     los 3 stops rotos. Contraste verificado contra blanco/negro en la
+     propuesta — no se calculó el lightness a ojo.
+     Override LOCAL de un primitivo compartido — no se toca Figma ni
+     @misitio/ui acá; ver README, sección "Identidad de marca" y el
+     runbook de brand.css para cuándo esto sí amerita ir a Figma.
+     ═══════════════════════════════════════════════════════════════ */
+  /* !important: --color-neutral-800 venía perdiendo el cascade contra
+     tokens.css en pruebas de dev-server pese a :root vs :root con este
+     archivo cargando después — nunca se explicó la causa raíz (compilar
+     el CSS de forma independiente confirmó que el output SÍ es correcto,
+     así que era un problema de serving/HMR, no del código). Se deja
+     !important en toda la rampa por consistencia y como salvavidas. */
+  --color-neutral-50: #fafafa !important;
+  --color-neutral-100: #f3f3f3 !important;
+  --color-neutral-200: #e6e6e6 !important;
+  --color-neutral-300: #d6d6d6 !important;
+  --color-neutral-400: #bebebe !important;
+  --color-neutral-500: #9e9e9e !important;
+  --color-neutral-600: #808080 !important;
+  --color-neutral-700: #606060 !important;
+  --color-neutral-800: #3d3d3d !important;
+  --color-neutral-900: #232323 !important;
+  --color-neutral-950: #0e0e0e !important;
+
+  /* ═══════════════════════════════════════════════════════════════
+     3. ESCALAS DE COLOR — amber/clay/jade ancladas en OKLCH
+     Fuente: "Paleta VPER — propuesta de reemplazo de primitivos"
+     (2026-08-11). Cada familia comparte una escalera de luminancia y
+     el hex exacto de marca queda anclado en el stop donde su luminancia
+     real cae (no forzado a un 500 arbitrario — eso rompía la monotonía,
+     ver intento anterior en el historial de este archivo).
+     - info NO se toca: --color-info-500 (#5eb2e3) ya es idéntico a
+       --brand-sky, byte a byte.
+     - gold/amarillo/ink NO se tocan: código muerto confirmado por grep,
+       ningún token semántico alcanzable en vper los usa.
+     ═══════════════════════════════════════════════════════════════ */
+  /* main ← amber (marca/warning). Ancla #FDBF66 en el stop 300. */
+  --color-main-50: #fff5e9;
+  --color-main-100: #fdead0;
+  --color-main-200: #fed7a4;
+  --color-main-300: #fdbf66;
+  --color-main-400: #f4a508;
+  --color-main-500: #d38f0f;
+  --color-main-600: #b17706;
+  --color-main-700: #8f5f06;
+  --color-main-800: #6e4802;
+  --color-main-900: #4f3301;
+  --color-main-950: #352000;
+
+  /* accent ← clay (danger). Ancla #D55856 en el stop 600. */
+  --color-accent-50: #fff4f3;
+  --color-accent-100: #ffe6e4;
+  --color-accent-200: #ffd1ce;
+  --color-accent-300: #ffb7b2;
+  --color-accent-400: #fe9690;
+  --color-accent-500: #f1716d;
+  --color-accent-600: #d55856;
+  --color-accent-700: #af403f;
+  --color-accent-800: #8a2d2d;
+  --color-accent-900: #651c1d;
+  --color-accent-950: #470d0f;
+
+  /* leaf ← jade (success/teal marca). Ancla #74BDB7 en el stop 400. */
+  --color-leaf-50: #f1f9f8;
+  --color-leaf-100: #e1f1ef;
+  --color-leaf-200: #c5e6e3;
+  --color-leaf-300: #a2d9d4;
+  --color-leaf-400: #74bdb7;
+  --color-leaf-500: #56b0a9;
+  --color-leaf-600: #39958f;
+  --color-leaf-700: #237974;
+  --color-leaf-800: #125d59;
+  --color-leaf-900: #05433f;
+  --color-leaf-950: #002c2a;
+
+  /* ═══════════════════════════════════════════════════════════════
+     4. PALETA DE MARCA — overrides exactos, ganan siempre sobre la
+     sección 3 (misma :root, pero estos son la fuente de verdad real).
+     Pares superficie/texto e íconos/bordes tomados de la propuesta
+     (sección 5, "Mapeo semántico") — no inventados, contraste ya
+     verificado ahí contra blanco/negro.
+     #FDBF66 brand · #5EB2E3 sky · #D55856 danger · #74BDB7 teal
+     ═══════════════════════════════════════════════════════════════ */
+  --brand-action: #fdbf66;
+  --brand-action-hover: #fed7a4; /* amber/200 */
+  --brand-action-press: #f4a508; /* amber/400 */
+  --brand-main: #fdbf66;
+  --brand-subtle: color-mix(in srgb, #fdbf66 16%, transparent);
+  --brand-strong: #b17706; /* amber/600 */
+  --brand-gold: #fdbf66;
+  --brand-sky: #5eb2e3;
+  --brand-leaf: #74bdb7;
+
+  /* Relleno de marca (amber/300) + texto neutral/950 — 11.1:1, mismo par
+     en claro y oscuro según la propuesta (botón de marca es idéntico en
+     ambos modos, no hace falta variante). */
+  --button-primary-text: #0e0e0e;
+  --text-on-brand: #0e0e0e;
+  --text-brand: #8f5f06; /* amber/700, 5.52:1 en claro */
+  --text-brand-accent: #237974; /* jade/700 — mismo rol que success-text */
+
+  --feedback-error-icon: #d55856; /* clay/600 */
+  --feedback-error-border: #d55856;
+  --feedback-error-text: #af403f; /* clay/700, 5.37:1 */
+  --feedback-error-bg: #fff4f3; /* clay/50 */
+  --button-danger-bg-press: #af403f; /* clay/700 */
+
+  --feedback-warning-icon: #b17706; /* amber/600 */
+  --feedback-warning-border: #b17706;
+  --feedback-warning-text: #8f5f06; /* amber/700, 5.12:1 */
+  --feedback-warning-bg: #fff5e9; /* amber/50 */
+
+  --feedback-info-icon: #5eb2e3; /* sky/500 */
+  --feedback-info-border: #378ebd; /* sky/600 */
+  --feedback-info-text: #22729c; /* sky/700, 4.94:1 */
+  --feedback-info-bg: #f0f8fd; /* sky/50 */
+
+  --feedback-success-icon: #74bdb7; /* jade/400 */
+  --feedback-success-border: #39958f; /* jade/600 */
+  --feedback-success-text: #237974; /* jade/700, 4.84:1 */
+  --feedback-success-bg: #f1f9f8; /* jade/50 */
+
+  --interaction-link-default: #378ebd; /* sky/600 */
+  --interaction-link-hover: #22729c; /* sky/700 */
+  --interaction-link-visited: #11587a; /* sky/800 */
+  --focus-ring-color: #378ebd; /* sky/600, 3.64:1 — sky/500 no llega a 3:1 */
+
+  /* ═══════════════════════════════════════════════════════════════
+     5. ESCALAS CRUDAS (primitivos tipográficos)
+     Punto de partida calibrado a Obviously Wide + Montserrat.
+     Tocá acá si querés mover TODA la tipografía a la vez.
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* size — misma escalera del DS; dejada explícita para poder subir/
+     bajar un escalón sin tocar Figma */
+  --typography-size-2xs: 10px;
+  --typography-size-xs: 12px;
+  --typography-size-sm: 14px;
+  --typography-size-md: 16px;
+  --typography-size-lg: 18px;
+  --typography-size-xl: 20px;
+  --typography-size-2xl: 24px;
+  --typography-size-3xl: 28px;
+  --typography-size-4xl: 32px;
+  --typography-size-5xl: 40px;
+  --typography-size-6xl: 48px;
+  --typography-size-7xl: 64px;
+  --typography-size-8xl: 96px; /* 104→96: wide/black se come más ancho */
+
+  /* weight — Montserrat tiene estos pesos reales vía next/font */
+  --typography-weight-regular: 400;
+  --typography-weight-medium: 500;
+  --typography-weight-semibold: 600;
+  --typography-weight-bold: 700;
+  --typography-weight-extrabold: 800;
+
+  /* leading (ratios unitless — válidos en CSS) */
+  --typography-leading-tight: 1.0; /* display wide: más cerrado */
+  --typography-leading-snug: 1.2;
+  --typography-leading-normal: 1.55; /* Montserrat body: un poco más aire */
+  --typography-leading-relaxed: 1.75;
+  --typography-leading-loose: 1.9;
+
+  /* tracking (em — válidos post @misitio/ui v0.1.3) */
+  --typography-tracking-tight: -0.02em;
+  --typography-tracking-normal: 0em;
+  --typography-tracking-wide: 0.04em;
+  --typography-tracking-wider: 0.08em;
+  --typography-tracking-caps: 0.14em;
+
+  /* ═══════════════════════════════════════════════════════════════
+     6. ESTILOS TIPOGRAFICOS (lo que consumen text-display-* / text-h*
+        / text-body-* / text-label-* / text-overline-* en Tailwind)
+        Cada trio: size · line-height · letter-spacing
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* —— Display (Obviously Wide Blck) —— */
+  --typography-styles-display-hero-size: 96px;
+  --typography-styles-display-hero-line-height: 96px;
+  --typography-styles-display-hero-letter-spacing: -1.5px;
+
+  --typography-styles-display-xl-size: 64px;
+  --typography-styles-display-xl-line-height: 64px;
+  --typography-styles-display-xl-letter-spacing: -1px;
+
+  --typography-styles-display-lg-size: 48px;
+  --typography-styles-display-lg-line-height: 50px;
+  --typography-styles-display-lg-letter-spacing: -0.6px;
+
+  --typography-styles-display-md-size: 40px;
+  --typography-styles-display-md-line-height: 44px;
+  --typography-styles-display-md-letter-spacing: -0.4px;
+
+  --typography-styles-display-sm-size: 32px;
+  --typography-styles-display-sm-line-height: 36px;
+  --typography-styles-display-sm-letter-spacing: -0.2px;
+
+  /* —— Headings (Montserrat) —— */
+  --typography-styles-heading-h1-size: 28px;
+  --typography-styles-heading-h1-line-height: 34px;
+  --typography-styles-heading-h1-letter-spacing: -0.2px;
+
+  --typography-styles-heading-h2-size: 24px;
+  --typography-styles-heading-h2-line-height: 30px;
+  --typography-styles-heading-h2-letter-spacing: -0.15px;
+
+  --typography-styles-heading-h3-size: 20px;
+  --typography-styles-heading-h3-line-height: 26px;
+  --typography-styles-heading-h3-letter-spacing: 0px;
+
+  --typography-styles-heading-h4-size: 18px;
+  --typography-styles-heading-h4-line-height: 26px;
+  --typography-styles-heading-h4-letter-spacing: 0px;
+
+  --typography-styles-heading-h5-size: 16px;
+  --typography-styles-heading-h5-line-height: 24px;
+  --typography-styles-heading-h5-letter-spacing: 0px;
+
+  /* —— Body (Montserrat) —— */
+  --typography-styles-body-lg-size: 18px;
+  --typography-styles-body-lg-line-height: 30px;
+  --typography-styles-body-lg-letter-spacing: 0px;
+
+  --typography-styles-body-md-size: 16px;
+  --typography-styles-body-md-line-height: 26px;
+  --typography-styles-body-md-letter-spacing: 0px;
+
+  --typography-styles-body-sm-size: 14px;
+  --typography-styles-body-sm-line-height: 22px;
+  --typography-styles-body-sm-letter-spacing: 0px;
+
+  --typography-styles-body-xs-size: 12px;
+  --typography-styles-body-xs-line-height: 18px;
+  --typography-styles-body-xs-letter-spacing: 0px;
+
+  --typography-styles-body-lg-bold-size: 18px;
+  --typography-styles-body-lg-bold-line-height: 30px;
+  --typography-styles-body-md-bold-size: 16px;
+  --typography-styles-body-md-bold-line-height: 26px;
+  --typography-styles-body-sm-bold-size: 14px;
+  --typography-styles-body-sm-bold-line-height: 22px;
+
+  /* —— Labels (uppercase-friendly; tracking en px) —— */
+  --typography-styles-label-lg-size: 16px;
+  --typography-styles-label-lg-line-height: 20px;
+  --typography-styles-label-lg-letter-spacing: 1.1px;
+
+  --typography-styles-label-md-size: 14px;
+  --typography-styles-label-md-line-height: 18px;
+  --typography-styles-label-md-letter-spacing: 1px;
+
+  --typography-styles-label-sm-size: 12px;
+  --typography-styles-label-sm-line-height: 15px;
+  --typography-styles-label-sm-letter-spacing: 0.9px;
+
+  --typography-styles-label-xs-size: 10px;
+  --typography-styles-label-xs-line-height: 13px;
+  --typography-styles-label-xs-letter-spacing: 0.9px;
+
+  /* —— Overlines —— */
+  --typography-styles-overline-lg-size: 14px;
+  --typography-styles-overline-lg-line-height: 18px;
+  --typography-styles-overline-lg-letter-spacing: 1.8px;
+
+  --typography-styles-overline-sm-size: 12px;
+  --typography-styles-overline-sm-line-height: 16px;
+  --typography-styles-overline-sm-letter-spacing: 1.6px;
+
+  /* —— Code (mono) —— */
+  --typography-styles-code-md-size: 14px;
+  --typography-styles-code-md-line-height: 24px;
+  --typography-styles-code-sm-size: 12px;
+  --typography-styles-code-sm-line-height: 18px;
+
+  /* ═══════════════════════════════════════════════════════════════
+     7. BOTÓN (tipografía semántica de componente)
+     ═══════════════════════════════════════════════════════════════ */
+  --button-font-weight: 800;
+  --button-letter-spacing: 0.14em;
+}
+
+.dark {
+  /* Misma tipografía en oscuro. Solo se recalibra color.
+     El relleno de marca es IDÉNTICO en ambos modos según la propuesta
+     (amber/300 sobre neutral/950 da 12.8:1 en oscuro también) — no se
+     redefine acá, ya vale desde :root. */
+  --brand-strong: #fed7a4; /* amber/200 — más claro en oscuro */
+
+  --text-brand: #fdbf66; /* amber/300, 12.82:1 en oscuro */
+  --text-brand-accent: var(--brand-main);
+
+  --feedback-error-border: #8a2d2d; /* clay/800 */
+  --feedback-error-text: #fe9690; /* clay/400, 7.49:1 */
+  --feedback-error-bg: #470d0f; /* clay/950 */
+
+  --feedback-warning-icon: #f4a508; /* amber/400 */
+  --feedback-warning-border: #6e4802; /* amber/800 */
+  --feedback-warning-text: #fdbf66; /* amber/300, 9.44:1 (mismo tono que el fill de marca — a propósito, ver propuesta sección 6) */
+  --feedback-warning-bg: #352000; /* amber/950 */
+
+  --feedback-info-border: #11587a; /* sky/800 */
+  --feedback-info-text: #7cc1eb; /* sky/400, 7.72:1 */
+  --feedback-info-bg: #00293d; /* sky/950 */
+  --feedback-info-icon: #7cc1eb; /* sky/400 */
+
+  --feedback-success-icon: #a2d9d4; /* jade/300 */
+  --feedback-success-border: #125d59; /* jade/800 */
+  --feedback-success-text: #a2d9d4; /* jade/300, 9.62:1 */
+  --feedback-success-bg: #002c2a; /* jade/950 */
+
+  --interaction-link-default: #7cc1eb; /* sky/400 */
+  --interaction-link-hover: #a0d4f5; /* sky/300, más claro en hover oscuro */
+  --focus-ring-color: #7cc1eb; /* sky/400, 10.68:1 */
+}
