@@ -5,6 +5,11 @@ Express), construido para mostrarle al cliente el sitio consumiendo el
 design system real de VPER — mismo paquete `@misitio/ui` que usa el proyecto
 `misitio`.
 
+**Handoff al desarrollador del cliente** (preview en Vercel, instalar
+`@misitio/ui` en un repo Vite+Tailwind, copiar primitivos y portar
+`className` de las secciones):
+[`docs/guia-desarrollador.md`](docs/guia-desarrollador.md).
+
 > Nombres: esta carpeta local se llama `vper-media-next`, pero el repo en
 > GitHub y el proyecto en Vercel se llaman `vper` (más corto, sin arrastrar
 > "next" al nombre público). Si ves `git@github.com:RicardoArceNCR/vper.git`
