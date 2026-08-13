@@ -38,7 +38,7 @@ con su `brand.css`.
 | Display | Obviously Wide Blck (self-host) | `--typography-family-display` / `--brand-font-display` |
 | Body | Montserrat (`next/font`) | `--typography-family-body` / `--brand-font-body` |
 | CTA / brand | `#FDBF66` | `--brand-action` (+ hover/press) |
-| Sky / info | `#5EB2E3` | `--brand-sky`, links, focus |
+| Sky / info | `#5EB2E3` | `--brand-sky`; links/focus usan la escala `sky` derivada (600 claro, 400 oscuro), no el hex plano |
 | Danger | `#D55856` | `--feedback-error-*` |
 | Acento teal | `#74BDB7` | `--brand-leaf`, success |
 
@@ -83,7 +83,8 @@ que confiar en la palabra de quien los corrió:
      sobre las escalas nuevas (paso 3) — en `vper` hoy es 0 pixeles
      cambiados, comprobable, no una opinión.
    - Calculá el contraste WCAG de los stops que se usarían como texto/ícono
-     contra su fondo típico (AA = 4.5:1). Los de `vper` dan 6.7–11.9:1.
+     contra su fondo típico (AA = 4.5:1). Los de `vper` dan 4.84–12.82:1 en
+     texto (el focus ring usa el mínimo de UI, 3:1, no el de texto).
    - `tsc`/`build` limpios.
    - Recién ahí, revisión visual en browser — como último paso, no el único.
 
@@ -194,7 +195,8 @@ de ser un `alert()`), ese es el momento de revisar si aplica.
 - Las secciones 2-4 de `brand.css` (neutros acromáticos + escalas
   amber/clay/jade) son un **stopgap local** de un fix que en realidad le
   corresponde a `@misitio/ui` (bugs reales en los primitivos compartidos,
-  no gusto de VPER — ver ADR pendiente de aprobar en `misitio/docs/decisions/`
-  y el brief técnico correspondiente en `misitio-ui`). El día que el
-  paquete publique la corrección real, actualizar la versión acá y borrar
-  esas secciones en vez de mantener dos versiones de la verdad.
+  no gusto de VPER — ver `misitio/docs/decisions/0012-paleta-primitivos-vper.md`
+  y `misitio-ui/docs/fix-primitivos-color.md`). El día que el paquete
+  publique la corrección real, actualizar la versión acá y borrar esas
+  secciones en vez de mantener dos versiones de la verdad. Contexto de
+  sesión completo: `docs/session-handoff-brand-color.md`.

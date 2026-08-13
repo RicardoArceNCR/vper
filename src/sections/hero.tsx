@@ -46,7 +46,10 @@ export default function Hero() {
 
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background via-background/70 to-transparent z-20 pointer-events-none" />
 
-      <div className="relative z-30 wrap text-center px-4 flex flex-col items-center justify-center h-full pt-20">
+      {/* pt-16 coincide con el alto del header sin scroll (h-16, bajado de
+          h-20 el 2026-08-12) — mismo criterio que antes, solo el valor
+          nuevo. */}
+      <div className="relative z-30 wrap text-center px-4 flex flex-col items-center justify-center h-full pt-16">
         <AnimatePresence mode="wait">
           <motion.h1
             key={currentSlide}

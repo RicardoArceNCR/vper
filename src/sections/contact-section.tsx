@@ -7,7 +7,17 @@ import { fadeInUp } from "@/lib/motion";
 
 export default function ContactSection() {
   return (
-    <section id="contact" className="py-24 md:py-32 bg-muted border-b border-border">
+    // Mismo fondo fijo que las páginas de proyecto (2026-08-12, pedido
+    // explícito): bg-muted de base + bg-image encima — son propiedades CSS
+    // distintas (background-color vs -image), no colisionan. bg-fixed la
+    // deja pegada al viewport mientras el contenido scrollea encima. El
+    // asset ya es casi negro sobre negro, no compite con el texto — no
+    // hace falta bajarle opacity aparte (ver /work/[slug]/page.tsx, mismo
+    // criterio).
+    <section
+      id="contact"
+      className="py-24 md:py-32 bg-muted bg-[url('/images/bg-vper-pattern.webp')] bg-fixed bg-cover bg-center border-b border-border"
+    >
       <div className="wrap">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div
@@ -50,7 +60,7 @@ export default function ContactSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-            className="bg-card border border-border relative"
+            className="bg-card border border-border relative p-6 md:p-10"
           >
             {/* Igual que en vper-media-repo: submit de mentira (alert), no hay
                 integración real de envío todavía — puerto fiel del demo. */}

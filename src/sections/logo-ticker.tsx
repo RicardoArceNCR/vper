@@ -1,11 +1,15 @@
+// Clientes reales (2026-08-12, pedido explícito: "solo estos los que
+// debemos mostrar") — reemplaza los 7 placeholders del demo original.
+// Los 5 PNG subidos ya venían blancos sobre transparente (logo "reverse"
+// listo para fondo oscuro), por eso el filter brightness/contrast que
+// tenía el demo para forzar blanco desapareció más abajo — con estos
+// assets ya no hace falta y solo introducía grises de más.
 const LOGOS = [
-  "/images/058581a5717cc878bde460c427a08820637f41cc.webp",
-  "/images/58f20cc742861e64ac9eff42647c2497669d62e7.webp",
-  "/images/2f5a3defb32cc8d2415b610d85fcc1b7451f2685.webp",
-  "/images/8aac8bcc118fb4e2162f62506814e0b5ce8785bc.webp",
-  "/images/8e99c0c29c5e4b0a534fe85dc562c953a924dd41.webp",
-  "/images/322cb2cf8948424318858f728938d61af328c612.webp",
-  "/images/1ce7e57b2ba62dbf92d53a8e530c5994313bd7eb.webp",
+  "/images/logo-drytec.webp",
+  "/images/logo-chevrolet.webp",
+  "/images/logo-vidanica.webp",
+  "/images/logo-novasis.webp",
+  "/images/logo-flordecana.webp",
 ];
 
 // Sin hooks/motion: puede quedarse como server component.
@@ -19,7 +23,7 @@ export default function LogoTicker() {
               key={idx}
               src={logo}
               alt="Client Logo"
-              className="h-8 md:h-12 object-contain opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-300 filter brightness-200 contrast-75 px-2"
+              className="h-8 md:h-12 object-contain opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-300 px-2"
             />
           ))}
           {LOGOS.map((logo, idx) => (
@@ -27,7 +31,7 @@ export default function LogoTicker() {
               key={`dup-${idx}`}
               src={logo}
               alt="Client Logo"
-              className="h-8 md:h-12 object-contain opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-300 filter brightness-200 contrast-75 px-2"
+              className="h-8 md:h-12 object-contain opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-300 px-2"
             />
           ))}
         </div>

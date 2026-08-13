@@ -85,9 +85,36 @@
   --color-neutral-500: #9e9e9e !important;
   --color-neutral-600: #808080 !important;
   --color-neutral-700: #606060 !important;
-  --color-neutral-800: #3d3d3d !important;
-  --color-neutral-900: #232323 !important;
-  --color-neutral-950: #0e0e0e !important;
+  /* 800/900/950 recalibrados 2026-08-12 ("propuesta más oscura y senior",
+     revisión de sitio completo) — mismos 3 stops que ya traían el fix
+     original, ahora recalculados juntos para (a) una página más oscura y
+     (b) cerrar un bug real que la revisión completa encontró: en dark,
+     --border-default = neutral-800, y con el valor viejo (#3d3d3d) quedaba
+     a 1.16:1 de --surface-raised/card (#333333, fix de sesión anterior) —
+     invisible en la práctica. Es la MISMA familia de bug que el de
+     card-vs-muted ya resuelto, un nivel más abajo en la escalera. Afecta
+     border-border/card-border/input-border/nav-border en TODO el sitio
+     (WorkGallery, ContactSection, inputs del form) sin tocar JSX — un
+     único root-cause fix en vez de 3 parches puntuales.
+     Verificado con luminancia relativa WCAG (no a ojo):
+       neutral-950 (page/nav/footer)      #0e0e0e → #0a0a0a
+       neutral-900 (muted/section/inputs) #232323 → #181818
+       neutral-800 (border-default)       #3d3d3d → #474747
+     Escalera resultante en dark, real y monótona en luminancia:
+       page #0a0a0a → muted #181818 (1.11:1) → card #333333 (1.41:1
+       sobre muted, 1.57:1 sobre page para las cards que van directo
+       sobre bg-background) → border-default #474747 (1.36:1 sobre
+       card — el bug quedó cerrado, antes 1.16:1) → border-strong
+       #808080 sin cambios (3.20:1 sobre card, para bordes que ya
+       pedían más presencia a propósito: ServicesGrid, íconos del
+       footer). Texto sin tocar: --text-primary/#fafafa da 17–19:1
+       contra page/muted, --text-tertiary/#808080 da 4.5–5:1 — sigue
+       AA. neutral-800/900/950 no son alcanzables en modo claro
+       (confirmado por grep contra tokens.css: ahí border-default usa
+       neutral-200, no 800) — este cambio es dark-only en la práctica. */
+  --color-neutral-800: #474747 !important;
+  --color-neutral-900: #181818 !important;
+  --color-neutral-950: #0a0a0a !important;
 
   /* ═══════════════════════════════════════════════════════════════
      3. ESCALAS DE COLOR — amber/clay/jade ancladas en OKLCH
@@ -378,4 +405,52 @@
   --interaction-link-default: #7cc1eb; /* sky/400 */
   --interaction-link-hover: #a0d4f5; /* sky/300, más claro en hover oscuro */
   --focus-ring-color: #7cc1eb; /* sky/400, 10.68:1 */
+
+  /* Escalera de 4 niveles (revisión de sitio completo, 2026-08-12; card
+     re-oscurecida el mismo día tras feedback directo sobre WorkGallery —
+     "los grises de las tarjetas siguen pareciendo muy claros"):
+       página (bg-background)  → --background-page  → neutral/950 #0a0a0a
+       sección (bg-muted)      → --background-subtle → neutral/900 #181818
+       card (bg-card, --surface-accent-bg) → ESTE valor, #2a2a2a
+       borde por defecto (border-border/card-border/input-border)
+         → --border-default → neutral/800 #474747 (ver sección 2)
+     Historial de esta card, 2 iteraciones antes de esta:
+       1) #232323 — idéntica a --background-subtle: colisión, la card no
+          se despegaba de su sección, solo se notaba el borde.
+       2) #333333 — corrigió (1) y quedó aprobada en ServicesGrid/Contact
+          (cards sobre bg-muted). Pero en WorkGallery, donde la card va
+          directo sobre bg-background (mucho más oscuro), se leía como un
+          gris claro "flotando" — correcto en relación a la sección, pero
+          no en relación a la página, y ahí es donde más se nota.
+     #2a2a2a baja la card ~18% de luminosidad real sin repetir el bug de
+     (1): contra --background-subtle da 1.24:1 — el mismo piso que ya se
+     había aprobado como "se despega, sin ser un salto brusco" en el paso
+     (2) — se preserva ese piso a propósito, no se relajó el criterio.
+     Contra la página da 1.38:1 (bajó de 1.57, a propósito: menos "pop",
+     más integrada — es literalmente lo que se pidió). El ganador real es
+     el borde: --border-default ahora contrasta 1.54:1 contra esta card
+     (subió de 1.36) — se lee mejor, no peor, al oscurecer el relleno. */
+  --surface-raised: #2a2a2a;
+  --surface-container: #2a2a2a;
+  --background-strong: #2a2a2a;
+
+  /* --surface-accent-bg: SOLO lo consume ServicesGrid (confirmado por
+     grep — nada más en tokens.css/tokens-dark.css ni en el sitio lo usa),
+     así que no comparte valor con --surface-raised aunque hoy coincidan
+     por casualidad en el resto de tarjetas. 2026-08-12: pedido explícito
+     de invertir la jerarquía acá — la sección YA es gris (--background-
+     subtle, #181818), así que en vez de una card más CLARA que su fondo
+     (patrón "raised" del resto del sitio), esta se hunde: más OSCURA que
+     la sección, casi al nivel de la página (var(--background-page), hoy
+     #0a0a0a) — un "vacío" recortado en el gris de la sección. Contraste
+     de relleno contra la sección queda deliberadamente sutil (1.11:1,
+     nada de texto se apoya en esa diferencia) porque quien define la
+     forma de la card ya no es el relleno — es --border-strong (#808080),
+     que contra este fondo casi negro sube a 5.01:1 (antes 3.63:1 en la
+     versión "raised" de al lado). Es el patrón contrario, a propósito:
+     no una regresión del fix de card-vs-borde de la sección 2 (ese
+     seguía siendo necesario para WorkGallery/Contact, que sí son
+     "raised"). Texto (--surface-accent-text, neutral/50 #fafafa) da
+     17.95:1 contra este fondo, muy por encima de cualquier mínimo AA. */
+  --surface-accent-bg: var(--background-page);
 }
