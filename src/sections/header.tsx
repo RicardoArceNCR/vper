@@ -86,6 +86,7 @@ export default function Header() {
           <button
             className="md:hidden p-2 text-[var(--nav-item-default)] hover:text-[var(--nav-item-hover)] transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>

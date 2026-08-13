@@ -55,6 +55,24 @@ Figma (variables)
 Un `Button` no dice `#FDBF66`. Dice `var(--button-primary-bg)`, que apunta
 a `--brand-action`, que en VPER se pisa en `brand.css`.
 
+### Bridge vs `brand.css` — los dos son contrato, no el mismo trabajo
+
+Van juntos en la cascada y **los dos son obligatorios**. No son lo mismo.
+
+| | `theme-bridge.css` | `brand.css` |
+|---|---|---|
+| Quién lo escribe | El paquete (`@misitio/ui`) | Este sitio (cada cliente el suyo) |
+| Lo tocás | **Nunca.** Si falta un mapeo, se pide al paquete. | **Sí.** Acá vive VPER. |
+| Trabajo | Traduce tokens a clases Tailwind (`bg-background`, `text-body-sm`, `font-display`) | Pisa los **valores**: fuentes, paleta, type scale, `--brand-*` |
+| Sin él | Las clases del DS no existen | El sitio se ve con la marca default del paquete, no como VPER |
+| Dónde carga | Después de Tailwind, antes de `brand.css` | **Último.** Misma especificidad (`:root`), gana el último archivo |
+
+El bridge es infraestructura compartida. `brand.css` es **la superficie de
+personalización por cliente**. Si mañana hay otro sitio con el mismo
+paquete, el bridge se instala igual; lo que cambia es un `brand.css`
+distinto. Por eso copiarlo no es un extra: es tan parte del contrato como
+el orden `tokens.css` → `tokens-dark.css` → bridge.
+
 ### El bridge (Tailwind v4)
 
 `theme-bridge.css` traduce esos tokens a **clases** de Tailwind:
@@ -83,13 +101,15 @@ nombres bajo `.dark`. Si `<html>` tiene la clase `dark`, todo el árbol
 cambia. El toggle de este repo lee/escribe `localStorage` (`vper-theme`) y
 pone `.dark` **antes** del primer paint para no parpadear.
 
-### Qué no es el design system
+### Qué no es el paquete (sí es el sitio)
 
-- Las **secciones** (Hero, Header, Footer) son el sitio VPER, no el paquete.
-- `brand.css` es la marca de **este** cliente. Vive en el sitio, no en el
-  paquete.
+- Las **secciones** (Hero, Header, Footer) son layout de VPER, no del
+  paquete. Se portan; no se instalan.
 - Next.js (`next/link`, `next/font`, `"use client"`, App Router) es el
   framework de este preview. Tu Vite no lo necesita.
+
+`brand.css` **sí es design system**, del lado del consumidor: el paquete
+trae la grilla de nombres; este archivo le pone la cara a VPER.
 
 ---
 
@@ -215,16 +235,35 @@ Equivale a `src/app/globals.css` de este repo. Ejemplo para Vite:
 `theme-bridge.css` **sí** va: tu proyecto usa Tailwind v4. Sin él,
 `text-body-sm` y `bg-background` no resuelven.
 
-### Marca VPER — `brand.css`
+### `brand.css` — la capa de marca (mismo peso que el bridge)
 
-Copiá `src/app/brand.css` de este repo a tu proyecto (por ejemplo
-`src/brand.css`) y cargalo **después** del bridge, como arriba.
+Copiá `src/app/brand.css` **entero** a tu proyecto (por ejemplo
+`src/brand.css`) y cargalo **después** del bridge, como arriba. No lo
+armes de a poco ni lo “simplifiques” en el primer pase: es el tablero
+completo de lo que personaliza a VPER sobre el paquete.
 
-Ahí está la identidad de VPER: Obviously Wide (display), Montserrat
-(body), paleta ámbar/sky/teal, escalas de color. No se toca el paquete
-para cambiar un color de este cliente: se pisa en `brand.css`.
+Misma especificidad que los tokens (`:root` / `.dark`). Gana porque
+carga último. Si lo ponés antes del bridge, el paquete te pisa la marca
+y el preview de Vercel y tu sitio dejan de coincidir.
 
-Same specificity, gana el último archivo. Por eso el orden importa.
+No se toca `@misitio/ui` para cambiar un color, una fuente o un tracking
+de este cliente. Se pisa acá.
+
+Qué hay adentro (secciones numeradas en el archivo):
+
+| # | Qué pisa | Para qué |
+|---|---|---|
+| 1 | Familias | Display = Obviously Wide. Body/mono se nombran acá; en este preview body/mono los termina de definir `next/font` (en Vite los definís vos, ver abajo). |
+| 2 | Neutros | Rampa acromática. El paquete trae un neutral con tinte; VPER lo reemplaza para que fondo/borde no compitan con la marca. |
+| 3 | Escalas amber / clay / jade | Red de seguridad bajo los semánticos. Cuando el paquete adopte esa paleta, esta sección se borra. |
+| 4 | `--brand-*`, feedback, links, focus | **La fuente de verdad de color de VPER** (`#FDBF66`, sky, danger, teal). Gana siempre sobre la sección 3. |
+| 5 | Size / weight / leading / tracking crudos | Mover toda la tipografía a la vez, sin Figma. |
+| 6 | Estilos `display` → `code` | Lo que consumen `text-display-*`, `text-h*`, `text-body-*`, `text-label-*`. |
+| 7 | Tipografía de botón | `--button-font-weight`, `--button-letter-spacing`. |
+
+Si un override no se ve, el componente probablemente usa `text-4xl` o
+`text-[39px]` en vez de `text-display-*` / `text-body-*`: ahí el token
+(y `brand.css`) no participan.
 
 ### Fuentes
 
@@ -286,7 +325,7 @@ No copies el sitio entero. Revisá estas rutas:
 ```
 src/app/layout.tsx              orden de imports de tokens
 src/app/globals.css             Tailwind + bridge + .wrap
-src/app/brand.css               marca VPER — copiar
+src/app/brand.css               capa de marca VPER — copiar entero; mismo peso que el bridge
 src/ui/lib/utils.ts             cn() — copiar junto a los primitivos
 src/ui/components/button.tsx    copiar archivo
 src/ui/components/card.tsx      copiar archivo

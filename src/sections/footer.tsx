@@ -43,7 +43,7 @@ export default function Footer() {
                   que usa Header), no una recreación tipográfica aparte. */}
               <img src={LOGO} alt="VPER Media" className="h-8 md:h-9 w-auto mb-6" />
               <p className="text-xs text-[var(--footer-text)] leading-relaxed font-medium mb-6 max-w-xs text-center md:text-left">
-                Campaigns, content & experiences that convert. Transformamos marcas y aceleramos el crecimiento digital.
+                Campañas, contenido y experiencias que convierten. Transformamos marcas y aceleramos el crecimiento digital.
               </p>
               <div className="flex gap-4">
                 <a href="https://instagram.com" target="_blank" rel="noreferrer" className="w-8 h-8 border border-[var(--border-strong)] rounded-full flex items-center justify-center text-[var(--text-primary)] hover:text-primary hover:border-primary/20 hover:scale-110 transition-all duration-300">
@@ -56,7 +56,7 @@ export default function Footer() {
             </div>
 
             <div className="flex flex-col items-center md:items-start shrink-0">
-              <h4 className="font-display text-xs font-bold tracking-widest text-[var(--footer-heading)] mb-6 uppercase">NAVIGATION</h4>
+              <h4 className="font-display text-xs font-bold tracking-widest text-[var(--footer-heading)] mb-6 uppercase">NAVEGACIÓN</h4>
               <ul className="flex flex-col gap-3 items-center md:items-start">
                 {FOOTER_NAV_ITEMS.map((item) => (
                   <li key={item.id}>

@@ -19,19 +19,19 @@ export default function NotFound() {
 
           <h1 className="text-4xl font-bold text-foreground mb-2">404</h1>
 
-          <h2 className="text-xl font-semibold text-foreground/80 mb-4">Page Not Found</h2>
+          <h2 className="text-xl font-semibold text-foreground/80 mb-4">Página no encontrada</h2>
 
           <p className="text-foreground/60 mb-8 leading-relaxed">
-            Sorry, the page you are looking for doesn&apos;t exist.
+            La página que buscás no existe.
             <br />
-            It may have been moved or deleted.
+            Puede que se haya movido o eliminado.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button variant="default" size="lg" asChild>
               <Link href="/">
                 <Home className="w-4 h-4 mr-2" />
-                Go Home
+                Volver al inicio
               </Link>
             </Button>
           </div>

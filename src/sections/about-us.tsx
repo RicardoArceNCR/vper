@@ -17,7 +17,7 @@ export default function AboutUs() {
           NOSOTROS
         </span>
         <h2 className="font-display text-4xl md:text-6xl font-black tracking-tight mb-6">
-          ABOUT US.
+          SOBRE NOSOTROS.
         </h2>
         <p className="text-sm md:text-base text-muted-foreground font-medium">
           Estamos preparando esta sección. Muy pronto vas a poder conocer al equipo detrás de VPER

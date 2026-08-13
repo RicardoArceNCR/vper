@@ -28,7 +28,7 @@ export default function ProcessSection() {
           <SectionHeader
             eyebrow="METODOLOGÍA"
             title="NUESTRO PROCESO."
-            description="Campaigns, content and experiences that convert. Cómo trabajamos para garantizar el éxito de tu proyecto."
+            description="Campañas, contenido y experiencias que convierten. Cómo trabajamos para garantizar el éxito de tu proyecto."
           />
         </div>
 

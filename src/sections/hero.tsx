@@ -36,7 +36,7 @@ export default function Hero() {
           <div className="absolute inset-0 bg-background/60 z-20" />
           <motion.img
             src={slide.image}
-            alt="VPER Creative"
+            alt="VPER Media"
             className="w-full h-full object-cover object-center"
             animate={{ scale: index === currentSlide ? 1.08 : 1 }}
             transition={{ duration: 6, ease: "linear" }}
@@ -73,7 +73,7 @@ export default function Hero() {
           transition={{ delay: 0.6, duration: 0.8 }}
           className="text-body-sm md:text-body-lg text-muted-foreground dark:text-foreground max-w-2xl font-medium mb-12"
         >
-          Campaigns, content and experiences that convert. Creamos experiencias digitales y de
+          Campañas, contenido y experiencias que convierten. Creamos experiencias digitales y de
           marca memorables.
         </motion.p>
 
@@ -88,14 +88,14 @@ export default function Hero() {
             size="lg"
             onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
           >
-            SCHEDULE A CALL
+            AGENDA UNA LLAMADA
           </Button>
           <Button
             variant="default"
             size="lg"
             onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })}
           >
-            VIEW WORK
+            VER PROYECTOS
           </Button>
         </motion.div>
       </div>

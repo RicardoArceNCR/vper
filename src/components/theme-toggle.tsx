@@ -26,7 +26,7 @@ export default function ThemeToggle() {
     <button
       onClick={toggleTheme}
       className="p-2 text-[var(--nav-item-default)] hover:text-[var(--nav-item-hover)] transition-colors"
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
     >
       {isDark ? <Sun size={18} /> : <Moon size={18} />}
     </button>

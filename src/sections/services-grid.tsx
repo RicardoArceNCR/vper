@@ -27,7 +27,7 @@ const services = [
   {
     id: 1,
     title: "ATL & BTL",
-    desc: "Estrategias above y below the line que conectan tu marca con la audiencia correcta, en el canal correcto.",
+    desc: "Estrategias ATL y BTL que conectan tu marca con la audiencia correcta, en el canal correcto.",
     icon: Megaphone,
     color: "var(--brand-sky)",
   },
@@ -75,8 +75,8 @@ export default function ServicesGrid() {
         <div className="mb-20">
           <SectionHeader
             eyebrow="SERVICIOS"
-            title="STRATEGY. DESIGN. IMPACT."
-            description="Campaigns, content and experiences that convert. Ofrecemos soluciones creativas integrales para potenciar tu marca."
+            title="ESTRATEGIA. DISEÑO. IMPACTO."
+            description="Campañas, contenido y experiencias que convierten. Ofrecemos soluciones creativas integrales para potenciar tu marca."
           />
         </div>
 
@@ -109,7 +109,7 @@ export default function ServicesGrid() {
                 </p>
               </div>
               <div className="mt-8 flex items-center gap-2 text-xs font-bold tracking-widest text-[var(--surface-accent-text)] group-hover:text-primary transition-colors">
-                <span>LEARN MORE</span>
+                <span>VER MÁS</span>
                 <ArrowRight size={14} className="transform translate-x-0 group-hover:translate-x-2 transition-transform" />
               </div>
             </motion.div>

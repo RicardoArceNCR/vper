@@ -22,7 +22,7 @@ export default function LogoTicker() {
             <img
               key={idx}
               src={logo}
-              alt="Client Logo"
+              alt="Logo de cliente"
               className="h-8 md:h-12 object-contain opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-300 px-2"
             />
           ))}
@@ -30,7 +30,7 @@ export default function LogoTicker() {
             <img
               key={`dup-${idx}`}
               src={logo}
-              alt="Client Logo"
+              alt="Logo de cliente"
               className="h-8 md:h-12 object-contain opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-300 px-2"
             />
           ))}

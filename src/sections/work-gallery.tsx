@@ -83,8 +83,8 @@ export default function WorkGallery() {
         <div className="wrap mb-12">
           <SectionHeader
             eyebrow="PORTAFOLIO"
-            title="SELECTED WORK."
-            description="Campaigns, content and experiences that convert. Descubre nuestros últimos proyectos destacados."
+            title="PROYECTOS SELECCIONADOS."
+            description="Campañas, contenido y experiencias que convierten. Descubre nuestros últimos proyectos destacados."
           />
         </div>
         <div className="wrap flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4">
@@ -111,8 +111,8 @@ export default function WorkGallery() {
         <div className="wrap mb-4 md:mb-14">
           <SectionHeader
             eyebrow="PORTAFOLIO"
-            title="SELECTED WORK."
-            description="Campaigns, content and experiences that convert. Descubre nuestros últimos proyectos destacados."
+            title="PROYECTOS SELECCIONADOS."
+            description="Campañas, contenido y experiencias que convierten. Descubre nuestros últimos proyectos destacados."
           />
         </div>
 

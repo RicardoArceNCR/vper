@@ -27,14 +27,14 @@ export default function ContactSection() {
             variants={fadeInUp}
           >
             <span className="text-xs font-bold tracking-[0.3em] text-primary mb-4 block">HABLEMOS</span>
-            <h2 className="font-display text-4xl md:text-6xl font-black tracking-tight mb-6">CONTACT US.</h2>
+            <h2 className="font-display text-4xl md:text-6xl font-black tracking-tight mb-6">CONTÁCTANOS.</h2>
             <p className="text-sm md:text-base text-muted-foreground leading-relaxed font-medium mb-12 max-w-md">
               ¿Tienes un proyecto en mente o quieres potenciar tu marca? Completa el formulario y nos pondremos en contacto contigo lo antes posible.
             </p>
 
             <div className="flex flex-col gap-6">
               {[
-                { icon: <Mail size={18} />, label: "EMAIL", val: "info@vpermedia.com", href: "mailto:info@vpermedia.com" },
+                { icon: <Mail size={18} />, label: "CORREO", val: "info@vpermedia.com", href: "mailto:info@vpermedia.com" },
                 { icon: <Phone size={18} />, label: "TELÉFONO", val: "+505 7782-4749", href: "tel:+50577824749" },
                 { icon: <MapPin size={18} />, label: "UBICACIÓN", val: "Managua, Nicaragua" },
               ].map((item, idx) => (
@@ -67,7 +67,7 @@ export default function ContactSection() {
             <form className="flex flex-col gap-6" onSubmit={(e) => { e.preventDefault(); alert("¡Formulario enviado! Nos contactaremos pronto."); }}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[10px] font-bold tracking-widest text-input-label">NAME</label>
+                  <label className="text-[10px] font-bold tracking-widest text-input-label">NOMBRE</label>
                   <input
                     type="text"
                     placeholder="Tu nombre"
@@ -76,7 +76,7 @@ export default function ContactSection() {
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-[10px] font-bold tracking-widest text-input-label">SURNAME</label>
+                  <label className="text-[10px] font-bold tracking-widest text-input-label">APELLIDO</label>
                   <input
                     type="text"
                     placeholder="Tu apellido"
@@ -87,7 +87,7 @@ export default function ContactSection() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] font-bold tracking-widest text-input-label">EMAIL</label>
+                <label className="text-[10px] font-bold tracking-widest text-input-label">CORREO</label>
                 <input
                   type="email"
                   placeholder="tu@email.com"
@@ -97,7 +97,7 @@ export default function ContactSection() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] font-bold tracking-widest text-input-label">MESSAGE</label>
+                <label className="text-[10px] font-bold tracking-widest text-input-label">MENSAJE</label>
                 <textarea
                   rows={4}
                   placeholder="Cuéntanos sobre tu proyecto..."
@@ -110,7 +110,7 @@ export default function ContactSection() {
                 type="submit"
                 className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs tracking-widest h-12 rounded-none transition-all duration-300 shadow-[0_4px_20px_color-mix(in_srgb,var(--brand-main)_20%,transparent)] hover:translate-y-[-2px] hover:shadow-[0_8px_30px_color-mix(in_srgb,var(--brand-main)_40%,transparent)]"
               >
-                SUBMIT
+                ENVIAR
               </Button>
             </form>
           </motion.div>
