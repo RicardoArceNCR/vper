@@ -101,12 +101,49 @@ que confiar en la palabra de quien los corrió:
 
 - Next.js 15 (App Router) + React 19 + TypeScript strict
 - Tailwind v4, tokens vía `@misitio/ui` (orden:
-  `tokens.css` → `tokens-dark.css` → `theme-bridge.css` → `brand.css`)
+  `tokens.css` → `tokens-dark.css` → `theme-bridge.css` → `brand.css`,
+  los cuatro como `@import` dentro de `globals.css` — ver abajo)
 - Identidad VPER en `src/app/brand.css` (colores, fuentes, tracking, leading)
 - `framer-motion` para las animaciones (carrusel del hero, scroll-driven
   work gallery, fade-ins por sección)
 - `Button`/`Input`/`Card` copiados de `misitio` (`src/ui/components/`) —
   mismo patrón `cva` + tokens semánticos, portable 1:1 entre ambos proyectos
+
+## Orden de carga: un solo mecanismo (contrato, no preferencia)
+
+Los cuatro archivos de la cadena de tokens se importan **con `@import`,
+dentro de `src/app/globals.css`**. `layout.tsx` importa un solo CSS
+(`./globals.css`) y nada más.
+
+Esto contradice a propósito lo que dice hoy el README de `@misitio/ui`
+(que prescribe importar `tokens.css` y `tokens-dark.css` desde el entry de
+JS). Ese contrato es el que hay que corregir upstream, no este.
+
+**Por qué.** El CSS importado desde un módulo JS lo emite el bundler como
+una hoja separada; el importado con `@import` queda dentro de la misma
+hoja. Partir la cadena entre los dos mecanismos produce dos `<link>` cuyo
+orden relativo decide el bundler. Como tokens y `brand.css` tienen la
+misma especificidad (`:root` vs `:root`), gana el que cargue último — y
+eso dejaba de estar garantizado.
+
+Ese era el motivo real, nunca diagnosticado hasta 2026-08-18, de que la
+rampa de neutros de `brand.css` necesitara `!important` en sus 11 stops:
+no era un problema de HMR ni de serving, era la cadena partida en dos.
+La verificación de la sesión anterior ("compilar el CSS solo confirma que
+el output es correcto") no podía reproducirlo porque arrancaba en
+`globals.css`, que no importaba `tokens.css` — o sea, excluía justamente
+al archivo que competía.
+
+**Medido en el build real de Next**, no razonado:
+
+| | hojas CSS emitidas | `<link>` en el HTML | `--color-neutral-800` efectivo |
+|---|---|---|---|
+| Antes (split JS/CSS) | 2 | 2 | `#474747!important` |
+| Después (un `@import`) | **1** | **1** | `#474747`, sin `!important` |
+
+Regla práctica que queda: **si `brand.css` necesita `!important` para
+ganar, el orden de carga está mal.** No se agrega `!important`, se
+arregla la cadena.
 
 ## Diferencias reales vs. el demo original (no solo el framework)
 

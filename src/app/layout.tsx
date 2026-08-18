@@ -1,9 +1,9 @@
-// Orquestador de la cadena de tokens. Mismo contrato que misitio (ADR 0011
-// de @misitio/ui): el orden 1→2→3 importa, theme-bridge.css referencia via
-// var(...) valores que tienen que existir antes en la cascada.
-import "@misitio/ui/tokens.css"; // 1: :root (light)
-import "@misitio/ui/tokens-dark.css"; // 2: .dark
-import "./globals.css"; // 3: tailwind + bridge
+// La cadena de tokens (tokens.css → tokens-dark.css → theme-bridge.css →
+// brand.css) ya NO se orquesta acá: vive entera dentro de globals.css como
+// un único grafo de @import. Importar CSS desde un módulo JS lo manda a un
+// chunk separado cuyo orden entre hojas decide el bundler, y eso rompía la
+// cascada de brand.css en dev — ver el comentario largo en globals.css.
+import "./globals.css";
 
 import type { Metadata } from "next";
 import { fontBody, fontMono } from "@ui/lib/fonts";

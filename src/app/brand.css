@@ -71,20 +71,25 @@
      @misitio/ui acá; ver README, sección "Identidad de marca" y el
      runbook de brand.css para cuándo esto sí amerita ir a Figma.
      ═══════════════════════════════════════════════════════════════ */
-  /* !important: --color-neutral-800 venía perdiendo el cascade contra
-     tokens.css en pruebas de dev-server pese a :root vs :root con este
-     archivo cargando después — nunca se explicó la causa raíz (compilar
-     el CSS de forma independiente confirmó que el output SÍ es correcto,
-     así que era un problema de serving/HMR, no del código). Se deja
-     !important en toda la rampa por consistencia y como salvavidas. */
-  --color-neutral-50: #fafafa !important;
-  --color-neutral-100: #f3f3f3 !important;
-  --color-neutral-200: #e6e6e6 !important;
-  --color-neutral-300: #d6d6d6 !important;
-  --color-neutral-400: #bebebe !important;
-  --color-neutral-500: #9e9e9e !important;
-  --color-neutral-600: #808080 !important;
-  --color-neutral-700: #606060 !important;
+  /* 2026-08-18: se quitaron los !important que llevaba toda esta rampa.
+     La causa raíz que había quedado sin explicar ("pierde el cascade
+     contra tokens.css solo en dev-server") era estructural, no un
+     misterio de HMR: la cadena de tokens estaba partida en DOS
+     mecanismos de carga — tokens.css/tokens-dark.css como import de JS
+     en layout.tsx, bridge y brand.css como @import de CSS. Dos hojas
+     distintas, misma especificidad, orden decidido por el bundler.
+     Unificado todo en el grafo de @import de globals.css, brand.css gana
+     por posición y el !important sobra. Verificado compilando con
+     @tailwindcss/postcss: la última declaración de --color-neutral-800
+     en el output es #474747. Detalle completo en globals.css. */
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f3f3f3;
+  --color-neutral-200: #e6e6e6;
+  --color-neutral-300: #d6d6d6;
+  --color-neutral-400: #bebebe;
+  --color-neutral-500: #9e9e9e;
+  --color-neutral-600: #808080;
+  --color-neutral-700: #606060;
   /* 800/900/950 recalibrados 2026-08-12 ("propuesta más oscura y senior",
      revisión de sitio completo) — mismos 3 stops que ya traían el fix
      original, ahora recalculados juntos para (a) una página más oscura y
@@ -112,9 +117,9 @@
        AA. neutral-800/900/950 no son alcanzables en modo claro
        (confirmado por grep contra tokens.css: ahí border-default usa
        neutral-200, no 800) — este cambio es dark-only en la práctica. */
-  --color-neutral-800: #474747 !important;
-  --color-neutral-900: #181818 !important;
-  --color-neutral-950: #0a0a0a !important;
+  --color-neutral-800: #474747;
+  --color-neutral-900: #181818;
+  --color-neutral-950: #0a0a0a;
 
   /* ═══════════════════════════════════════════════════════════════
      3. ESCALAS DE COLOR — amber/clay/jade ancladas en OKLCH
