@@ -42,34 +42,38 @@ export default function Header() {
         isScrolled ? "h-14" : "h-16",
       )}
     >
-      <div className="flex items-stretch h-full">
-        <div className="wrap flex items-center justify-between flex-1">
-          {/* Antes href="#" — en el home eso no rompía nada visible (era
-              un anchor a sí mismo), pero en cualquier otra página
-              (/work/[slug]) no navegaba a ningún lado, solo agregaba "#"
-              a la URL actual. Link a "/" real. */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <img
-              src={LOGO}
-              alt="VPER Media"
-              className={cn(
-                "h-7 md:h-8 w-auto origin-left transition-all duration-300 group-hover:opacity-80",
-                isScrolled ? "scale-50" : "scale-100",
-              )}
-            />
-          </Link>
+      <div className="wrap flex items-center justify-between h-full gap-6">
+        {/* Antes href="#" — en el home eso no rompía nada visible (era
+            un anchor a sí mismo), pero en cualquier otra página
+            (/work/[slug]) no navegaba a ningún lado, solo agregaba "#"
+            a la URL actual. Link a "/" real. */}
+        <Link href="/" className="flex items-center gap-2 group">
+          <img
+            src={LOGO}
+            alt="VPER Media"
+            className={cn(
+              "h-7 md:h-8 w-auto origin-left transition-all duration-300 group-hover:opacity-80",
+              isScrolled ? "scale-50" : "scale-100",
+            )}
+          />
+        </Link>
 
-          {/* Mismo bug que el logo: href={`#${id}`} solo funciona parado
-              en "/" — en /work/[slug] no hace nada. href={`/#${id}`}
-              funciona desde cualquier página (Next navega a "/" y
-              scrollea al id). */}
-          <nav className="hidden md:flex items-center gap-8">
+        {/* Mismo bug que el logo: href={`#${id}`} solo funciona parado
+            en "/" — en /work/[slug] no hace nada. href={`/#${id}`}
+            funciona desde cualquier página (Next navega a "/" y
+            scrollea al id).
+            El CTA dejó de ser la franja a toda altura (rounded-none,
+            pegada al borde del viewport). Ahora es un Button sm
+            dentro del nav, mismo --button-radius (16px, casi pill)
+            que hero/404/form. */}
+        <div className="hidden md:flex items-center gap-6">
+          <nav className="flex items-center gap-8">
             {NAV_ITEMS.map((item) => (
               <Link
                 key={item.id}
                 href={`/#${item.id}`}
                 className={cn(
-                  "font-display uppercase transition-all duration-300 relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300",
+                  "font-sans font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing) transition-all duration-300 relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300",
                   isScrolled ? "text-label-xs" : "text-label-sm",
                   "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm",
                   activeSection === item.id
@@ -80,27 +84,20 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
-            <ThemeToggle />
           </nav>
-
-          <button
-            className="md:hidden p-2 text-[var(--nav-item-default)] hover:text-[var(--nav-item-hover)] transition-colors"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <ThemeToggle />
+          <Button variant="default" size="sm" asChild>
+            <Link href="/#contact">Agenda una cita</Link>
+          </Button>
         </div>
 
-        <Link
-          href="/#contact"
-          className={cn(
-            "hidden md:flex items-center justify-center h-full px-6 bg-[var(--button-primary-bg)] hover:bg-[var(--button-primary-bg-hover)] text-[var(--button-primary-text)] font-display uppercase transition-all duration-300",
-            isScrolled ? "text-label-sm" : "text-label-md",
-          )}
+        <button
+          className="md:hidden p-2 text-[var(--nav-item-default)] hover:text-[var(--nav-item-hover)] transition-colors"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
         >
-          AGENDA UNA CITA
-        </Link>
+          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </div>
 
       <AnimatePresence>
@@ -120,7 +117,7 @@ export default function Header() {
                 key={item.id}
                 href={`/#${item.id}`}
                 className={cn(
-                  "font-display text-label-lg uppercase transition-colors",
+                  "font-sans font-(weight:--button-font-weight) text-label-lg uppercase tracking-(--button-letter-spacing) transition-colors",
                   "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm",
                   activeSection === item.id
                     ? "text-[var(--nav-item-active)]"
@@ -133,12 +130,7 @@ export default function Header() {
             ))}
             <div className="flex items-center gap-4">
               <ThemeToggle />
-              <Button
-                variant="default"
-                size="sm"
-                className="flex-1 font-display text-label-md uppercase"
-                asChild
-              >
+              <Button variant="default" size="sm" className="flex-1" asChild>
                 <Link href="/#contact" onClick={() => setMobileMenuOpen(false)}>
                   AGENDA UNA CITA
                 </Link>

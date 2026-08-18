@@ -108,7 +108,7 @@ export default function ContactSection() {
 
               <Button
                 type="submit"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs tracking-widest h-12 rounded-none transition-all duration-300 shadow-[0_4px_20px_color-mix(in_srgb,var(--brand-main)_20%,transparent)] hover:translate-y-[-2px] hover:shadow-[0_8px_30px_color-mix(in_srgb,var(--brand-main)_40%,transparent)]"
+                className="h-12 transition-all duration-300 hover:translate-y-[-2px] shadow-[0_4px_20px_color-mix(in_srgb,var(--brand-main)_20%,transparent)] hover:shadow-[0_8px_30px_color-mix(in_srgb,var(--brand-main)_40%,transparent)]"
               >
                 ENVIAR
               </Button>

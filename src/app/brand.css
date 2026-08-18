@@ -356,10 +356,32 @@
   --typography-styles-code-sm-line-height: 18px;
 
   /* ═══════════════════════════════════════════════════════════════
-     7. BOTÓN (tipografía semántica de componente)
+     7. BOTÓN (tipografía + forma)
+     El paquete trae --button-radius: var(--radius-full) (cápsula
+     9999px). VPER lo pisa a xl (16px): rectángulo muy redondeado,
+     casi pill — se ve el tramo plano arriba/abajo, como el CTA de
+     la referencia. --pill-radius se deja en full: las categorías
+     sí son cápsulas. Un solo radio para hero, nav, 404 y form.
+
+     Familia: Montserrat (body), no Obviously Wide. El display es
+     para headlines; en nav y botones se come el label
+     ("AGENDA UNA C…"). Tracking un poco más cerrado que el
+     overline (0.14 → 0.06) para leerse como producto, no como
+     banner. Weight 700: el 800 en Wide era para compensar el
+     trazo; en Montserrat 700 ya es sólido.
      ═══════════════════════════════════════════════════════════════ */
-  --button-font-weight: 800;
-  --button-letter-spacing: 0.14em;
+  --button-font-weight: 700;
+  --button-letter-spacing: 0.06em;
+  --button-radius: var(--radius-xl);
+  /* Borde un punto más claro que el fill: si no, `border` 1px del
+     mismo hex que el relleno no se lee (el paquete iguala los dos). */
+  --button-primary-border: color-mix(in srgb, white 22%, #fdbf66);
+  /* Hover invertido: honey → oscuro + texto blanco. El paquete
+     aclara a amber/200; acá se pisa a propósito. */
+  --button-primary-bg-hover: #0e0e0e;
+  --button-primary-text-hover: #ffffff;
+  --button-primary-border-hover: color-mix(in srgb, white 18%, transparent);
+  --button-primary-bg-press: #1a1a1a;
 }
 
 .dark {
@@ -455,4 +477,19 @@
      "raised"). Texto (--surface-accent-text, neutral/50 #fafafa) da
      17.95:1 contra este fondo, muy por encima de cualquier mínimo AA. */
   --surface-accent-bg: var(--background-page);
+
+  /* Botón oscuro (variant secondary): fill con luz de arriba +
+     borde hairline más claro que el relleno. Hover invertido:
+     blanco + texto #0e0e0e — misma lógica cruzada que el honey.
+     fill-hover: none para que el sólido no quede tapado por el
+     gradient. */
+  --button-secondary-bg: #1a1a1a;
+  --button-secondary-bg-hover: #ffffff;
+  --button-secondary-bg-press: #e6e6e6;
+  --button-secondary-text: #ffffff;
+  --button-secondary-text-hover: #0e0e0e;
+  --button-secondary-border: color-mix(in srgb, white 18%, transparent);
+  --button-secondary-border-hover: #ffffff;
+  --button-secondary-fill: linear-gradient(180deg, #2e2e2e 0%, #161616 100%);
+  --button-secondary-fill-hover: none;
 }
