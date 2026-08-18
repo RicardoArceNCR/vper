@@ -1,12 +1,13 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { fadeInUp } from "@/lib/motion";
 import { cn } from "@ui/lib/utils";
 
 interface SectionHeaderProps {
   eyebrow: string;
-  title: string;
+  title: ReactNode;
   description?: string;
   align?: "start" | "center";
 }

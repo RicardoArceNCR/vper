@@ -75,7 +75,13 @@ export default function ServicesGrid() {
         <div className="mb-20">
           <SectionHeader
             eyebrow="SERVICIOS"
-            title="ESTRATEGIA. DISEÑO. IMPACTO."
+            title={
+              <>
+                <span className="md:block">ESTRATEGIA.</span>
+                <span className="md:hidden"> </span>
+                <span className="md:block">DISEÑO. IMPACTO.</span>
+              </>
+            }
             align="center"
           />
         </div>
