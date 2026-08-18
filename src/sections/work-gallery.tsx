@@ -19,14 +19,6 @@ function WorkCard({ item }: { item: WorkItem }) {
       className="group relative shrink-0 w-[78vw] sm:w-[52vw] lg:w-[clamp(360px,42vw,620px)] bg-card border border-border overflow-hidden transition-all duration-500 hover:border-foreground/15"
     >
       <div className="aspect-[16/10] overflow-hidden bg-muted relative">
-        {/* Bug real, no gusto: esto usaba bg-foreground/40, que en dark
-            mode resuelve a --text-primary (#fafafa, blanco) — un velo
-            BLANCO al 40% sobre la foto, no el tinte oscuro que la
-            animación de hover sugiere (aclara al 10% al pasar el mouse).
-            bg-foreground cambia de significado entre claro/oscuro; acá
-            queríamos un tinte SIEMPRE oscuro, así que va literal en negro,
-            no atado al token de tema. */}
-        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-colors duration-500 z-10" />
         <img
           src={item.hero.src}
           alt={item.title}

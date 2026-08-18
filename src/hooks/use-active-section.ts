@@ -1,25 +1,34 @@
 import { useEffect, useState } from "react";
 
-function useActiveSection(sectionIds: string[]) {
+// Línea de sonda justo debajo del header (h-16 = 64). Si ninguna
+// sección del nav la contiene — hero, ticker, footer — no hay item activo.
+const PROBE_Y = 72;
+
+function useActiveSection(sectionIds: readonly string[]) {
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting);
-        if (visible.length > 0) {
-          setActiveId(visible[0]!.target.id);
+    const update = () => {
+      let current: string | null = null;
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const { top, bottom } = el.getBoundingClientRect();
+        if (top <= PROBE_Y && bottom > PROBE_Y) {
+          current = id;
+          break;
         }
-      },
-      { rootMargin: "-80px 0px -60% 0px", threshold: 0 },
-    );
+      }
+      setActiveId((prev) => (prev === current ? prev : current));
+    };
 
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
   }, [sectionIds]);
 
   return activeId;

@@ -7,7 +7,7 @@ import ThemeToggle from "@/components/theme-toggle";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@ui/lib/utils";
 import { useActiveSection } from "@/hooks/use-active-section";
-import { NAV_ITEMS } from "@/lib/navigation";
+import { NAV_ITEMS, NAV_SECTION_IDS } from "@/lib/navigation";
 
 const LOGO = "/images/logo-vper-media.svg";
 // px — coincide con el alto normal del header (h-16). Bajado de 80 (h-20)
@@ -50,7 +50,7 @@ function HamburgerIcon({ open }: { open: boolean }) {
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const activeSection = useActiveSection(["work", "services", "process"]);
+  const activeSection = useActiveSection(NAV_SECTION_IDS);
 
   useEffect(() => {
     const onScroll = () => {

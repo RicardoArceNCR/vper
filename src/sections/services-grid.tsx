@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Megaphone, Sparkles, Globe, Target, Clapperboard, PartyPopper } from "lucide-react";
+import { Megaphone, Sparkles, Globe, Target, Clapperboard, PartyPopper } from "lucide-react";
 import { motion } from "framer-motion";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import SectionHeader from "@/components/section-header";
@@ -76,43 +76,43 @@ export default function ServicesGrid() {
           <SectionHeader
             eyebrow="SERVICIOS"
             title="ESTRATEGIA. DISEÑO. IMPACTO."
-            description="Campañas, contenido y experiencias que convierten. Ofrecemos soluciones creativas integrales para potenciar tu marca."
+            align="center"
           />
         </div>
 
+        {/* max-w-4xl local, no .wrap: sin VER MÁS la fila es ícono + un
+            título + una línea de copy, y a 1400px el hairline se va al
+            borde del viewport con un hueco muerto a la derecha. 896px
+            deja leer PLANEACIÓN ESTRATÉGICA y corta el copy a ~70ch. */}
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="min-w-0 max-w-4xl mx-auto border border-[var(--border-strong)]"
         >
           {services.map((service) => (
-            <motion.div
+            <motion.article
               variants={fadeInUp}
               key={service.id}
-              className="group p-8 bg-[var(--surface-accent-bg)] border border-[var(--border-strong)] hover:border-primary/20 transition-all duration-500 flex flex-col justify-between min-h-[300px] hover:shadow-[0_10px_30px_color-mix(in_srgb,var(--brand-main)_5%,transparent)]"
+              className="group flex min-w-0 items-start gap-5 md:gap-8 p-6 md:p-8 bg-[var(--surface-accent-bg)] border-b border-[var(--border-strong)] last:border-b-0 hover:bg-primary/[0.03] transition-colors duration-500"
             >
-              <div>
-                <div className="w-14 h-14 rounded-lg flex items-center justify-center mb-8 border border-[var(--border-strong)] group-hover:border-primary/20 group-hover:bg-primary/5 transition-all duration-500">
-                  <service.icon
-                    size={26}
-                    style={{ color: service.color }}
-                    className="group-hover:scale-110 transition-transform duration-300"
-                  />
-                </div>
-                <h3 className="text-lg font-bold tracking-wider mb-4 text-[var(--surface-accent-text)] group-hover:text-primary transition-colors">
+              <div className="size-14 md:size-16 shrink-0 rounded-2xl flex items-center justify-center border border-[var(--border-strong)] group-hover:border-primary/20 group-hover:bg-primary/5 transition-all duration-500">
+                <service.icon
+                  size={26}
+                  style={{ color: service.color }}
+                  className="group-hover:scale-110 transition-transform duration-300"
+                />
+              </div>
+              <div className="@container min-w-0 flex-1">
+                <h3 className="font-display display-title-sm font-black tracking-tight min-w-0 mb-3 text-[var(--surface-accent-text)] group-hover:text-primary transition-colors">
                   {service.title}
                 </h3>
-                <p className="text-xs text-[var(--surface-accent-text)] leading-relaxed font-medium">
+                <p className="text-body-sm text-[var(--surface-accent-text)]">
                   {service.desc}
                 </p>
               </div>
-              <div className="mt-8 flex items-center gap-2 text-xs font-bold tracking-widest text-[var(--surface-accent-text)] group-hover:text-primary transition-colors">
-                <span>VER MÁS</span>
-                <ArrowRight size={14} className="transform translate-x-0 group-hover:translate-x-2 transition-transform" />
-              </div>
-            </motion.div>
+            </motion.article>
           ))}
         </motion.div>
       </div>

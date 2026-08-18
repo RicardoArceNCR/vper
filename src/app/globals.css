@@ -89,8 +89,16 @@
     line-height: 0.95;
   }
 
+  /* Misma fórmula, techo de card/fila (h1). Sin esto, en un row a todo
+     el ancho el display-title sube a 3.75rem y ATL & BTL se come la fila. */
+  .display-title-sm {
+    font-size: min(1.75rem, calc(100cqi / 13.4));
+    line-height: 0.95;
+  }
+
   @media (min-width: 768px) {
-    .display-title {
+    .display-title,
+    .display-title-sm {
       line-height: 1;
     }
   }

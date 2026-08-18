@@ -12,7 +12,7 @@ En flex/grid, `min-width: auto` hace que el item sea tan ancho como esa palabra.
 
 Al agregar o editar un titular `font-display`:
 
-1. Usá `display-title`, no un paso fijo. El hero es la excepción (`clamp` propio).
+1. Usá `display-title`, no un paso fijo. El hero es la excepción (`clamp` propio). Dentro de una card o fila (servicios, etc.): `display-title-sm` — misma fórmula, techo 1.75rem.
 2. El padre inmediato: `@container min-w-0`.
 3. Ancestros flex/grid hasta el wrap: `min-w-0`.
 4. En grids de metadata (Cliente / Fecha / País): cada celda `min-w-0`, el valor `break-words`.
