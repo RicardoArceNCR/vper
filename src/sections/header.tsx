@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@ui/components/button";
 import ThemeToggle from "@/components/theme-toggle";
-import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@ui/lib/utils";
 import { useActiveSection } from "@/hooks/use-active-section";
@@ -25,6 +24,29 @@ const SCROLL_THRESHOLD = 64;
 const navLinkType =
   "font-sans text-body-sm font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing)";
 
+function HamburgerIcon({ open }: { open: boolean }) {
+  const bar = "block h-[2px] w-full bg-current rounded-none";
+  return (
+    <span className="flex h-4 w-[22px] flex-col justify-between" aria-hidden>
+      <span
+        className={cn(
+          bar,
+          "origin-center transition-transform duration-300 ease-out",
+          open && "translate-y-[7px] rotate-45",
+        )}
+      />
+      <span className={cn(bar, "transition-opacity duration-200", open && "opacity-0")} />
+      <span
+        className={cn(
+          bar,
+          "origin-center transition-transform duration-300 ease-out",
+          open && "-translate-y-[7px] -rotate-45",
+        )}
+      />
+    </span>
+  );
+}
+
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -42,109 +64,162 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileMenuOpen(false);
+    };
+    const mq = window.matchMedia("(min-width: 768px)");
+    const onMq = () => {
+      if (mq.matches) setMobileMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    mq.addEventListener("change", onMq);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKey);
+      mq.removeEventListener("change", onMq);
+    };
+  }, [mobileMenuOpen]);
+
   return (
-    <header
-      className={cn(
-        "fixed top-0 left-0 w-full z-50 bg-[var(--nav-bg)]/95 backdrop-blur-md border-b border-[var(--nav-border)] transition-all duration-300",
-        isScrolled ? "h-14" : "h-16",
-      )}
-    >
-      <div className="wrap flex items-center justify-between h-full gap-6">
-        {/* Antes href="#" — en el home eso no rompía nada visible (era
-            un anchor a sí mismo), pero en cualquier otra página
-            (/work/[slug]) no navegaba a ningún lado, solo agregaba "#"
-            a la URL actual. Link a "/" real. */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <img
-            src={LOGO}
-            alt="VPER Media"
-            className={cn(
-              "h-7 md:h-8 w-auto origin-left transition-all duration-300 group-hover:opacity-80",
-              isScrolled ? "scale-50" : "scale-100",
-            )}
-          />
-        </Link>
+    <header className="fixed top-0 left-0 w-full z-50">
+      {/* Blur acá, no en <header>: el overlay mobile es hermano, no agranda
+          la región de backdrop-filter (eso sí pegaría al scrollear). */}
+      <div
+        className={cn(
+          "relative z-10 nav-glass border-b border-[var(--nav-border)]/40 transition-[height] duration-300",
+          isScrolled ? "nav-glass-scrolled h-14" : "h-16",
+          mobileMenuOpen && "nav-glass-open",
+        )}
+      >
+        <div className="wrap flex items-center justify-between h-full gap-6">
+          {/* Antes href="#" — en el home eso no rompía nada visible (era
+              un anchor a sí mismo), pero en cualquier otra página
+              (/work/[slug]) no navegaba a ningún lado, solo agregaba "#"
+              a la URL actual. Link a "/" real. */}
+          <Link
+            href="/"
+            className="flex items-center gap-2 group"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <img
+              src={LOGO}
+              alt="VPER Media"
+              className={cn(
+                "h-7 md:h-8 w-auto origin-left transition-all duration-300 group-hover:opacity-80",
+                isScrolled ? "scale-50" : "scale-100",
+              )}
+            />
+          </Link>
 
-        {/* Mismo bug que el logo: href={`#${id}`} solo funciona parado
-            en "/" — en /work/[slug] no hace nada. href={`/#${id}`}
-            funciona desde cualquier página (Next navega a "/" y
-            scrollea al id).
-            El CTA dejó de ser la franja a toda altura (rounded-none,
-            pegada al borde del viewport). Ahora es un Button sm
-            dentro del nav, mismo --button-radius (16px, casi pill)
-            que hero/404/form. */}
-        <div className="hidden md:flex items-center gap-6">
-          <nav className="flex items-center gap-8">
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.id}
-                href={`/#${item.id}`}
-                className={cn(
-                  navLinkType,
-                  "transition-all duration-300 relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300",
-                  isScrolled && "text-body-xs",
-                  "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm",
-                  activeSection === item.id
-                    ? "text-[var(--nav-item-active)] after:w-full"
-                    : "text-[var(--nav-item-default)] hover:text-[var(--nav-item-hover)] after:w-0 hover:after:w-full",
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-          <ThemeToggle />
-          <Button variant="default" size="sm" asChild>
-            <Link href="/#contact">Agenda una cita</Link>
-          </Button>
+          {/* Mismo bug que el logo: href={`#${id}`} solo funciona parado
+              en "/" — en /work/[slug] no hace nada. href={`/#${id}`}
+              funciona desde cualquier página (Next navega a "/" y
+              scrollea al id).
+              El CTA dejó de ser la franja a toda altura (rounded-none,
+              pegada al borde del viewport). Ahora es un Button sm
+              dentro del nav, mismo --button-radius (16px, casi pill)
+              que hero/404/form. */}
+          <div className="hidden md:flex items-center gap-6">
+            <nav className="flex items-center gap-8">
+              {NAV_ITEMS.map((item) => (
+                <Link
+                  key={item.id}
+                  href={`/#${item.id}`}
+                  className={cn(
+                    navLinkType,
+                    "transition-all duration-300 relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300",
+                    isScrolled && "text-body-xs",
+                    "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm",
+                    activeSection === item.id
+                      ? "text-[var(--nav-item-active)] after:w-full"
+                      : "text-[var(--nav-item-default)] hover:text-[var(--nav-item-hover)] after:w-0 hover:after:w-full",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+            <ThemeToggle />
+            <Button variant="default" size="sm" asChild>
+              <Link href="/#contact">Agenda una cita</Link>
+            </Button>
+          </div>
+
+          <button
+            type="button"
+            className="md:hidden -mr-2 flex size-11 items-center justify-center text-[var(--nav-logo-text)]"
+            onClick={() => setMobileMenuOpen((open) => !open)}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-nav"
+            aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
+          >
+            <HamburgerIcon open={mobileMenuOpen} />
+          </button>
         </div>
-
-        <button
-          className="md:hidden p-2 text-[var(--nav-item-default)] hover:text-[var(--nav-item-hover)] transition-colors"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
-        >
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
       </div>
 
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className={cn(
-              "md:hidden absolute left-0 w-full bg-[var(--nav-bg)] border-b border-[var(--nav-border)] py-8 px-6 flex flex-col gap-6",
-              isScrolled ? "top-14" : "top-16",
-            )}
+            id="mobile-nav"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navegación"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="md:hidden fixed inset-0 z-0 flex h-dvh flex-col items-center justify-center bg-[var(--nav-bg)] px-6"
           >
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.id}
-                href={`/#${item.id}`}
-                className={cn(
-                  navLinkType,
-                  "text-body-lg transition-colors",
-                  "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm",
-                  activeSection === item.id
-                    ? "text-[var(--nav-item-active)]"
-                    : "text-[var(--nav-item-default)] hover:text-[var(--nav-item-hover)]",
-                )}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="flex items-center gap-4">
-              <ThemeToggle />
-              <Button variant="default" size="sm" className="flex-1" asChild>
+            <nav className="flex flex-col items-center gap-7">
+              {NAV_ITEMS.map((item, i) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    delay: 0.06 * i + 0.08,
+                    duration: 0.35,
+                    ease: [0.25, 1, 0.5, 1],
+                  }}
+                >
+                  <Link
+                    href={`/#${item.id}`}
+                    className={cn(
+                      "font-sans text-h1 font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing) text-center transition-colors",
+                      "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm",
+                      activeSection === item.id
+                        ? "text-[var(--nav-item-active)]"
+                        : "text-[var(--nav-item-default)] hover:text-[var(--nav-item-hover)]",
+                    )}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                </motion.div>
+              ))}
+            </nav>
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                delay: 0.06 * NAV_ITEMS.length + 0.08,
+                duration: 0.35,
+                ease: [0.25, 1, 0.5, 1],
+              }}
+              className="mt-10 flex flex-col items-center gap-6"
+            >
+              <Button variant="default" size="sm" asChild>
                 <Link href="/#contact" onClick={() => setMobileMenuOpen(false)}>
-                  AGENDA UNA CITA
+                  Agenda una cita
                 </Link>
               </Button>
-            </div>
+              <ThemeToggle />
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

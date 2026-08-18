@@ -118,3 +118,45 @@
 .animate-ticker:hover {
   animation-play-state: paused;
 }
+
+/* Vidrio negro del nav: el frosted se ve porque el fill es semitransparente,
+   no porque el blur sea grande. 8px en una franja de 56–64px es barato;
+   backdrop-blur-xl / saturate() / animar el filtro sí cuestan. El blur
+   vive en la BARRA interna, no en <header>, para que el menú mobile no
+   agrande la región filtrada. */
+.nav-glass {
+  background-color: color-mix(in srgb, var(--nav-bg) 55%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.nav-glass-scrolled {
+  background-color: color-mix(in srgb, var(--nav-bg) 72%, transparent);
+}
+
+/* Overlay mobile a pantalla completa: misma tinta que el nav, sin blur
+   (un backdrop-filter a 100dvh sí es caro). La barra se funde con el panel. */
+.nav-glass-open {
+  background-color: var(--nav-bg);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border-bottom-color: transparent;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .nav-glass,
+  .nav-glass-scrolled {
+    background-color: var(--nav-bg);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@supports not (
+  (-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))
+) {
+  .nav-glass,
+  .nav-glass-scrolled {
+    background-color: var(--nav-bg);
+  }
+}
