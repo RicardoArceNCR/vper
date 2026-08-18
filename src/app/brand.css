@@ -58,30 +58,41 @@
 
   /* ═══════════════════════════════════════════════════════════════
      2. NEUTROS — acromático de punta a punta (croma 0)
-     El neutral original de @misitio/ui es cálido en 50-700 pero salta a
-     azul-tinta en 800-950 (hue ~200°, sat 30-47%) — de ahí el stroke/
-     fondo azul en cards, nav y footer. La propuesta 2026-08-11 no solo
-     corrige esos 3 stops: define TODA la rampa como acromática (sin hue),
-     porque un neutral con tinte de marca dejar de servir como neutral —
-     rompe la jerarquía visual que depende de que fondo/borde/texto no
-     compitan en color con nada. Se reemplaza la escala completa, no solo
-     los 3 stops rotos. Contraste verificado contra blanco/negro en la
-     propuesta — no se calculó el lightness a ojo.
+     Esto es 100% preferencia de marca de VPER: un neutral sin tinte,
+     y una curva más oscura que la del paquete. Ya NO es un workaround
+     de ningún bug — ver la nota de 2026-08-18 más abajo.
      Override LOCAL de un primitivo compartido — no se toca Figma ni
      @misitio/ui acá; ver README, sección "Identidad de marca" y el
      runbook de brand.css para cuándo esto sí amerita ir a Figma.
      ═══════════════════════════════════════════════════════════════ */
-  /* 2026-08-18: se quitaron los !important que llevaba toda esta rampa.
-     La causa raíz que había quedado sin explicar ("pierde el cascade
-     contra tokens.css solo en dev-server") era estructural, no un
-     misterio de HMR: la cadena de tokens estaba partida en DOS
-     mecanismos de carga — tokens.css/tokens-dark.css como import de JS
-     en layout.tsx, bridge y brand.css como @import de CSS. Dos hojas
-     distintas, misma especificidad, orden decidido por el bundler.
-     Unificado todo en el grafo de @import de globals.css, brand.css gana
-     por posición y el !important sobra. Verificado compilando con
-     @tailwindcss/postcss: la última declaración de --color-neutral-800
-     en el output es #474747. Detalle completo en globals.css. */
+  /* 2026-08-18 — @misitio/ui v0.1.4, dos cosas cerradas río arriba:
+
+     1. Los 3 stops de neutral que tenían hue azul (800-950, herencia de
+        un valor de Figma que contradecía su propia descripción) se
+        corrigieron EN FIGMA. El primitivo del paquete ya es cálido de
+        punta a punta — el override de esta sección deja de ser "arreglar
+        un bug ajeno" y pasa a ser lo que siempre debió ser: la elección
+        de VPER de que sea acromático (croma 0), no cálido.
+
+     2. El bug real de contraste (--border-default apuntaba al MISMO
+        primitivo que --surface-raised — el borde de una card era del
+        color de la card, 1.00:1) se corrigió en el MAPEO SEMÁNTICO del
+        paquete, no acá: border/default ahora resuelve a neutral-700, no
+        neutral-800. Verificado contra build/tokens-dark.css de v0.1.4.
+        La recalibración de 800/900/950 que este archivo tenía hasta hoy
+        decía perseguir (a) una página más oscura Y (b) cerrar ese bug de
+        contraste. La razón (b) ya no aplica — el paquete lo resuelve por
+        su cuenta ahora, para cualquier consumidor, sin overrides.
+
+     Lo que queda es puramente (a): VPER prefiere una curva más oscura
+     que el paquete. Se mantienen los MISMOS valores por continuidad
+     visual (cambiarlos es una decisión de gusto, no de este commit) —
+     si en algún momento se prueba con la curva del paquete sin ajustar
+     (más clara), no está corrigiendo nada, es puro rediseño.
+
+     También se quitaron los !important que llevaba toda esta rampa
+     (causa raíz real: la cadena de tokens estaba partida en dos
+     mecanismos de carga — ver globals.css). */
   --color-neutral-50: #fafafa;
   --color-neutral-100: #f3f3f3;
   --color-neutral-200: #e6e6e6;
@@ -90,33 +101,6 @@
   --color-neutral-500: #9e9e9e;
   --color-neutral-600: #808080;
   --color-neutral-700: #606060;
-  /* 800/900/950 recalibrados 2026-08-12 ("propuesta más oscura y senior",
-     revisión de sitio completo) — mismos 3 stops que ya traían el fix
-     original, ahora recalculados juntos para (a) una página más oscura y
-     (b) cerrar un bug real que la revisión completa encontró: en dark,
-     --border-default = neutral-800, y con el valor viejo (#3d3d3d) quedaba
-     a 1.16:1 de --surface-raised/card (#333333, fix de sesión anterior) —
-     invisible en la práctica. Es la MISMA familia de bug que el de
-     card-vs-muted ya resuelto, un nivel más abajo en la escalera. Afecta
-     border-border/card-border/input-border/nav-border en TODO el sitio
-     (WorkGallery, ContactSection, inputs del form) sin tocar JSX — un
-     único root-cause fix en vez de 3 parches puntuales.
-     Verificado con luminancia relativa WCAG (no a ojo):
-       neutral-950 (page/nav/footer)      #0e0e0e → #0a0a0a
-       neutral-900 (muted/section/inputs) #232323 → #181818
-       neutral-800 (border-default)       #3d3d3d → #474747
-     Escalera resultante en dark, real y monótona en luminancia:
-       page #0a0a0a → muted #181818 (1.11:1) → card #333333 (1.41:1
-       sobre muted, 1.57:1 sobre page para las cards que van directo
-       sobre bg-background) → border-default #474747 (1.36:1 sobre
-       card — el bug quedó cerrado, antes 1.16:1) → border-strong
-       #808080 sin cambios (3.20:1 sobre card, para bordes que ya
-       pedían más presencia a propósito: ServicesGrid, íconos del
-       footer). Texto sin tocar: --text-primary/#fafafa da 17–19:1
-       contra page/muted, --text-tertiary/#808080 da 4.5–5:1 — sigue
-       AA. neutral-800/900/950 no son alcanzables en modo claro
-       (confirmado por grep contra tokens.css: ahí border-default usa
-       neutral-200, no 800) — este cambio es dark-only en la práctica. */
   --color-neutral-800: #474747;
   --color-neutral-900: #181818;
   --color-neutral-950: #0a0a0a;
@@ -418,7 +402,20 @@
        sección (bg-muted)      → --background-subtle → neutral/900 #181818
        card (bg-card, --surface-accent-bg) → ESTE valor, #2a2a2a
        borde por defecto (border-border/card-border/input-border)
-         → --border-default → neutral/800 #474747 (ver sección 2)
+         → --border-default → neutral/700 #606060 desde @misitio/ui v0.1.4
+         (antes neutral/800 #474747 — ver nota de 2026-08-18 en sección 2)
+
+     2026-08-18: este override es INDEPENDIENTE del fix de contraste que
+     llegó con v0.1.4. Ese fix resolvió el mapeo semántico (border-default
+     ya no comparte primitivo con surface-raised, para cualquier
+     consumidor); este override sigue siendo la elección estética de que
+     la card se vea recesada casi al nivel de la página, no un parche de
+     contraste. Si se borrara hoy, surface-raised heredaría neutral-800
+     (#474747) del paquete: card vs sección pasaría de 1.24:1 a 1.91:1,
+     y borde vs card de 2.28:1 a 1.48:1 — ambos números sanos, es
+     puramente una card más clara que la de hoy. No se toca sin revisión
+     visual: es gusto, no bug.
+
      Historial de esta card, 2 iteraciones antes de esta:
        1) #232323 — idéntica a --background-subtle: colisión, la card no
           se despegaba de su sección, solo se notaba el borde.
