@@ -106,9 +106,24 @@
     line-height: 0.95;
   }
 
+  /* Hero: el clamp de marca se queda; 100cqi/13.4 evita que EXCEPCIONALES.
+     (13.0em) se salga en un 375px — el piso de 32px del clamp no cabe. */
+  .display-title-hero {
+    font-size: min(
+      clamp(
+        var(--typography-styles-display-sm-size),
+        3.5vw + 0.5rem,
+        var(--typography-styles-display-hero-size)
+      ),
+      calc(100cqi / 13.4)
+    );
+    line-height: 0.95;
+  }
+
   @media (min-width: 768px) {
     .display-title,
-    .display-title-sm {
+    .display-title-sm,
+    .display-title-hero {
       line-height: 1;
     }
   }

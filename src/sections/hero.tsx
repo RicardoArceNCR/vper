@@ -49,23 +49,21 @@ export default function Hero() {
       {/* pt-16 coincide con el alto del header sin scroll (h-16, bajado de
           h-20 el 2026-08-12) — mismo criterio que antes, solo el valor
           nuevo. */}
-      <div className="relative z-30 wrap text-center px-4 flex flex-col items-center justify-center h-full pt-16">
-        <AnimatePresence mode="wait">
-          <motion.h1
-            key={currentSlide}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-            className="font-display font-extrabold tracking-tight max-w-5xl leading-[0.95] mb-8 text-foreground"
-            style={{
-              fontSize:
-                "clamp(var(--typography-styles-display-sm-size), 3.5vw + 0.5rem, var(--typography-styles-display-hero-size))",
-            }}
-          >
-            {carouselSlides[currentSlide]!.title}
-          </motion.h1>
-        </AnimatePresence>
+      <div className="relative z-30 wrap min-w-0 text-center px-4 flex flex-col items-center justify-center h-full pt-16">
+        <div className="@container min-w-0 w-full">
+          <AnimatePresence mode="wait">
+            <motion.h1
+              key={currentSlide}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
+              className="font-display display-title-hero font-extrabold tracking-tight max-w-5xl mx-auto mb-8 text-foreground"
+            >
+              {carouselSlides[currentSlide]!.title}
+            </motion.h1>
+          </AnimatePresence>
+        </div>
 
         <motion.p
           initial={{ opacity: 0 }}
