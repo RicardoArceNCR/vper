@@ -51,9 +51,9 @@ con su `brand.css`.
 size/weight/leading/tracking + todos los estilos display→code + botón +
 paleta). Tocá un valor, guardá, mirá. Requiere `@misitio/ui` ≥ `v0.1.3`.
 
-**Obviously Wide Blck:** hoy hay una DEMO en
-`public/fonts/ObviouslyWide-Black.woff2` (ver `public/fonts/README.md`).
-Reemplazá ese archivo por la versión licenciada cuando la tengas.
+**Obviously Wide Blck:** `public/fonts/ObviouslyWide-Black.woff2` ya trae
+acentos (ver `public/fonts/README.md`). Antes de producción, reemplazá ese
+archivo por la versión licenciada de Ohno Type.
 
 ## Runbook: `brand.css` para un cliente nuevo
 
@@ -230,10 +230,10 @@ de ser un `alert()`), ese es el momento de revisar si aplica.
   `next/image`. Next avisa esto como warning de build, no error — migrar a
   `next/image` es una optimización real de LCP/bandwidth para más adelante,
   no urgente para un demo.
-- `public/fonts/ObviouslyWide-Black.woff2` es una versión **demo** (charset
-  limitado, licencia no apta para producción — ver
-  `public/fonts/README.md`). Bloqueante solo para el deploy final al
-  cliente, no para seguir iterando en local/preview.
+- `public/fonts/ObviouslyWide-Black.woff2` ya trae acentos; la licencia
+  sigue sin ser la de Ohno Type (ver `public/fonts/README.md`). Bloqueante
+  solo para el deploy final al cliente, no para seguir iterando en
+  local/preview.
 - Las secciones 2-4 de `brand.css` (neutros acromáticos + escalas
   amber/clay/jade) son un **stopgap local** de un fix que en realidad le
   corresponde a `@misitio/ui` (bugs reales en los primitivos compartidos,

@@ -35,7 +35,7 @@
  * Carga: DESPUÉS de @misitio/ui/theme-bridge.css (ver globals.css).
  */
 
-/* Obviously Wide Blck — hoy DEMO (ver public/fonts/README.md). */
+/* Obviously Wide Blck — Latin-1 / acentos. Ver public/fonts/README.md. */
 @font-face {
   font-family: "Obviously Wide Blck";
   src: url("/fonts/ObviouslyWide-Black.woff2") format("woff2");

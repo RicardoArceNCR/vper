@@ -2,14 +2,13 @@
 
 ## Obviously Wide Blck
 
-Hoy en este folder: **versión DEMO** convertida desde
-`Documents/VPER/fonts/obviously-font/ObviouslyDemo-WideBlack.otf`
-→ `ObviouslyWide-Black.woff2`.
+`ObviouslyWide-Black.woff2` — Wide Black con Latin-1 / acentos
+(áéíóúüñ, ¿¡). El peso que usa el sitio.
 
-- Sirve para preview local.
-- Charset limitado + licencia demo — **no usar en producción**.
-- Cuando tengas la versión licenciada, reemplaza solo este `.woff2`
-  (mismo nombre). `brand.css` no cambia.
+- Preview local: sirve para **DISEÑO**, **JOSÉ**, **CONTÁCTANOS**, etc.
+- La copia vino marcada como uso personal (exFont / iFonts), no como
+  licencia de Ohno Type. Antes de producción, reemplazá este `.woff2`
+  por el archivo oficial (mismo nombre). `brand.css` no cambia.
 
 ## Montserrat / IBM Plex Mono
 
