@@ -8,18 +8,18 @@ import { cn } from "@ui/lib/utils";
 // auditoría completa de qué token resuelve cada variante; no se duplica
 // el comentario largo aquí para no desincronizarlo en dos lugares.
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--button-radius)] text-body-sm font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing) transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--focus-ring-offset)] disabled:pointer-events-none disabled:opacity-50 disabled:bg-[var(--button-disabled-bg)] disabled:text-[var(--button-disabled-text)] disabled:border-[var(--button-disabled-border)] [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--button-radius)] text-body-sm font-sans font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing) transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--focus-ring-offset)] disabled:pointer-events-none disabled:opacity-50 disabled:bg-[var(--button-disabled-bg)] disabled:text-[var(--button-disabled-text)] disabled:border-[var(--button-disabled-border)] [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-[var(--button-primary-bg)] text-[var(--button-primary-text)] border-[var(--button-primary-border)] hover:bg-[var(--button-primary-bg-hover)] active:bg-[var(--button-primary-bg-press)]",
+          "border bg-[var(--button-primary-bg)] text-[var(--button-primary-text)] border-[var(--button-primary-border)] hover:bg-[var(--button-primary-bg-hover)] hover:text-[var(--button-primary-text-hover,#fff)] hover:border-[var(--button-primary-border-hover,var(--button-primary-bg-hover))] active:bg-[var(--button-primary-bg-press)] active:text-[var(--button-primary-text-hover,#fff)]",
         destructive:
           "bg-[var(--button-danger-bg)] text-[var(--button-danger-text)] border-[var(--button-danger-border)] hover:bg-[var(--button-danger-bg-hover)] active:bg-[var(--button-danger-bg-press)]",
         outline:
           "border border-[var(--button-secondary-border)] bg-transparent hover:bg-[var(--button-secondary-bg-hover)] text-[var(--button-secondary-text)]",
         secondary:
-          "bg-[var(--button-secondary-bg)] text-[var(--button-secondary-text)] border-[var(--button-secondary-border)] hover:bg-[var(--button-secondary-bg-hover)] active:bg-[var(--button-secondary-bg-press)]",
+          "border bg-[var(--button-secondary-bg)] [background-image:var(--button-secondary-fill,none)] text-[var(--button-secondary-text)] border-[var(--button-secondary-border)] hover:bg-[var(--button-secondary-bg-hover)] hover:[background-image:none] hover:text-[var(--button-secondary-text-hover,#0e0e0e)] hover:border-[var(--button-secondary-border-hover,#fff)] active:bg-[var(--button-secondary-bg-press)] active:[background-image:none] active:text-[var(--button-secondary-text-hover,#0e0e0e)]",
         ghost:
           "border-[var(--button-ghost-border)] bg-[var(--button-ghost-bg)] text-[var(--button-ghost-text)] hover:bg-[var(--button-ghost-bg-hover)] active:bg-[var(--button-ghost-bg-press)]",
         link: "text-[var(--color-accent-base)] underline-offset-4 hover:underline",

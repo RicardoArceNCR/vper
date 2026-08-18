@@ -21,7 +21,7 @@ export default function ProjectHero({
 
   if (hero.type === "video") {
     return (
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted border border-border">
+      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
         {playing ? (
           <video
             src={hero.src}
@@ -53,7 +53,7 @@ export default function ProjectHero({
   }
 
   return (
-    <div className="aspect-[4/3] overflow-hidden bg-muted border border-border">
+    <div className="aspect-[4/3] overflow-hidden bg-muted">
       <img src={hero.src} alt={title} className="w-full h-full object-cover" />
     </div>
   );

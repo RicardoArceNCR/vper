@@ -45,7 +45,7 @@ export default async function WorkDetailPage({ params }: Props) {
       <Header />
 
       <main className="flex-1 pt-28 pb-24 md:pb-32">
-        <div className="wrap grid grid-cols-1 lg:grid-cols-[minmax(0,380px)_1fr] gap-12 lg:gap-16 items-start">
+        <div className="wrap px-0 md:px-8 grid grid-cols-1 lg:grid-cols-[minmax(0,380px)_1fr] gap-12 lg:gap-16 items-start">
           {/* Columna izquierda: sticky en desktop (despeja el header con
               top-24 — el header mide 64px sin scroll / 56px scrolleado
               desde 2026-08-12, 24 = 96px cubre los dos casos con aire),
@@ -65,7 +65,7 @@ export default async function WorkDetailPage({ params }: Props) {
               seguridad para que la última línea respire antes del límite
               real del contenedor. */}
           <aside className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto flex flex-col gap-6 lg:pr-2 lg:pb-12">
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 px-4 md:px-0">
               {item.categories.map((category) => (
                 <Pill key={category}>{category}</Pill>
               ))}
@@ -73,7 +73,7 @@ export default async function WorkDetailPage({ params }: Props) {
 
             <ProjectHero hero={item.hero} title={item.title} />
 
-            <div>
+            <div className="px-4 md:px-0">
               <h1 className="font-display text-3xl md:text-4xl font-black tracking-tight mb-3">
                 {item.title}
               </h1>

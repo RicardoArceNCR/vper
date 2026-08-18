@@ -3,12 +3,40 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Bridge compartido (@theme inline + breakpoints + :root/.dark) — paquete
-   @misitio/ui (ADR 0011), mismo mecanismo que misitio. */
-@import "@misitio/ui/theme-bridge.css";
+/* ── Cadena de tokens completa, en UN SOLO mecanismo de carga ─────────
+   Los 4 archivos van acá, en este orden, y NO como `import` de JS en
+   layout.tsx (que es como vivían hasta 2026-08-18).
 
-/* Identidad de ESTE sitio. Siempre después del bridge — ver brand.css. */
-@import "./brand.css";
+   Ese split — tokens por import de JS, bridge/brand por @import de CSS —
+   era la causa raíz del bug de cascada que obligaba a poner !important
+   en toda la rampa neutral de brand.css. El CSS importado desde un
+   módulo JS sale en un chunk aparte, y el orden final entre hojas lo
+   decide el bundler, no el código: con misma especificidad (:root vs
+   :root) gana la que cargue última, y en dev con HMR se reordenaban, así
+   que tokens.css terminaba pisando a brand.css de forma intermitente.
+   Por eso el síntoma solo aparecía en dev-server y la verificación
+   compilando "el CSS solo" nunca lo reprodujo: esa compilación arrancaba
+   en globals.css, que no importaba tokens.css — o sea, excluía
+   justamente al archivo que competía.
+
+   Con un solo grafo de @import el orden es el del archivo: determinista
+   en dev y en build. Verificado con @tailwindcss/postcss (el motor real,
+   no DevTools): la última declaración de --color-neutral-800 en el
+   output es la de brand.css (#474747), sin ningún !important.
+
+   El orden no es decorativo: theme-bridge.css referencia vía var(...)
+   valores que tienen que existir antes, y brand.css va último porque
+   pisa por CASCADA, no por especificidad. Alterarlo rompe el theming.
+
+   Nota: `@import "tailwindcss"` también define --color-neutral-50..950
+   (paleta default de Tailwind v4, en oklch). Son tres definiciones del
+   mismo nombre; Tailwind emite la suya primero, así que pierde contra
+   las dos siguientes. Es una colisión de namespace latente — si algún
+   día el DS renombra sus primitivos, este es el motivo para hacerlo. */
+@import "@misitio/ui/tokens.css"; /* 1: primitivos + semánticos (:root) */
+@import "@misitio/ui/tokens-dark.css"; /* 2: overrides bajo .dark */
+@import "@misitio/ui/theme-bridge.css"; /* 3: @theme inline → Tailwind */
+@import "./brand.css"; /* 4: identidad de ESTE sitio */
 
 @layer base {
   * {
@@ -50,6 +78,21 @@
     width: 100%;
     padding-left: var(--spacing-8);
     padding-right: var(--spacing-8);
+  }
+
+  /* Obviously Wide: "SELECCIONADOS." mide 13.2em (medido en el .woff2).
+     El tamaño es el ancho del @container / 13.4, techo text-6xl (3.75rem).
+     El padre TIENE que estar acotado (min-w-0) — si el flex item crece
+     con el texto, cqi y el contenido se persiguen y esto no achica. */
+  .display-title {
+    font-size: min(3.75rem, calc(100cqi / 13.4));
+    line-height: 0.95;
+  }
+
+  @media (min-width: 768px) {
+    .display-title {
+      line-height: 1;
+    }
   }
 }
 

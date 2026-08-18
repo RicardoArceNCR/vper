@@ -198,29 +198,10 @@ Un `vite build` local o un host estático no lo necesita.
 El orden es un contrato. Si lo alterás, se rompe el theming entero, no un
 botón suelto.
 
-### En el entry de tu app
+### Todo en tu CSS global — un solo archivo, un solo mecanismo
 
-En Vite suele ser `src/main.tsx` o `client/src/main.tsx`. Equivale a
-`src/app/layout.tsx` de este repo.
-
-```tsx
-import "@misitio/ui/tokens.css";      // 1. claro
-import "@misitio/ui/tokens-dark.css"; // 2. oscuro
-import "./index.css";                 // 3. Tailwind + bridge + marca
-```
-
-Si hoy tenés algo como:
-
-```tsx
-import "../../design-system/tokens/build/tokens.css";
-```
-
-reemplazalo por los dos imports del paquete. Cuando el sitio compile y se
-vea bien, **borrá** la carpeta local `design-system/tokens/`.
-
-### En tu CSS global
-
-Equivale a `src/app/globals.css` de este repo. Ejemplo para Vite:
+Equivale a `src/app/globals.css` de este repo. Los cuatro archivos van
+acá, en este orden:
 
 ```css
 @import "tailwindcss";
@@ -228,12 +209,49 @@ Equivale a `src/app/globals.css` de este repo. Ejemplo para Vite:
 
 @custom-variant dark (&:is(.dark *));
 
-@import "@misitio/ui/theme-bridge.css";
-@import "./brand.css";
+@import "@misitio/ui/tokens.css";      /* 1. primitivos + semánticos */
+@import "@misitio/ui/tokens-dark.css"; /* 2. overrides bajo .dark    */
+@import "@misitio/ui/theme-bridge.css";/* 3. mapeo a Tailwind v4     */
+@import "./brand.css";                 /* 4. marca de este cliente   */
 ```
+
+### En el entry de tu app (`main.tsx`): un solo import
+
+```tsx
+import "./index.css"; // y nada más de CSS acá
+```
+
+> **No importes `tokens.css` ni `tokens-dark.css` desde el entry de JS.**
+> Esta guía decía lo contrario hasta 2026-08-18 y estaba mal — vale la
+> pena entender por qué, porque el síntoma es difícil de diagnosticar.
+>
+> El CSS importado desde un módulo JS lo emite el bundler como una hoja
+> aparte. El CSS importado con `@import` desde otro CSS queda dentro de
+> la misma hoja. Si partís la cadena entre los dos mecanismos, terminás
+> con dos `<link>` cuyo orden relativo lo decide el bundler, no tu
+> código — y como los tokens y `brand.css` tienen la **misma
+> especificidad** (`:root` vs `:root`), el que gana es simplemente el que
+> cargue último. En `vper` esto se verificó midiendo el build real: con
+> el split salían 2 hojas CSS; unificado, sale 1 sola.
+>
+> En la práctica se veía así: el sitio compilaba bien, la versión de
+> producción se veía bien, pero en `dev` con HMR los colores de marca se
+> caían de forma intermitente al guardar un archivo. Se "arregló" un
+> tiempo poniendo `!important` en toda la rampa de neutros de
+> `brand.css`. Con la cadena unificada eso ya no hace falta, y no debe
+> hacer falta en tu repo tampoco: **si te ves obligado a poner
+> `!important` para que la marca gane, el orden de carga está mal.**
+>
+> Vite tiene sus propias reglas de orden entre chunks de CSS, distintas
+> de las de Next — razón de más para no depender de ellas.
 
 `theme-bridge.css` **sí** va: tu proyecto usa Tailwind v4. Sin él,
 `text-body-sm` y `bg-background` no resuelven.
+
+Si hoy tenés algo como `import "../../design-system/tokens/build/tokens.css"`
+en tu entry, reemplazalo por los `@import` del paquete de arriba. Cuando el
+sitio compile y se vea bien, **borrá** la carpeta local
+`design-system/tokens/`.
 
 ### `brand.css` — la capa de marca (mismo peso que el bridge)
 

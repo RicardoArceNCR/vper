@@ -25,9 +25,10 @@ export default function ContactSection() {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeInUp}
+            className="@container min-w-0"
           >
             <span className="text-xs font-bold tracking-[0.3em] text-primary mb-4 block">HABLEMOS</span>
-            <h2 className="font-display text-4xl md:text-6xl font-black tracking-tight mb-6">CONTÁCTANOS.</h2>
+            <h2 className="font-display display-title font-black tracking-tight mb-6">CONTÁCTANOS.</h2>
             <p className="text-sm md:text-base text-muted-foreground leading-relaxed font-medium mb-12 max-w-md">
               ¿Tienes un proyecto en mente o quieres potenciar tu marca? Completa el formulario y nos pondremos en contacto contigo lo antes posible.
             </p>
@@ -108,7 +109,7 @@ export default function ContactSection() {
 
               <Button
                 type="submit"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs tracking-widest h-12 rounded-none transition-all duration-300 shadow-[0_4px_20px_color-mix(in_srgb,var(--brand-main)_20%,transparent)] hover:translate-y-[-2px] hover:shadow-[0_8px_30px_color-mix(in_srgb,var(--brand-main)_40%,transparent)]"
+                className="h-12 transition-all duration-300 hover:translate-y-[-2px] shadow-[0_4px_20px_color-mix(in_srgb,var(--brand-main)_20%,transparent)] hover:shadow-[0_8px_30px_color-mix(in_srgb,var(--brand-main)_40%,transparent)]"
               >
                 ENVIAR
               </Button>

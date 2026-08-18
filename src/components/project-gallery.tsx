@@ -10,9 +10,9 @@ import type { GalleryImage } from "@/lib/work-items";
 // proporciones reales del archivo.
 export default function ProjectGallery({ images }: { images: GalleryImage[] }) {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col">
       {images.map((img, idx) => (
-        <div key={idx} className="overflow-hidden bg-muted border border-border">
+        <div key={idx} className="overflow-hidden bg-muted">
           <img src={img.src} alt={img.alt} className="w-full h-auto block" />
         </div>
       ))}
