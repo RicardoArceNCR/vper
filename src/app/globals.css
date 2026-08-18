@@ -79,6 +79,21 @@
     padding-left: var(--spacing-8);
     padding-right: var(--spacing-8);
   }
+
+  /* Obviously Wide: "SELECCIONADOS." mide 13.2em (medido en el .woff2).
+     El tamaño es el ancho del @container / 13.4, techo text-6xl (3.75rem).
+     El padre TIENE que estar acotado (min-w-0) — si el flex item crece
+     con el texto, cqi y el contenido se persiguen y esto no achica. */
+  .display-title {
+    font-size: min(3.75rem, calc(100cqi / 13.4));
+    line-height: 0.95;
+  }
+
+  @media (min-width: 768px) {
+    .display-title {
+      line-height: 1;
+    }
+  }
 }
 
 /* ── Utilidades propias de ESTE proyecto (no viven en el bridge compartido) ── */

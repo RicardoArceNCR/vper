@@ -80,7 +80,7 @@ export default function WorkGallery() {
   if (prefersReducedMotion) {
     return (
       <section id="work" className="py-24 md:py-32 bg-background border-b border-border">
-        <div className="wrap mb-12">
+        <div className="wrap min-w-0 mb-12">
           <SectionHeader
             eyebrow="PORTAFOLIO"
             title="PROYECTOS SELECCIONADOS."
@@ -108,7 +108,7 @@ export default function WorkGallery() {
       {/* top-16 coincide con el alto del header sin scroll (h-16, bajado
           de h-20 el 2026-08-12). */}
       <div className="sticky top-16 h-screen flex flex-col justify-start pt-6 md:justify-center md:pt-0 overflow-hidden border-b border-border">
-        <div className="wrap mb-4 md:mb-14">
+        <div className="wrap min-w-0 mb-4 md:mb-14">
           <SectionHeader
             eyebrow="PORTAFOLIO"
             title="PROYECTOS SELECCIONADOS."

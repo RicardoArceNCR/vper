@@ -18,6 +18,13 @@ const LOGO = "/images/logo-vper-media.svg";
 // mismo ratio aproximado), solo se bajó el punto de partida.
 const SCROLL_THRESHOLD = 64;
 
+// Misma pila tipográfica que Button (text-body-sm + Montserrat +
+// --button-font-weight/--button-letter-spacing). text-label-* no: esa
+// utilidad trae letter-spacing 0.9–1.1px del DS y pisa el tracking del
+// botón, así que el nav seguía viéndose “wide” aunque ya no era display.
+const navLinkType =
+  "font-sans text-body-sm font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing)";
+
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -73,8 +80,9 @@ export default function Header() {
                 key={item.id}
                 href={`/#${item.id}`}
                 className={cn(
-                  "font-sans font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing) transition-all duration-300 relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300",
-                  isScrolled ? "text-label-xs" : "text-label-sm",
+                  navLinkType,
+                  "transition-all duration-300 relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300",
+                  isScrolled && "text-body-xs",
                   "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm",
                   activeSection === item.id
                     ? "text-[var(--nav-item-active)] after:w-full"
@@ -117,7 +125,8 @@ export default function Header() {
                 key={item.id}
                 href={`/#${item.id}`}
                 className={cn(
-                  "font-sans font-(weight:--button-font-weight) text-label-lg uppercase tracking-(--button-letter-spacing) transition-colors",
+                  navLinkType,
+                  "text-body-lg transition-colors",
                   "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm",
                   activeSection === item.id
                     ? "text-[var(--nav-item-active)]"
