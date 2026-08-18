@@ -241,3 +241,19 @@ export const workItems: WorkItem[] = [
 export function getWorkItem(slug: string): WorkItem | undefined {
   return workItems.find((item) => item.slug === slug);
 }
+
+// Orden = el de workItems (el mismo que la home). Loop: el último
+// apunta al primero, para no dejar un callejón sin salida al pie
+// de Oh! La Lashes.
+export function getAdjacentWorkItems(slug: string): {
+  prev: WorkItem;
+  next: WorkItem;
+} | null {
+  const i = workItems.findIndex((item) => item.slug === slug);
+  if (i < 0 || workItems.length < 2) return null;
+  const n = workItems.length;
+  return {
+    prev: workItems[(i - 1 + n) % n]!,
+    next: workItems[(i + 1) % n]!,
+  };
+}

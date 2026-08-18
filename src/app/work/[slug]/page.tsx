@@ -4,8 +4,9 @@ import Header from "@/sections/header";
 import Footer from "@/sections/footer";
 import ProjectHero from "@/components/project-hero";
 import ProjectGallery from "@/components/project-gallery";
+import ProjectPager from "@/components/project-pager";
 import { Pill } from "@ui/components/pill";
-import { workItems, getWorkItem } from "@/lib/work-items";
+import { workItems, getWorkItem, getAdjacentWorkItems } from "@/lib/work-items";
 
 // Next 15: params llega como Promise en Server Components (Async Request
 // APIs) — hay que await-earlo, no es opcional ni retrocompatible con el
@@ -33,6 +34,7 @@ export default async function WorkDetailPage({ params }: Props) {
   const { slug } = await params;
   const item = getWorkItem(slug);
   if (!item) notFound();
+  const adjacent = getAdjacentWorkItems(slug);
 
   return (
     // Textura de fondo fija (pedido 2026-08-12): bg-background de base +
@@ -71,7 +73,9 @@ export default async function WorkDetailPage({ params }: Props) {
               ))}
             </div>
 
-            <ProjectHero hero={item.hero} title={item.title} />
+            {item.hero.type === "video" ? (
+              <ProjectHero hero={item.hero} title={item.title} />
+            ) : null}
 
             <div className="@container min-w-0 px-4 md:px-0">
               <h1 className="font-display display-title font-black tracking-tight max-w-full mb-3">
@@ -124,6 +128,8 @@ export default async function WorkDetailPage({ params }: Props) {
 
           <ProjectGallery images={item.gallery} />
         </div>
+
+        {adjacent ? <ProjectPager prev={adjacent.prev} next={adjacent.next} /> : null}
       </main>
 
       <Footer />
