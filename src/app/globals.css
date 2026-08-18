@@ -76,8 +76,18 @@
 @layer components {
   .wrap {
     width: 100%;
-    padding-left: var(--spacing-8);
-    padding-right: var(--spacing-8);
+    /* Mobile: 16px. 32px (--spacing-8) en un 375px deja 64px de gutter
+       (~17% del viewport) y las secciones se leen encogidas. md vuelve
+       a 32px, el aire de desktop no se toca. */
+    padding-left: var(--spacing-4);
+    padding-right: var(--spacing-4);
+  }
+
+  @media (min-width: 768px) {
+    .wrap {
+      padding-left: var(--spacing-8);
+      padding-right: var(--spacing-8);
+    }
   }
 
   /* Obviously Wide: "SELECCIONADOS." mide 13.2em (medido en el .woff2).

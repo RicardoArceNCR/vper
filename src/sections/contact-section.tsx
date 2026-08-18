@@ -61,7 +61,7 @@ export default function ContactSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-            className="bg-card border border-border relative p-6 md:p-10"
+            className="bg-card border border-border relative p-4 md:p-6"
           >
             {/* Igual que en vper-media-repo: submit de mentira (alert), no hay
                 integración real de envío todavía — puerto fiel del demo. */}
