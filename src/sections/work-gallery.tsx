@@ -7,7 +7,7 @@ import { motion, useScroll, useTransform, useReducedMotion, useSpring } from "fr
 import SectionHeader from "@/components/section-header";
 import { workItems, type WorkItem } from "@/lib/work-items";
 
-// Los 4 proyectos y sus imágenes viven en lib/work-items.ts — es la misma
+// Los proyectos y sus imágenes viven en lib/work-items.ts — es la misma
 // fuente que consume /work/[slug]. Antes estaban hardcodeados acá adentro;
 // moverlos evita que la card de la home y la página de detalle del mismo
 // proyecto terminen mostrando título/imagen distintos con el tiempo.

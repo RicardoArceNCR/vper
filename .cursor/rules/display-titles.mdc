@@ -1,0 +1,20 @@
+---
+description: Títulos display (Obviously Wide) no pueden ensanchar flex/grid ni recortar texto
+globs: src/**/*.{tsx,css}
+alwaysApply: true
+---
+
+# Títulos display no desbordan el layout
+
+Obviously Wide es muy ancha (`SELECCIONADOS.` = 13.2em, `NETFOREMOST` = 11.2em). Un `text-4xl` / `text-6xl` en `font-display` no cabe; la palabra no parte.
+
+En flex/grid, `min-width: auto` hace que el item sea tan ancho como esa palabra. La fila se sale del viewport y un `overflow-hidden` del padre recorta el texto de al lado (párrafo del portafolio, columna País, etc.).
+
+Al agregar o editar un titular `font-display`:
+
+1. Usá `display-title`, no un paso fijo. El hero es la excepción (`clamp` propio).
+2. El padre inmediato: `@container min-w-0`.
+3. Ancestros flex/grid hasta el wrap: `min-w-0`.
+4. En grids de metadata (Cliente / Fecha / País): cada celda `min-w-0`, el valor `break-words`.
+
+No "arreglés" el recorte bajando el tipo en desktop ni con `break-all`.

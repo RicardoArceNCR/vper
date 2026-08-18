@@ -45,7 +45,7 @@ export default async function WorkDetailPage({ params }: Props) {
       <Header />
 
       <main className="flex-1 pt-28 pb-24 md:pb-32">
-        <div className="wrap px-0 md:px-8 grid grid-cols-1 lg:grid-cols-[minmax(0,380px)_1fr] gap-12 lg:gap-16 items-start">
+        <div className="wrap px-0 md:px-8 grid grid-cols-1 lg:grid-cols-[minmax(0,380px)_1fr] gap-12 lg:gap-16 items-start min-w-0">
           {/* Columna izquierda: sticky en desktop (despeja el header con
               top-24 — el header mide 64px sin scroll / 56px scrolleado
               desde 2026-08-12, 24 = 96px cubre los dos casos con aire),
@@ -64,7 +64,7 @@ export default async function WorkDetailPage({ params }: Props) {
               "cortado" en vez de simplemente terminado — es el margen de
               seguridad para que la última línea respire antes del límite
               real del contenedor. */}
-          <aside className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto flex flex-col gap-6 lg:pr-2 lg:pb-12">
+          <aside className="min-w-0 lg:sticky lg:top-24 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto flex flex-col gap-6 lg:pr-2 lg:pb-12">
             <div className="flex flex-wrap gap-2 px-4 md:px-0">
               {item.categories.map((category) => (
                 <Pill key={category}>{category}</Pill>
@@ -73,8 +73,8 @@ export default async function WorkDetailPage({ params }: Props) {
 
             <ProjectHero hero={item.hero} title={item.title} />
 
-            <div className="px-4 md:px-0">
-              <h1 className="font-display text-3xl md:text-4xl font-black tracking-tight mb-3">
+            <div className="@container min-w-0 px-4 md:px-0">
+              <h1 className="font-display display-title font-black tracking-tight max-w-full mb-3">
                 {item.title}
               </h1>
               <span className="text-xs font-bold tracking-widest text-primary uppercase block mb-6">
@@ -88,24 +88,24 @@ export default async function WorkDetailPage({ params }: Props) {
                   una sola columna) esto también evita que el lector tenga
                   que pasar el bloque de texto largo antes de llegar a la
                   galería, no solo en desktop. */}
-              <dl className="grid grid-cols-3 gap-4 pb-6 mb-6 border-b border-border">
-                <div>
+              <dl className="grid grid-cols-3 gap-3 sm:gap-4 pb-6 mb-6 border-b border-border min-w-0">
+                <div className="min-w-0">
                   <dt className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1">
                     Cliente
                   </dt>
-                  <dd className="text-sm font-bold text-foreground">{item.client}</dd>
+                  <dd className="text-sm font-bold text-foreground break-words">{item.client}</dd>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <dt className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1">
                     Fecha
                   </dt>
-                  <dd className="text-sm font-bold text-foreground">{item.date}</dd>
+                  <dd className="text-sm font-bold text-foreground break-words">{item.date}</dd>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <dt className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1">
                     País
                   </dt>
-                  <dd className="text-sm font-bold text-foreground">{item.country}</dd>
+                  <dd className="text-sm font-bold text-foreground break-words">{item.country}</dd>
                 </div>
               </dl>
 

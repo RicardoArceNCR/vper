@@ -334,6 +334,42 @@ padding lateral. Copiá esto a tu CSS global:
 La cinta de logos usa `.animate-ticker`. Está al final de
 `src/app/globals.css`; copiala si portás esa sección.
 
+### Títulos display (copiar `.display-title`)
+
+Obviously Wide es muy ancha: `SELECCIONADOS.` mide 13.2em,
+`NETFOREMOST` 11.2em. Un `text-4xl` / `text-6xl` fijo no cabe; la
+palabra no parte. Peor: en un flex/grid el item vale `min-width: auto`
+(= el ancho de esa palabra), la fila se sale del viewport y un
+`overflow-hidden` del padre recorta el texto de al lado (el párrafo
+del portafolio, la columna País, etc.).
+
+La clase `.display-title` (junto a `.wrap` en `globals.css`) hace
+`font-size: min(3.75rem, 100cqi / 13.4)` — techo de desktop, piso el
+ancho real de la columna. Copiala con `.wrap`:
+
+```css
+.display-title {
+  font-size: min(3.75rem, calc(100cqi / 13.4));
+  line-height: 0.95;
+}
+@media (min-width: 768px) {
+  .display-title { line-height: 1; }
+}
+```
+
+Tres reglas para que funcione:
+
+1. El padre del título es `@container min-w-0`.
+2. Todo ancestro flex/grid hasta el wrap también tiene `min-w-0`.
+   Sin eso el contenedor crece con el texto y `cqi` no achica.
+3. No uses `text-4xl md:text-6xl` en un `font-display`. Usá
+   `display-title`. El hero es la excepción: ya trae su propio
+   `clamp()` a `--typography-styles-display-hero-size`.
+
+En grids de metadata (Cliente / Fecha / País) cada celda lleva
+`min-w-0` y el valor `break-words`. Si no, la celda se expande al
+min-content y se corta el borde derecho en mobile.
+
 ---
 
 ## 7. Qué revisar en este repo
@@ -482,7 +518,7 @@ las clases**.
 - El `className` completo de cada nodo
 - `style={{ fontSize: "clamp(var(--typography-styles-…))" }}` si está
 - Arbitrary values con tokens (`bg-[var(--nav-bg)]`)
-- La utility `.wrap` y `.animate-ticker` (desde `globals.css`)
+- La utility `.wrap`, `.display-title` y `.animate-ticker` (desde `globals.css`)
 - El uso de `<Button>`, `<Card>`, `<Pill>` (ya copiados)
 
 ### Qué reescribir (es framework, no diseño)
@@ -584,7 +620,9 @@ tokens de `tokens-dark.css` se aplican solos.
   nuevo del paquete es el update.
 - No uses `text-4xl` / `text-[39px]` para titulares del DS: el token no
   participa y `brand.css` no va a poder corregirlo. Preferí
-  `text-display-*`, `text-h*`, `text-body-*`, `text-label-*`.
+  `text-display-*`, `text-h*`, `text-body-*`, `text-label-*`. En
+  titulares `font-display` usá `.display-title`, no un paso fijo:
+  Obviously Wide desborda el viewport y ensancha el flex (ver §6).
 - No copies `"use client"` ni `next/link` a Vite.
 - No mantengas un Button shadcn y el Button de este repo a la vez.
 
@@ -599,7 +637,8 @@ tokens de `tokens-dark.css` se aplican solos.
 5. En el CSS global: Tailwind → `tw-animate-css` → `dark` variant →
    `theme-bridge.css` → `brand.css`.
 6. Copiar `src/app/brand.css`. Definir `--typography-family-body` /
-   `--typography-family-mono` sin `next/font`. Copiar `.wrap`.
+   `--typography-family-mono` sin `next/font`. Copiar `.wrap` y
+   `.display-title` (el padre del título va `@container min-w-0`).
 7. Borrar `design-system/tokens/` local cuando compile y se vea bien.
 8. Copiar los 4 primitivos + `utils.ts`. Ajustar imports.
 9. Sección por sección: diff de `className` contra `src/sections/`.

@@ -4,23 +4,14 @@
 // detalle eso hubiera significado mantener título/categoría/imágenes
 // sincronizados a mano en dos lugares. Con esto, un solo lugar de verdad.
 //
-// CONTENIDO — estado mixto, a propósito (actualizado 2026-08-12):
-// - "toma-tola" (primer proyecto) es real: fotografía real del cliente
-//   (public/images/TOMA TOLA BRANDING-*.jpg), copy real pegado tal cual
-//   por el cliente, país confirmado por el sello de empaque. Solo la
-//   fecha queda pendiente (ver campo "date").
-// - Los otros 3 proyectos siguen siendo placeholder — mismo relleno
-//   explícito de la sesión anterior (texto Lorem Ipsum, "client" con
-//   "Cliente confidencial 0N" en vez de una marca real: inventar un
-//   nombre de empresa real ahí sería una afirmación falsa sobre esa
-//   empresa, no relleno inocuo). Reemplazar caso por caso a medida que
-//   entre material real de cada uno, como ya pasó con el primero.
+// CONTENIDO (actualizado 2026-08-18): los 5 proyectos son reales —
+// láminas del cliente, copy en español. Fecha y país quedan pendientes
+// donde el material no lo confirma. Los 3 placeholders (Experiencia
+// digital, Dirección creativa, Contenido social) se sacaron el mismo día.
 //
-// IMÁGENES: el sitio solo trae ~28 fotos reales en public/images para los
-// proyectos placeholder (no son infinitas), así que su galería reutiliza
-// imágenes de otras secciones (servicios/proceso/hero) en vez de inventar
-// rutas que no existen. "toma-tola" no tiene este problema — tiene su
-// propio set de fotos reales, sin reutilizar nada de otras secciones.
+// IMÁGENES: cada proyecto real trae su propio set en public/images
+// (toma-tola-*, netforemost-*, vida-nica-*, monumental-humidors-*,
+// oh-la-lashes-*), sin reutilizar fotos de otras secciones.
 //
 // VIDEO: el tipo "video" está soportado end-to-end (ver ProjectHero), pero
 // ningún proyecto lo usa todavía porque no hay ningún .mp4 real en
@@ -53,9 +44,6 @@ export interface WorkItem {
   hero: { type: "image" | "video"; src: string; poster?: string };
   gallery: GalleryImage[];
 }
-
-const LOREM =
-  "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.";
 
 export const workItems: WorkItem[] = [
   {
@@ -107,64 +95,145 @@ export const workItems: WorkItem[] = [
       { src: "/images/toma-tola-10.webp", alt: "Toma-Tola — ficha de ingredientes y sello del distribuidor (10)" },
       { src: "/images/toma-tola-11.webp", alt: "Toma-Tola — valla publicitaria, pines, posavasos y detalle de lata (11)" },
       { src: "/images/toma-tola-12.webp", alt: "Toma-Tola — collage de marca en uso: consumo, cooler, gorra, sitio web (12)" },
-      { src: "/images/toma-tola-13.webp", alt: "Toma-Tola — lámina de cierre de presentación, \"Thank you very much\" (13)" },
+      { src: "/images/toma-tola-13.webp", alt: "Toma-Tola — lámina de cierre de presentación (13)" },
     ],
   },
   {
-    slug: "digital-experience",
-    title: "EXPERIENCIA DIGITAL",
-    subtitle: "Diseño web",
-    categories: ["Digital"],
-    client: "Cliente confidencial 02",
-    date: "2025",
-    country: "Costa Rica",
-    description: LOREM,
-    hero: { type: "image", src: "/images/40ff27b92e607e79304651fa3b9a20a866f6de72.webp" },
+    // Segundo proyecto real (2026-08-18). Copy original en inglés,
+    // traducido al español (el sitio está en español). Categorías
+    // acordadas: Creatividad + Digital.
+    slug: "netforemost",
+    title: "NETFOREMOST",
+    subtitle: "Equipos nativos en IA",
+    categories: ["Creatividad", "Digital"],
+    client: "NetForemost",
+    date: "Fecha pendiente de confirmar",
+    country: "País pendiente de confirmar",
+    description:
+      "Construye software más rápido con equipos de delivery nativos en IA.\n\nNetForemost ofrece diseño de producto, desarrollo de software, QA y gestión de proyectos para empresas que necesitan los roles, el proceso y la experiencia tecnológica adecuados para alcanzar sus objetivos de software.",
+    hero: { type: "image", src: "/images/netforemost-hero.webp" },
+    // Galería en el orden original (01–13). El hero de la card es la
+    // lámina de marca con wordmark (pedido 2026-08-18), distinta de la
+    // -01/-02 de la secuencia.
     gallery: [
-      { src: "/images/bd37aae033ded0a3b41c58503bb285e902309d1a.webp", alt: "Experiencia digital — pieza 1" },
-      { src: "/images/b8e5aa2cb8161a86beb964887f7eb868f1d146d4.webp", alt: "Experiencia digital — pieza 2" },
-      { src: "/images/adc9ad8b7b6c369aad2235798753d32219fc2b03.webp", alt: "Experiencia digital — pieza 3" },
-      { src: "/images/c2340cc4f028e5db1828d110a96850a40aa470c9.webp", alt: "Experiencia digital — pieza 4" },
-      { src: "/images/4c17b7789867c053637f12fd5d98f584ecb0e308.webp", alt: "Experiencia digital — pieza 5" },
-      { src: "/images/269f572522c2b8e4702ecc91fe307b35854fb64c.webp", alt: "Experiencia digital — pieza 6" },
+      { src: "/images/netforemost-01.webp", alt: "NetForemost — wordmark e isotipo sobre fondo oscuro (01)" },
+      { src: "/images/netforemost-02.webp", alt: "NetForemost — hero del sitio, equipos de delivery nativos en IA (02)" },
+      { src: "/images/netforemost-03.webp", alt: "NetForemost — paleta de color y tipografía Work Sans / Lato (03)" },
+      { src: "/images/netforemost-04.webp", alt: "NetForemost — isotipo N sobre retícula (04)" },
+      { src: "/images/netforemost-05.webp", alt: "NetForemost — sistema de logo en cuatro fondos (05)" },
+      { src: "/images/netforemost-06.webp", alt: "NetForemost — mockup de app y barra del browser (06)" },
+      { src: "/images/netforemost-07.webp", alt: "NetForemost — mockup de laptop con el sitio (07)" },
+      { src: "/images/netforemost-08.webp", alt: "NetForemost — isotipo 3D en vidrio (08)" },
+      { src: "/images/netforemost-09.webp", alt: "NetForemost — banner construido alrededor de tu stack tecnológico (09)" },
+      { src: "/images/netforemost-10.webp", alt: "NetForemost — banner el discovery va antes de cada statement of work (10)" },
+      { src: "/images/netforemost-11.webp", alt: "NetForemost — mockup de tarjeta de presentación (11)" },
+      { src: "/images/netforemost-12.webp", alt: "NetForemost — retrato desarrollo nativo en IA (12)" },
+      { src: "/images/netforemost-13.webp", alt: "NetForemost — cierre de presentación, Gracias (13)" },
     ],
   },
   {
-    slug: "creative-direction",
-    title: "DIRECCIÓN CREATIVA",
-    subtitle: "Lanzamiento de producto",
-    categories: ["Creatividad", "Audiovisual"],
-    client: "Cliente confidencial 03",
-    date: "2024",
-    country: "Panamá",
-    description: LOREM,
-    hero: { type: "image", src: "/images/5bffb580299f4f3ea634dea64bef359a203e92fd.webp" },
-    gallery: [
-      { src: "/images/55d2a969fc609eaedfdf9745ba9dcd543cde9836.webp", alt: "Dirección creativa — pieza 1" },
-      { src: "/images/614bb68043c305dc176a286eb6a45bbc1daf6c2c.webp", alt: "Dirección creativa — pieza 2" },
-      { src: "/images/727d2809dc3e7714eec8b7598155acb0ee852f32.webp", alt: "Dirección creativa — pieza 3" },
-      { src: "/images/1031bf7c59810c75b1e729e6881a5931e8d03819.webp", alt: "Dirección creativa — pieza 4" },
-      { src: "/images/36bc2da07d386d06bb24293e2aac95fd81bdb5dc.webp", alt: "Dirección creativa — pieza 5" },
-      { src: "/images/645801bdbd0b05382051f8fac1b00ac24d6c1340.webp", alt: "Dirección creativa — pieza 6" },
-    ],
-  },
-  {
-    slug: "social-content",
-    title: "CONTENIDO SOCIAL",
-    subtitle: "Estrategia de contenido",
-    categories: ["Digital", "Eventos"],
-    client: "Cliente confidencial 04",
-    date: "2024",
+    // Tercer proyecto real (2026-08-18). Láminas VIDA_NICA_BRANDING-01 y
+    // -03 a -13 (no hay -02). Copy del cliente, con la "у" cirílica del
+    // pegado convertida a "y". Categorías: Creatividad (identidad: logo,
+    // paleta, tipo Meditative, papelería) + Digital (Facebook, Instagram,
+    // stories). El tótem (11) es ATL, una pieza de doce — no alcanza
+    // para taguear ATL & BTL. País: Nicaragua está en el copy ("inviertes
+    // en Nicaragua", "mercado nicaragüense"), no es una suposición.
+    slug: "vida-nica",
+    title: "VIDA NICA",
+    subtitle: "Bienes raíces",
+    categories: ["Creatividad", "Digital"],
+    client: "Vida Nica",
+    date: "Fecha pendiente de confirmar",
     country: "Nicaragua",
-    description: LOREM,
-    hero: { type: "image", src: "/images/66b5fc4b0db29f5c76c0bf7fcb9487e5b2a19f0c.webp" },
+    description:
+      "En Vida Nica Bienes Raíces, transformamos la manera en que inviertes en Nicaragua, ofreciendo oportunidades exclusivas en bienes raíces con un servicio transparente, profesional y personalizado.\n\nNos especializamos en conectar a inversionistas nacionales e internacionales con propiedades de alto valor, asegurando experiencias de compra, venta y alquiler que reflejen confianza, calidad y crecimiento.\n\nNuestra identidad está arraigada en la esencia de Nicaragua: su cultura vibrante, su riqueza natural y su potencial de desarrollo. Con una imagen moderna y sofisticada, brindamos soluciones inmobiliarias estratégicas que garantizan bienestar, rentabilidad y una inversión segura en el mercado nicaragüense.\n\nVida Nica: donde la exclusividad y la confianza construyen tu futuro.",
+    hero: { type: "image", src: "/images/vida-nica-hero.webp" },
+    // Galería en el orden original del material (01, 03–13). El hero es
+    // la -01 (bahía + logo): sirve de card y abre la secuencia, mismo
+    // criterio que Toma-Tola.
     gallery: [
-      { src: "/images/82bbaf1eb527f137627b5fd0b0f70dda88cacec0.webp", alt: "Contenido social — pieza 1" },
-      { src: "/images/9353bfe8e9365a790af56f3356bd07903b8f2724.webp", alt: "Contenido social — pieza 2" },
-      { src: "/images/a338897be47fb06799af096e1a29aeb038648149.webp", alt: "Contenido social — pieza 3" },
-      { src: "/images/bd37aae033ded0a3b41c58503bb285e902309d1a.webp", alt: "Contenido social — pieza 4" },
-      { src: "/images/b8e5aa2cb8161a86beb964887f7eb868f1d146d4.webp", alt: "Contenido social — pieza 5" },
-      { src: "/images/adc9ad8b7b6c369aad2235798753d32219fc2b03.webp", alt: "Contenido social — pieza 6" },
+      { src: "/images/vida-nica-hero.webp", alt: "Vida Nica — bahía de San Juan del Sur con logo (01)" },
+      { src: "/images/vida-nica-03.webp", alt: "Vida Nica — paleta de color y tipografía Meditative (03)" },
+      { src: "/images/vida-nica-04.webp", alt: "Vida Nica — variantes de logo: isotipo, horizontal y vertical (04)" },
+      { src: "/images/vida-nica-05.webp", alt: "Vida Nica — banner Inversiones seguras en bienes raíces (05)" },
+      { src: "/images/vida-nica-06.webp", alt: "Vida Nica — muro de oficina con logo 3D (06)" },
+      { src: "/images/vida-nica-07.webp", alt: "Vida Nica — mockup de Facebook e Instagram (07)" },
+      { src: "/images/vida-nica-08.webp", alt: "Vida Nica — porta tarjetas de cuero con isotipo (08)" },
+      { src: "/images/vida-nica-09.webp", alt: "Vida Nica — sello de goma de la marca (09)" },
+      { src: "/images/vida-nica-10.webp", alt: "Vida Nica — stickers de logo (10)" },
+      { src: "/images/vida-nica-11.webp", alt: "Vida Nica — tótem digital en plaza (11)" },
+      { src: "/images/vida-nica-12.webp", alt: "Vida Nica — papelería corporativa (12)" },
+      { src: "/images/vida-nica-13.webp", alt: "Vida Nica — cierre de presentación, Gracias (13)" },
+    ],
+  },
+  {
+    // Cuarto proyecto real (2026-08-18). Láminas
+    // MONUMENTAL_HUMIDORS_BRANDING-01 y -03 a -13 (no hay -02). Copy
+    // original en inglés, traducido al español (el sitio está en
+    // español). Categorías: Creatividad (identidad: imagotipo, paleta,
+    // Pioggia/Gotham, sello 2019) + Audiovisual (fotografía de producto y
+    // lifestyle). No hay entregable digital de sitio/app. Fecha: 2019
+    // está en el sello de marca (20 / 19). País: el copy habla de
+    // artesanos cubanos — Cuba, no una suposición de sede inventada.
+    slug: "monumental-humidors",
+    title: "MONUMENTAL",
+    subtitle: "Humidores",
+    categories: ["Creatividad", "Audiovisual"],
+    client: "Monumental Humidors",
+    date: "2019",
+    country: "Cuba",
+    description:
+      "Monumental Humidors nació del conocimiento, la experiencia y el magisterio de distinguidos artesanos cubanos, profundamente familiarizados con la cultura y el mundo de los puros premium. Su comprensión de la importancia de preservar correctamente cada pieza dio origen a una marca creada para proteger lo que hace único a un gran puro: su aroma, sabor, calidad y carácter.\n\nCada humidor se elabora con dedicación, precisión y respeto por una tradición que ha trascendido generaciones. Más que un objeto funcional, es una pieza distintiva que reúne artesanía, diseño y excelencia.\n\nNuestro propósito es llevar Monumental Humidors a los amantes y conocedores de puros de todo el mundo, para que disfruten de una experiencia de conservación digna de sus mejores cigarros.",
+    hero: { type: "image", src: "/images/monumental-humidors-hero.webp" },
+    // Galería en el orden original (01, 03–13). El hero de la card es el
+    // pin MH (lámina 11), no la -01 — pedido 2026-08-18.
+    gallery: [
+      { src: "/images/monumental-humidors-01.webp", alt: "Monumental Humidors — humidor con wordmark de la marca (01)" },
+      { src: "/images/monumental-humidors-03.webp", alt: "Monumental Humidors — logo sobre tres fondos de color (03)" },
+      { src: "/images/monumental-humidors-04.webp", alt: "Monumental Humidors — paleta de color y tipografía Pioggia / Gotham (04)" },
+      { src: "/images/monumental-humidors-05.webp", alt: "Monumental Humidors — variantes de logo: imagotipo, horizontal, vertical y sello (05)" },
+      { src: "/images/monumental-humidors-06.webp", alt: "Monumental Humidors — pieza Colección Signature (06)" },
+      { src: "/images/monumental-humidors-07.webp", alt: "Monumental Humidors — pieza Proporciones divinas (07)" },
+      { src: "/images/monumental-humidors-08.webp", alt: "Monumental Humidors — pieza Inconfundiblemente Monumental (08)" },
+      { src: "/images/monumental-humidors-09.webp", alt: "Monumental Humidors — sello dorado de la marca, 2019 (09)" },
+      { src: "/images/monumental-humidors-10.webp", alt: "Monumental Humidors — pieza Una tradición de generación en generación (10)" },
+      { src: "/images/monumental-humidors-11.webp", alt: "Monumental Humidors — pin MH en la manga de un saco (11)" },
+      { src: "/images/monumental-humidors-12.webp", alt: "Monumental Humidors — artesano con camiseta de la marca (12)" },
+      { src: "/images/monumental-humidors-13.webp", alt: "Monumental Humidors — cierre de presentación, Gracias (13)" },
+    ],
+  },
+  {
+    // Quinto proyecto real (2026-08-18). Láminas OH_LA_LASHES_BRANDING-01
+    // y -03 a -13 (no hay -02). Copy del cliente en español. Categorías:
+    // Creatividad (identidad, paleta, papelería, merch) + Digital (feed
+    // de redes). El mupi/valla (07) es ATL, una pieza de doce. País:
+    // Nicaragua — Managua y +505 en la tarjeta, no es una suposición.
+    slug: "oh-la-lashes",
+    title: "LA LASHES",
+    subtitle: "Clínica estética",
+    categories: ["Creatividad", "Digital"],
+    client: "Oh! La Lashes",
+    date: "Fecha pendiente de confirmar",
+    country: "Nicaragua",
+    description:
+      "En Oh! La Lashes tenemos una clara misión: destacar lo más hermoso de ti y garantizar que tu imagen y presencia refleje con claridad toda la belleza que emana desde tu interior.\n\nContamos con una amplia gama de servicios de belleza y estética, personal altamente calificado, certificaciones internacionales y servicio de la más alta calidad.",
+    hero: { type: "image", src: "/images/oh-la-lashes-hero.webp" },
+    // Galería en el orden original (01, 03–13). El hero de la card es el
+    // mockup de redes (lámina 06), no la -01 — pedido 2026-08-18.
+    gallery: [
+      { src: "/images/oh-la-lashes-01.webp", alt: "Oh! La Lashes — close-up de ojo con logo de la marca (01)" },
+      { src: "/images/oh-la-lashes-03.webp", alt: "Oh! La Lashes — variantes de logo en positivo y negativo (03)" },
+      { src: "/images/oh-la-lashes-04.webp", alt: "Oh! La Lashes — paleta de color de marca (04)" },
+      { src: "/images/oh-la-lashes-05.webp", alt: "Oh! La Lashes — tipografía Passenger Display (05)" },
+      { src: "/images/oh-la-lashes-06.webp", alt: "Oh! La Lashes — piezas para redes sociales (06)" },
+      { src: "/images/oh-la-lashes-07.webp", alt: "Oh! La Lashes — valla y mupi Realza tu belleza (07)" },
+      { src: "/images/oh-la-lashes-08.webp", alt: "Oh! La Lashes — tratamiento en clínica (08)" },
+      { src: "/images/oh-la-lashes-09.webp", alt: "Oh! La Lashes — polo, sello y tarjetas (09)" },
+      { src: "/images/oh-la-lashes-10.webp", alt: "Oh! La Lashes — tarjetas de presentación (10)" },
+      { src: "/images/oh-la-lashes-11.webp", alt: "Oh! La Lashes — visera con logo (11)" },
+      { src: "/images/oh-la-lashes-12.webp", alt: "Oh! La Lashes — papelería corporativa (12)" },
+      { src: "/images/oh-la-lashes-13.webp", alt: "Oh! La Lashes — cierre de presentación, Gracias (13)" },
     ],
   },
 ];
