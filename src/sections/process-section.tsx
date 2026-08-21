@@ -9,31 +9,31 @@ const processSteps = [
     id: 1,
     title: "INVESTIGACIÓN",
     desc: "Analizamos tu mercado, audiencia y competencia para trazar la ruta.",
-    icon: "/images/icon-2.svg",
+    icon: "/images/process-investigacion.png?v=7",
   },
   {
     id: 2,
     title: "ESTRATEGIA",
     desc: "Definimos el plan de acción táctico y los objetivos clave.",
-    icon: "/images/icon-4.svg",
+    icon: "/images/process-estrategia.png?v=7",
   },
   {
     id: 3,
     title: "DISEÑO",
     desc: "Damos vida visual a la estrategia con conceptos innovadores.",
-    icon: "/images/icon-5.svg",
+    icon: "/images/process-diseno.png?v=7",
   },
   {
     id: 4,
     title: "DESARROLLO",
     desc: "Implementamos las soluciones con la tecnología más avanzada.",
-    icon: "/images/icon-1.svg",
+    icon: "/images/process-desarrollo.png?v=7",
   },
   {
     id: 5,
     title: "ENTREGA",
     desc: "Lanzamos el proyecto y medimos su impacto continuo.",
-    icon: "/images/icon-3.svg",
+    icon: "/images/process-entrega.png?v=7",
   },
 ];
 
@@ -66,28 +66,19 @@ export default function ProcessSection() {
                 <div className="hidden lg:block absolute top-24 left-[65%] w-full h-[1px] bg-border z-0 group-hover:bg-primary/20 transition-colors duration-500" />
               )}
 
-              <div className="relative z-10 size-28 md:size-36 lg:size-48 shrink-0 rounded-full bg-muted border border-border flex items-center justify-center p-3 md:p-4 lg:p-5 md:mb-8 group-hover:border-primary/30 group-hover:shadow-[0_0_40px_color-mix(in_srgb,var(--brand-main)_25%,transparent)] transition-all duration-500">
-                <span
-                  aria-hidden
-                  className="block h-[82%] w-[82%] bg-foreground group-hover:bg-primary transition-all duration-500 group-hover:scale-105"
-                  style={{
-                    maskImage: `url(${step.icon})`,
-                    WebkitMaskImage: `url(${step.icon})`,
-                    maskRepeat: "no-repeat",
-                    WebkitMaskRepeat: "no-repeat",
-                    maskPosition: "center",
-                    WebkitMaskPosition: "center",
-                    maskSize: "contain",
-                    WebkitMaskSize: "contain",
-                  }}
+              <div className="relative z-10 size-28 md:size-36 lg:size-48 shrink-0 rounded-full overflow-hidden border border-border bg-black md:mb-8 group-hover:border-primary group-hover:shadow-[0_0_40px_color-mix(in_srgb,var(--brand-main)_25%,transparent)] transition-all duration-500">
+                <img
+                  src={step.icon}
+                  alt=""
+                  className="size-full object-contain scale-100 group-hover:scale-110 transition-transform duration-500"
                 />
               </div>
 
               <div className="relative z-10 min-w-0 flex-1 md:flex-none md:flex md:flex-col md:items-center">
-                <span className="text-xs font-bold text-primary tracking-widest mb-1 md:mb-3 block">
+                <span className="text-sm md:text-base font-bold text-primary tracking-widest mb-1 md:mb-3 block">
                   0{step.id}
                 </span>
-                <h3 className="text-sm font-bold tracking-widest text-foreground mb-1 md:mb-3 uppercase group-hover:text-primary transition-colors">
+                <h3 className="text-base md:text-lg font-bold tracking-wider text-foreground mb-1 md:mb-3 uppercase group-hover:text-primary transition-colors break-words">
                   {step.title}
                 </h3>
                 <p className="text-xs text-muted-foreground leading-relaxed font-medium md:max-w-[200px]">
