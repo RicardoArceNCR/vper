@@ -10,6 +10,7 @@ interface SectionHeaderProps {
   title: ReactNode;
   description?: string;
   align?: "start" | "center";
+  titleClassName?: string;
 }
 
 export default function SectionHeader({
@@ -17,6 +18,7 @@ export default function SectionHeader({
   title,
   description,
   align = "start",
+  titleClassName,
 }: SectionHeaderProps) {
   const centered = align === "center";
 
@@ -43,7 +45,12 @@ export default function SectionHeader({
         <span className="text-xs font-bold tracking-[0.3em] text-primary mb-4 block">
           {eyebrow}
         </span>
-        <h2 className="font-display display-title font-black tracking-tight max-w-full">
+        <h2
+          className={cn(
+            "font-display display-title font-black tracking-tight max-w-full",
+            titleClassName,
+          )}
+        >
           {title}
         </h2>
       </div>

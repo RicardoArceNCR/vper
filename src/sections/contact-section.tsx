@@ -61,7 +61,7 @@ export default function ContactSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-            className="bg-card border border-border relative p-4 md:p-6"
+            className="bg-card border border-border relative p-4 md:p-6 rounded-[var(--button-radius)]"
           >
             {/* Igual que en vper-media-repo: submit de mentira (alert), no hay
                 integración real de envío todavía — puerto fiel del demo. */}
@@ -73,7 +73,7 @@ export default function ContactSection() {
                     type="text"
                     placeholder="Tu nombre"
                     required
-                    className="h-12 bg-background border border-input px-4 text-xs font-medium focus:border-primary focus:outline-none transition-colors"
+                    className="h-12 bg-background border border-input px-4 text-xs font-medium focus:border-primary focus:outline-none transition-colors rounded-[var(--button-radius)]"
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -82,7 +82,7 @@ export default function ContactSection() {
                     type="text"
                     placeholder="Tu apellido"
                     required
-                    className="h-12 bg-background border border-input px-4 text-xs font-medium focus:border-primary focus:outline-none transition-colors"
+                    className="h-12 bg-background border border-input px-4 text-xs font-medium focus:border-primary focus:outline-none transition-colors rounded-[var(--button-radius)]"
                   />
                 </div>
               </div>
@@ -93,7 +93,7 @@ export default function ContactSection() {
                   type="email"
                   placeholder="tu@email.com"
                   required
-                  className="h-12 bg-background border border-input px-4 text-xs font-medium focus:border-primary focus:outline-none transition-colors"
+                  className="h-12 bg-background border border-input px-4 text-xs font-medium focus:border-primary focus:outline-none transition-colors rounded-[var(--button-radius)]"
                 />
               </div>
 
@@ -103,7 +103,7 @@ export default function ContactSection() {
                   rows={4}
                   placeholder="Cuéntanos sobre tu proyecto..."
                   required
-                  className="bg-background border border-input p-4 text-xs font-medium focus:border-primary focus:outline-none transition-colors resize-none"
+                  className="bg-background border border-input p-4 text-xs font-medium focus:border-primary focus:outline-none transition-colors resize-none rounded-[var(--button-radius)]"
                 />
               </div>
 

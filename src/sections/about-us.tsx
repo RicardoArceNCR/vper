@@ -66,7 +66,10 @@ function TeamMemberCard({
   const [open, setOpen] = useState(false);
 
   return (
-    <motion.li variants={fadeInUp} className="flex min-w-0 flex-col text-left">
+    <motion.li
+      variants={fadeInUp}
+      className="@container flex min-w-0 flex-col text-left"
+    >
       <div className="mb-4 aspect-[3/4] overflow-hidden rounded-2xl bg-muted">
         <img
           src={photo}
@@ -74,7 +77,7 @@ function TeamMemberCard({
           className="size-full object-cover object-top"
         />
       </div>
-      <h3 className="text-sm md:text-base font-bold tracking-tight text-foreground">
+      <h3 className="font-display display-title-sm font-black tracking-tight text-foreground mb-1">
         {name}
       </h3>
       <p className="text-sm font-medium text-foreground/90 mb-2">{role}</p>

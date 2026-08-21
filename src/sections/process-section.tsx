@@ -81,7 +81,7 @@ export default function ProcessSection() {
                 <h3 className="text-base md:text-lg font-bold tracking-wider text-foreground mb-1 md:mb-3 uppercase group-hover:text-primary transition-colors break-words">
                   {step.title}
                 </h3>
-                <p className="text-xs text-muted-foreground leading-relaxed font-medium md:max-w-[200px]">
+                <p className="text-sm text-muted-foreground leading-relaxed font-medium md:max-w-[200px]">
                   {step.desc}
                 </p>
               </div>
