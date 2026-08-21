@@ -16,27 +16,8 @@ const IMAGES = {
 export default function Footer() {
   return (
     <footer className="bg-[var(--footer-bg)] pt-20 pb-10 border-t border-border">
-      {/* Auditoría 2026-08-12: se veía "tirado a la izquierda" en pantallas
-          anchas porque .wrap NO tiene max-width en ningún lado del sitio
-          (grep confirma: cero contenedores de sección con max-w-*, solo
-          textos sueltos como max-w-2xl para cortar líneas largas) — a
-          2600px de viewport real, este grid de 3 columnas iguales estiraba
-          cada columna a ~800px cuando el contenido (nombres, emails, 5
-          links cortos) necesita una fracción de eso, dejando huecos
-          enormes. Otras secciones no se notan porque su contenido SÍ llena
-          el ancho (grids de 6 cards, imagen de fondo del hero); el footer
-          es puro texto corto, ahí se nota.
-          Fix con dos partes: (1) max-w-7xl acá adentro — no toqué .wrap
-          global a propósito, es un cambio de UNA sección, no una decisión
-          de arquitectura de todo el sitio que nadie pidió; (2) grid de 3
-          columnas iguales → flex justify-between con cada bloque a su
-          ancho natural (shrink-0), que es como reparten espacio la
-          mayoría de los footers reales (logo+tagline a la izquierda,
-          columnas de link/contacto a su tamaño, aire parejo entre medio —
-          no franjas iguales forzadas). */}
       <div className="wrap">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:justify-between gap-12 md:gap-16 mb-16 text-center md:text-left">
+        <div className="flex flex-col md:flex-row md:justify-between gap-12 md:gap-16 mb-16 text-center md:text-left">
             <div className="flex flex-col items-center md:items-start md:max-w-xs shrink-0">
               {/* Antes era texto ("VPER.MEDIA" armado con spans) — pedido
                   explícito: el SVG real del nav (mismo logo-vper-media.svg
@@ -103,14 +84,13 @@ export default function Footer() {
           </div>
 
           <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-            <span className="text-[10px] text-[var(--footer-legal-text)] font-medium">
+            <span className="text-xs text-[var(--footer-legal-text)] font-medium">
               &copy; 2026 VPER Media. Todos los derechos reservados.
             </span>
-            <span className="text-[10px] text-[var(--footer-legal-text)] font-medium">
+            <span className="text-xs text-[var(--footer-legal-text)] font-medium">
               Managua, Nicaragua | Remoto LATAM
             </span>
           </div>
-        </div>
       </div>
     </footer>
   );

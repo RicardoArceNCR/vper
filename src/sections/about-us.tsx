@@ -68,16 +68,16 @@ function TeamMemberCard({
   return (
     <motion.li
       variants={fadeInUp}
-      className="@container flex min-w-0 flex-col text-left"
+      className="group @container flex min-w-0 flex-col text-left"
     >
-      <div className="mb-4 aspect-[3/4] overflow-hidden rounded-2xl bg-muted">
+      <div className="mb-4 aspect-[3/4] overflow-hidden rounded-2xl bg-muted ring-1 ring-transparent transition-[box-shadow,ring-color] duration-500 group-hover:ring-primary/40 group-hover:shadow-[0_0_32px_color-mix(in_srgb,var(--brand-main)_22%,transparent)]">
         <img
           src={photo}
           alt={name}
-          className="size-full object-cover object-top"
+          className="size-full object-cover object-top transition-transform duration-[1.2s] ease-out group-hover:scale-[1.06]"
         />
       </div>
-      <h3 className="font-display display-title-sm font-black tracking-tight text-foreground mb-1">
+      <h3 className="font-display display-title-sm font-black tracking-tight text-foreground mb-3">
         {name}
       </h3>
       <p className="text-sm font-medium text-foreground/90 mb-2">{role}</p>
