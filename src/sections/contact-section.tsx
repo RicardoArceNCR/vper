@@ -16,7 +16,7 @@ export default function ContactSection() {
     // criterio).
     <section
       id="contact"
-      className="py-24 md:py-32 bg-muted bg-[url('/images/bg-vper-pattern.webp')] bg-fixed bg-cover bg-center border-b border-border"
+      className="py-24 md:py-32 bg-muted bg-[url('/images/bg-vper-pattern.webp')] bg-fixed bg-cover bg-center"
     >
       <div className="wrap">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">

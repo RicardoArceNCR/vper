@@ -190,7 +190,7 @@ export default function Header() {
                   <Link
                     href={`/#${item.id}`}
                     className={cn(
-                      "font-sans text-h1 font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing) text-center transition-colors",
+                      "font-sans text-h2 font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing) text-center transition-colors",
                       "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm",
                       activeSection === item.id
                         ? "text-[var(--nav-item-active)]"
@@ -213,7 +213,7 @@ export default function Header() {
               }}
               className="mt-10 flex flex-col items-center gap-6"
             >
-              <Button variant="default" size="sm" asChild>
+              <Button variant="default" size="lg" asChild>
                 <Link href="/#contact" onClick={() => setMobileMenuOpen(false)}>
                   Agenda una cita
                 </Link>

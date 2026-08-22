@@ -6,6 +6,7 @@ import ServicesGrid from "@/sections/services-grid";
 import ProcessSection from "@/sections/process-section";
 import AboutUs from "@/sections/about-us";
 import ContactSection from "@/sections/contact-section";
+import GlowMark from "@/sections/glow-mark";
 import Footer from "@/sections/footer";
 
 export default function Home() {
@@ -19,6 +20,7 @@ export default function Home() {
       <ProcessSection />
       <AboutUs />
       <ContactSection />
+      <GlowMark />
       <Footer />
     </div>
   );

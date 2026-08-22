@@ -150,7 +150,7 @@ export default function AboutUs() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
-          className="grid min-w-0 grid-cols-1 md:grid-cols-3 gap-6 md:gap-8"
+          className="grid min-w-0 grid-cols-2 md:grid-cols-3 gap-6 md:gap-8"
         >
           {team.map((member) => (
             <TeamMemberCard key={member.name} {...member} />

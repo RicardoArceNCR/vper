@@ -23,4 +23,5 @@ tsconfig.tsbuildinfo
 
 # Exports originales de Illustrator/Figma; el sitio usa WebP.
 public/images/Artboard*.png
+public/images/Artboard*.svg
 public/images/*@7x.png

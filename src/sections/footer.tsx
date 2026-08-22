@@ -14,8 +14,11 @@ const IMAGES = {
 
 // Sin hooks/motion: puede quedarse como server component.
 export default function Footer() {
+  // Sin border-t: la línea de horizonte ahora la dibuja <GlowMark />, que tapa
+  // el 27% inferior del wordmark con este mismo --footer-bg. Dejar el borde acá
+  // daba dos líneas paralelas separadas por esa franja.
   return (
-    <footer className="bg-[var(--footer-bg)] pt-20 pb-10 border-t border-border">
+    <footer className="bg-[var(--footer-bg)] pt-20 pb-10">
       <div className="wrap">
         <div className="flex flex-col md:flex-row md:justify-between gap-12 md:gap-16 mb-16 text-center md:text-left">
             <div className="flex flex-col items-center md:items-start md:max-w-xs shrink-0">
