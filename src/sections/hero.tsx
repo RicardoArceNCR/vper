@@ -5,10 +5,10 @@ import { Button } from "@ui/components/button";
 import { motion, AnimatePresence } from "framer-motion";
 
 const carouselSlides = [
-  { image: "/images/hero-portada-1.png", title: "NO HACEMOS MARKETING, HACEMOS QUE TENGA SENTIDO." },
-  { image: "/images/hero-portada-2.png", title: "CREAMOS ESTRATEGIAS QUE IMPACTAN Y CONVIERTEN." },
-  { image: "/images/hero-portada-3.png", title: "DISEÑO DE VANGUARDIA PARA MARCAS EXCEPCIONALES." },
-  { image: "/images/hero-portada-4.png", title: "NO HACEMOS MARKETING, HACEMOS QUE TENGA SENTIDO." },
+  { image: "/images/hero-portada-1.webp", title: "NO HACEMOS MARKETING, HACEMOS QUE TENGA SENTIDO." },
+  { image: "/images/hero-portada-2.webp", title: "CREAMOS ESTRATEGIAS QUE IMPACTAN Y CONVIERTEN." },
+  { image: "/images/hero-portada-3.webp", title: "DISEÑO DE VANGUARDIA PARA MARCAS EXCEPCIONALES." },
+  { image: "/images/hero-portada-4.webp", title: "NO HACEMOS MARKETING, HACEMOS QUE TENGA SENTIDO." },
 ];
 
 export default function Hero() {

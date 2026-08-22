@@ -20,3 +20,7 @@ next-env.d.ts
 tsconfig.tsbuildinfo
 
 .pnpm-store/
+
+# Exports originales de Illustrator/Figma; el sitio usa WebP.
+public/images/Artboard*.png
+public/images/*@7x.png

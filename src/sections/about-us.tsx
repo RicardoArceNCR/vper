@@ -10,50 +10,56 @@ const team = [
   {
     name: "Jader Vanegas",
     role: "Director general",
-    photo: "/images/team-jader.png",
-    bio: "Placeholder. Lidera la dirección general de VPER y alinea estrategia, equipo y entrega para que cada proyecto tenga rumbo claro. Texto de relleno para la bio — reemplazar por el copy real.",
+    photo: "/images/team-jader.webp",
+    bio: "Ejecutivo con experiencia regional en Centroamérica y Panamá, especializado en dirección empresarial, finanzas, desarrollo de negocios y optimización operativa. Ha liderado equipos, expansión de mercados y resultados financieros. Como fundador de una firma contable, asesora en finanzas, tributación y procesos administrativos. Su experiencia ejecutiva en logística panameña integra visión estratégica, control financiero, eficiencia operativa y enfoque comercial para impulsar rentabilidad y crecimiento sostenible.",
   },
   {
     name: "Carlos Escobar",
     role: "Director digital",
-    photo: "/images/team-carlos.png",
-    bio: "Placeholder. Define la estrategia digital, performance y presencia en canales. Texto de relleno para la bio — reemplazar por el copy real del cliente.",
+    photo: "/images/team-carlos.webp",
+    bio: "Profesional de marketing con más de diez años de experiencia creando estrategias 360° que integran creatividad y resultados de negocio. Ha liderado equipos, administrado presupuestos superiores a $500,000 y desarrollado campañas digitales y tradicionales para marcas de retail, salud y finanzas, logrando retornos de hasta 10:1. Su formación internacional en la Universidad Rafael Landívar e INCAE fortalece su visión estratégica, analítica y orientada al impacto.",
   },
   {
     name: "Karen Cruz",
     role: "Directora de cuentas",
-    photo: "/images/team-karen.png",
-    bio: "Placeholder. Cuida la relación con el cliente y el día a día de las cuentas, para que nada se pierda entre briefing y entrega. Texto de relleno — reemplazar.",
+    photo: "/images/team-karen.webp",
+    bio: "Profesional de Marketing apasionada por transformar insights en estrategias y estrategias en acciones. Cuenta con experiencia en investigación de mercados, estrategia comercial, gestión de categorías y desarrollo de campañas, combinando pensamiento analítico, creatividad y orientación a resultados. Actualmente cursa una Maestría en Marketing en la University of Denver.",
   },
   {
-    name: "Victor Reyes",
-    role: "Director de arte",
-    photo: "/images/team-victor.png",
-    bio: "Placeholder. Marca el lenguaje visual de cada pieza: dirección de arte, sistemas y look que hacen reconocible a la marca. Texto de relleno — reemplazar.",
+    name: "Heriberto García",
+    role: "Web Master Leader",
+    photo: "/images/team-heriberto.webp",
+    bio: "Ingeniero en Sistemas con más de diez años de experiencia creando soluciones y experiencias digitales de alto impacto. Especialista en desarrollo web, diseño UX/UI, optimización de conversiones y comercio electrónico. Su enfoque combina eficiencia, escalabilidad y análisis de datos para desarrollar plataformas funcionales, intuitivas y orientadas a resultados. Impulsa procesos de innovación y transformación digital que fortalecen el crecimiento, la competitividad y el rendimiento empresarial.",
   },
   {
     name: "Chemel Pulido",
     role: "Creativo",
-    photo: "/images/team-chemel.png",
-    bio: "Placeholder. Conceptos, campañas y piezas que convierten una idea en algo imposible de ignorar. Texto de relleno para la bio — reemplazar por el copy real.",
+    photo: "/images/team-chemel.webp",
+    bio: "Director de arte y creativo con amplia trayectoria en diseño, conceptualización y dirección visual. Admirador de la buena publicidad, desarrolla briefs sólidos y propuestas estratégicas basadas en un análisis profundo, integrando calidad narrativa, gráfica y funcionalidad. Reconocido con plata en Cannes Young Lions Dominicana 2022, combina liderazgo y colaboración. Ha creado campañas para sectores financiero, telecomunicaciones, automotriz, bienes raíces y plataformas digitales de alto impacto.",
+  },
+  {
+    name: "Victor Reyes",
+    role: "Director de arte",
+    photo: "/images/team-victor.webp",
+    bio: "Modelador 3D con perfil tecnocreativo, especializado en desarrollar piezas de alta calidad, detalle y excelencia visual. Combina dominio técnico, sensibilidad estética y afinidad por la tecnología, el hardware y la cultura geek. Ha creado un banco propio de mobiliario detallado y comercializado sus recursos digitalmente. Explora inteligencia artificial, animación, personajes y branding premium, integrando Smart Home y estética gamer con enfoque innovador, estratégico y rentable.",
   },
   {
     name: "Juan Traña",
     role: "Diseñador audiovisual",
-    photo: "/images/team-juan.png",
-    bio: "Placeholder. Motion, video y piezas audiovisuales para campañas y contenido. Texto de relleno para la bio — reemplazar por el copy real.",
+    photo: "/images/team-juan.webp",
+    bio: "Diseñador gráfico senior, ilustrador y animador 2D especializado en Motion Graphics, con 14 años de experiencia en agencias líderes del sector creativo. Posee una sólida trayectoria en diseño visual, comunicación estratégica y producción audiovisual, creando piezas de alto impacto para marcas, campañas publicitarias y proyectos multiplataforma. Destaca por su rigor, atención al detalle y coherencia visual, integrando creatividad y estrategia para fortalecer posicionamiento de marca.",
   },
   {
-    name: "Elizbeth Altamirano",
+    name: "Elizabeth Altamirano",
     role: "Content manager",
-    photo: "/images/team-elizbeth.png",
-    bio: "Placeholder. Planifica y produce el contenido que mantiene a la marca presente, con criterio y consistencia. Texto de relleno — reemplazar.",
+    photo: "/images/team-elizabeth.webp",
+    bio: "Licenciada en Comunicación especializada en estrategias de contenido y gestión de campañas en Meta Ads. Cuenta con experiencia en segmentación, análisis de métricas y optimización de resultados, utilizando datos para impulsar el crecimiento de marcas digitales. Se distingue por integrar creatividad, innovación y análisis estratégico, manteniéndose actualizada en tendencias de marketing digital para desarrollar campañas efectivas, relevantes y orientadas al logro de resultados.",
   },
   {
     name: "Manuel Miranda",
     role: "Pauta digital",
-    photo: "/images/team-manuel.png",
-    bio: "Placeholder. Media buying y pauta: presupuesto, audiencias y medición para que la inversión rinda. Texto de relleno — reemplazar por el copy real.",
+    photo: "/images/team-manuel.webp",
+    bio: "Senior Performance Marketing Analyst con más de cuatro años de experiencia en marketing digital para clientes enterprise de México y Latinoamérica. Especializado en Google Ads y Meta, ha gestionado inversiones mensuales superiores a USD 650 mil, priorizando eficiencia, escalabilidad y resultados. Desarrolla automatizaciones mediante Google Ads Scripts y Apps Script, optimizando procesos y cuentas. También aporta liderazgo, mentoría y análisis estratégico con datos para crecer.",
   },
 ];
 
@@ -114,7 +120,7 @@ export default function AboutUs() {
       id="aboutus"
       className="py-24 md:py-32 bg-background border-b border-border"
     >
-      <div className="wrap">
+      <div className="wrap max-w-[1217px] mx-auto">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -124,7 +130,9 @@ export default function AboutUs() {
         >
           <div className="@container min-w-0 w-full mb-8 md:mb-10">
             <h2 className="font-display display-title font-black tracking-tight text-primary">
-              NUESTRO EQUIPO
+              VPER MEDIA
+              <br />
+              EQUIPO
             </h2>
           </div>
           <p className="text-sm md:text-base text-foreground font-medium leading-relaxed max-w-2xl mx-auto">
@@ -142,7 +150,7 @@ export default function AboutUs() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
+          className="grid min-w-0 grid-cols-1 md:grid-cols-3 gap-6 md:gap-8"
         >
           {team.map((member) => (
             <TeamMemberCard key={member.name} {...member} />

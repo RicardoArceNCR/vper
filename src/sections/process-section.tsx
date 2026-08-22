@@ -9,31 +9,31 @@ const processSteps = [
     id: 1,
     title: "INVESTIGACIÓN",
     desc: "Analizamos tu mercado, audiencia y competencia para trazar la ruta.",
-    icon: "/images/process-investigacion.png?v=7",
+    icon: "/images/process-investigacion.webp",
   },
   {
     id: 2,
     title: "ESTRATEGIA",
     desc: "Definimos el plan de acción táctico y los objetivos clave.",
-    icon: "/images/process-estrategia.png?v=7",
+    icon: "/images/process-estrategia.webp",
   },
   {
     id: 3,
     title: "DISEÑO",
     desc: "Damos vida visual a la estrategia con conceptos innovadores.",
-    icon: "/images/process-diseno.png?v=7",
+    icon: "/images/process-diseno.webp",
   },
   {
     id: 4,
     title: "DESARROLLO",
     desc: "Implementamos las soluciones con la tecnología más avanzada.",
-    icon: "/images/process-desarrollo.png?v=7",
+    icon: "/images/process-desarrollo.webp",
   },
   {
     id: 5,
     title: "ENTREGA",
     desc: "Lanzamos el proyecto y medimos su impacto continuo.",
-    icon: "/images/process-entrega.png?v=7",
+    icon: "/images/process-entrega.webp",
   },
 ];
 
