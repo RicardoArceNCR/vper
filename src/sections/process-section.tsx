@@ -7,32 +7,32 @@ import SectionHeader from "@/components/section-header";
 const processSteps = [
   {
     id: 1,
-    title: "INVESTIGACIÓN",
-    desc: "Analizamos tu mercado, audiencia y competencia para trazar la ruta.",
+    title: "PREGUNTAR",
+    desc: "Todo empieza con preguntas. Algunas cómodas, otras bastante menos. Entendemos la marca, el mercado y las personas hasta encontrar el reto que realmente vale resolver.",
     icon: "/images/process-investigacion.webp",
   },
   {
     id: 2,
-    title: "ESTRATEGIA",
-    desc: "Definimos el plan de acción táctico y los objetivos clave.",
+    title: "PENSAR",
+    desc: "Juntamos datos, experiencia e intuición hasta encontrar una dirección clara. Porque una gran idea también necesita saber hacia dónde va.",
     icon: "/images/process-estrategia.webp",
   },
   {
     id: 3,
-    title: "DISEÑO",
-    desc: "Damos vida visual a la estrategia con conceptos innovadores.",
+    title: "CREAR",
+    desc: "Acá la estrategia deja de ser una presentación. La convertimos en una idea con voz, forma y suficiente personalidad para salir al mundo.",
     icon: "/images/process-diseno.webp",
   },
   {
     id: 4,
-    title: "DESARROLLO",
-    desc: "Implementamos las soluciones con la tecnología más avanzada.",
+    title: "HACER",
+    desc: "Una gran idea merece una gran ejecución. La producimos, adaptamos y llevamos a cada lugar donde tenga algo importante que hacer.",
     icon: "/images/process-desarrollo.webp",
   },
   {
     id: 5,
-    title: "ENTREGA",
-    desc: "Lanzamos el proyecto y medimos su impacto continuo.",
+    title: "APRENDER",
+    desc: "Publicamos, medimos, escuchamos y aprendemos. Cada proyecto nos deja algo que hace que la próxima idea empiece un poco más adelante.",
     icon: "/images/process-entrega.webp",
   },
 ];
@@ -44,9 +44,15 @@ export default function ProcessSection() {
         <div className="mb-20">
           <SectionHeader
             eyebrow="METODOLOGÍA"
-            title="NUESTRO PROCESO."
-            description="Campañas, contenido y experiencias que convierten. Cómo trabajamos para garantizar el éxito de tu proyecto."
+            title="LA MAGIA TIENE MÉTODO."
+            description="Y si no, preguntale a Houdini."
+            titleClassName="text-primary"
           />
+          <p className="text-sm md:text-base text-muted-foreground font-medium mt-10 md:mt-12 max-w-3xl">
+            Detrás de cada idea que parece simple hay preguntas, estrategia, criterio,
+            ejecución y unas cuantas vueltas más. Así convertimos un reto en algo que valga
+            la pena crear.
+          </p>
         </div>
 
         <motion.div
@@ -81,7 +87,7 @@ export default function ProcessSection() {
                 <h3 className="text-base md:text-lg font-bold tracking-wider text-foreground mb-1 md:mb-3 uppercase group-hover:text-primary transition-colors break-words">
                   {step.title}
                 </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed font-medium md:max-w-[200px]">
+                <p className="text-sm text-muted-foreground leading-relaxed font-medium">
                   {step.desc}
                 </p>
               </div>

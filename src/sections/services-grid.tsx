@@ -23,13 +23,9 @@ export default function ServicesGrid() {
         <div className="mb-16 md:mb-20">
           <SectionHeader
             eyebrow="SERVICIOS"
-            title={
-              <>
-                <span className="block">ESTRATEGIA.</span>
-                <span className="mt-[0.2em] block">DISEÑO. IMPACTO.</span>
-              </>
-            }
-            titleClassName="leading-[1.2]"
+            title="Una buena idea necesita más que una chispa."
+            description="Estrategia para guiarla, creatividad para darle forma, digital y medios para moverla, y producción para hacerla realidad."
+            titleClassName="uppercase text-primary"
             align="center"
           />
         </div>

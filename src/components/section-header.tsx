@@ -31,7 +31,7 @@ export default function SectionHeader({
       className={cn(
         "flex min-w-0",
         centered
-          ? "flex-col items-center text-center"
+          ? "flex-col items-center text-center gap-6"
           : "flex-col lg:flex-row lg:items-center gap-6 lg:gap-10",
       )}
     >
@@ -58,7 +58,7 @@ export default function SectionHeader({
         <p
           className={cn(
             "text-sm md:text-base text-muted-foreground font-medium min-w-0",
-            !centered && "lg:basis-1/3 lg:shrink-0 lg:mt-8",
+            centered ? "max-w-2xl" : "lg:basis-1/3 lg:shrink-0 lg:mt-8",
           )}
         >
           {description}

@@ -9,9 +9,9 @@ import type { Metadata } from "next";
 import { fontBody, fontMono } from "@ui/lib/fonts";
 
 export const metadata: Metadata = {
-  title: "VPER Media — No hacemos marketing, hacemos que tenga sentido.",
+  title: "VPER Media — Siempre hay algo más grande por crear.",
   description:
-    "Campañas, contenido y experiencias que convierten. Estrategia de marca, diseño e impacto digital.",
+    "Las buenas ideas tienen un pequeño problema: nunca se quedan quietas. Las convertimos en campañas, contenido y experiencias para descubrir hasta dónde pueden llegar.",
 };
 
 // Anti-FOUC de dark mode, mismo truco que misitio: se decide la clase .dark

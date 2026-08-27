@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, Linkedin } from "lucide-react";
+import { Facebook, Instagram, Linkedin } from "lucide-react";
 import { FOOTER_NAV_ITEMS } from "@/lib/navigation";
 
 const LOGO = "/images/logo-vper-media.svg";
@@ -24,13 +24,18 @@ export default function Footer() {
                   que usa Header), no una recreación tipográfica aparte. */}
               <img src={LOGO} alt="VPER Media" className="h-8 md:h-9 w-auto mb-6" />
               <p className="text-xs text-[var(--footer-text)] leading-relaxed font-medium mb-6 max-w-xs text-center md:text-left">
-                Campañas, contenido y experiencias que convierten. Transformamos marcas y aceleramos el crecimiento digital.
+                Creamos. Aprendemos. Volvemos a crear.
+                <br />
+                Siempre hay algo más grande por crear.
               </p>
               <div className="flex gap-4">
-                <a href="https://instagram.com" target="_blank" rel="noreferrer" className="w-8 h-8 border border-[var(--border-strong)] rounded-full flex items-center justify-center text-[var(--text-primary)] hover:text-primary hover:border-primary/20 hover:scale-110 transition-all duration-300">
+                <a href="https://www.facebook.com/profile.php?id=61587696818975" target="_blank" rel="noreferrer" aria-label="Facebook" className="w-8 h-8 border border-[var(--border-strong)] rounded-full flex items-center justify-center text-[var(--text-primary)] hover:text-primary hover:border-primary/20 hover:scale-110 transition-all duration-300">
+                  <Facebook size={14} />
+                </a>
+                <a href="https://www.instagram.com/vpermedia/" target="_blank" rel="noreferrer" aria-label="Instagram" className="w-8 h-8 border border-[var(--border-strong)] rounded-full flex items-center justify-center text-[var(--text-primary)] hover:text-primary hover:border-primary/20 hover:scale-110 transition-all duration-300">
                   <Instagram size={14} />
                 </a>
-                <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="w-8 h-8 border border-[var(--border-strong)] rounded-full flex items-center justify-center text-[var(--text-primary)] hover:text-primary hover:border-primary/20 hover:scale-110 transition-all duration-300">
+                <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="w-8 h-8 border border-[var(--border-strong)] rounded-full flex items-center justify-center text-[var(--text-primary)] hover:text-primary hover:border-primary/20 hover:scale-110 transition-all duration-300">
                   <Linkedin size={14} />
                 </a>
               </div>

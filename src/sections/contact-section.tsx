@@ -28,9 +28,9 @@ export default function ContactSection() {
             className="@container min-w-0"
           >
             <span className="text-xs font-bold tracking-[0.3em] text-primary mb-4 block">HABLEMOS</span>
-            <h2 className="font-display display-title font-black tracking-tight mb-6">CONTÁCTANOS.</h2>
+            <h2 className="font-display display-title font-black tracking-tight mb-6">¿QUÉ CREAMOS AHORA?</h2>
             <p className="text-sm md:text-base text-muted-foreground leading-relaxed font-medium mb-12 max-w-md">
-              ¿Tienes un proyecto en mente o quieres potenciar tu marca? Completa el formulario y nos pondremos en contacto contigo lo antes posible.
+              Si tenés un proyecto, una marca o apenas una idea dando vueltas, contanos. Las cosas grandes suelen empezar con una conversación.
             </p>
 
             <div className="flex flex-col gap-6">
@@ -111,7 +111,7 @@ export default function ContactSection() {
                 type="submit"
                 className="h-12 transition-all duration-300 hover:translate-y-[-2px] shadow-[0_4px_20px_color-mix(in_srgb,var(--brand-main)_20%,transparent)] hover:shadow-[0_8px_30px_color-mix(in_srgb,var(--brand-main)_40%,transparent)]"
               >
-                ENVIAR
+                EMPECEMOS
               </Button>
             </form>
           </motion.div>

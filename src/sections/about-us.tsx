@@ -129,19 +129,22 @@ export default function AboutUs() {
           className="text-center mb-12 md:mb-16"
         >
           <div className="@container min-w-0 w-full mb-8 md:mb-10">
+            <span className="text-xs font-bold tracking-[0.3em] text-primary mb-4 block">
+              NOSOTROS
+            </span>
             <h2 className="font-display display-title font-black tracking-tight text-primary">
-              VPER MEDIA
+              CINCO DIRECTORES.
               <br />
-              EQUIPO
+              MUCHAS IDEAS.
+              <br />
+              UNA SOLA DIRECCIÓN.
             </h2>
           </div>
           <p className="text-sm md:text-base text-foreground font-medium leading-relaxed max-w-2xl mx-auto">
-            El marketing no falla por falta de ideas, falla por falta de
-            estructura. Muchas marcas operan con áreas desconectadas, lo que
-            genera decisiones aisladas, ejecución inconsistente y pérdida de
-            eficiencia. Por eso, diseñamos un equipo donde cada rol cumple una
-            función crítica dentro del proceso, asegurando dirección, coherencia
-            y control en cada decisión.
+            Estrategia, creatividad, arte, digital y cuentas pensando desde
+            lugares distintos para llegar al mismo lugar: una idea más grande.
+            Porque cuando juntás buenas cabezas alrededor de una mesa, siempre
+            termina pasando algo interesante.
           </p>
         </motion.div>
 

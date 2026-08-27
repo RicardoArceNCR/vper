@@ -25,9 +25,24 @@ import { getFeaturedWorkItems } from "@/lib/work-items";
 // Se calcula una vez, en módulo: la curaduría no cambia entre renders.
 const featured = getFeaturedWorkItems();
 
-const SECTION_TITLE = "PROYECTOS SELECCIONADOS.";
+const SECTION_TITLE = (
+  <>
+    {/* Setup a 30px, golpe a 60px (afinado 2026-08-26). El min() con cqi
+        conserva la proporción 1:2 cuando el contenedor se estrecha —
+        ENSEÑÁRTELA a 60px fijos se sale en un 375. El leading lo hereda
+        de .display-title (0.95 / 1): el aire ENTRE blanca y amarilla no
+        es line-height, es este mt — las dos frases son bloques distintos. */}
+    <span className="block [font-size:min(30px,calc(100cqi/26.8))]">
+      Podríamos hablar horas de creatividad.
+    </span>
+    <span className="mt-[0.3em] block text-primary [font-size:min(60px,calc(100cqi/13.4))]">
+      Preferimos enseñártela.
+    </span>
+  </>
+);
 const SECTION_DESCRIPTION =
-  "Campañas, contenido y experiencias que convierten. Una selección de lo último; el archivo completo está en la página de proyectos.";
+  "Una selección de retos que se convirtieron en ideas. Y de ideas que terminaron siendo mucho más.";
+const SECTION_TITLE_CLASS = "uppercase";
 
 // El link al archivo. Comparte la fila con la barra de progreso en vez
 // de sumar altura propia: dentro de un sticky h-screen, cada bloque
@@ -84,6 +99,7 @@ export default function WorkGallery() {
             eyebrow="PORTAFOLIO"
             title={SECTION_TITLE}
             description={SECTION_DESCRIPTION}
+            titleClassName={SECTION_TITLE_CLASS}
           />
         </div>
         <div className="wrap flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4">
@@ -115,6 +131,7 @@ export default function WorkGallery() {
             eyebrow="PORTAFOLIO"
             title={SECTION_TITLE}
             description={SECTION_DESCRIPTION}
+            titleClassName={SECTION_TITLE_CLASS}
           />
         </div>
 

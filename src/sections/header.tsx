@@ -156,7 +156,7 @@ export default function Header() {
             </nav>
             <ThemeToggle />
             <Button variant="default" size="sm" asChild>
-              <Link href="/#contact">Agenda una cita</Link>
+              <Link href="/#contact">¿NOS REUNIMOS?</Link>
             </Button>
           </div>
 
@@ -230,7 +230,7 @@ export default function Header() {
             >
               <Button variant="default" size="lg" asChild>
                 <Link href="/#contact" onClick={() => setMobileMenuOpen(false)}>
-                  Agenda una cita
+                  ¿NOS REUNIMOS?
                 </Link>
               </Button>
               <ThemeToggle />

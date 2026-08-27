@@ -20,37 +20,37 @@
 export const SERVICES = [
   {
     name: "Creatividad",
-    desc: "Ideas y conceptos que hacen que una marca sea imposible de ignorar.",
+    desc: "Las ideas pueden cambiar una conversación, una percepción o una marca entera. Creamos con esa ambición.",
     icon: "/images/service-creatividad.png",
     iconBg: "var(--color-main-200)",
   },
   {
     name: "Branding",
-    desc: "Identidad visual, sistemas y piezas que hacen reconocible a la marca en cada punto de contacto.",
+    desc: "Construimos marcas con personalidad propia. De esas que reconocés antes de terminar de verlas.",
     icon: "/images/service-branding.png",
     iconBg: "var(--color-info-300)",
   },
   {
     name: "Digital",
-    desc: "Presencia digital, performance y contenido pensado para convertir, no solo para verse bien.",
+    desc: "Ideas, contenido, medios y datos moviéndose a la velocidad de la gente. Porque el mundo digital cambia todos los días. Nosotros también.",
     icon: "/images/service-digital.png",
     iconBg: "var(--color-leaf-200)",
   },
   {
     name: "Planeación Estratégica",
-    desc: "La ruta antes de la ejecución: research, objetivos y el plan que sostiene toda la campaña.",
+    desc: "Encontramos el problema detrás del problema. Después ponemos estrategia, criterio y una buena cantidad de preguntas sobre la mesa.",
     icon: "/images/service-planeacion.png",
     iconBg: "var(--color-leaf-200)",
   },
   {
     name: "Audiovisual",
-    desc: "Producción de video y fotografía que le da cara y voz a cada historia de marca.",
+    desc: "Convertimos ideas en historias que se ven, se escuchan y se sienten. Porque algunas cosas simplemente necesitan cobrar vida.",
     icon: "/images/service-audiovisual.png",
     iconBg: "var(--color-main-200)",
   },
   {
     name: "ATL & BTL",
-    desc: "Estrategias ATL y BTL que conectan tu marca con la audiencia correcta, en el canal correcto.",
+    desc: "Ponemos las ideas donde realmente pueden pasar cosas: medios, calles, eventos, experiencias y cualquier lugar donde esté la gente.",
     icon: "/images/service-atl.png",
     iconBg: "var(--color-info-300)",
   },
