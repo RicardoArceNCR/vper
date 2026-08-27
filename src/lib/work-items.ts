@@ -1,32 +1,57 @@
-// Fuente única de proyectos — la home (WorkGallery) y el detalle
-// (app/work/[slug]) leen del MISMO array. Antes WorkGallery tenía estos 4
-// proyectos hardcodeados dentro del componente; al sumar páginas de
-// detalle eso hubiera significado mantener título/categoría/imágenes
-// sincronizados a mano en dos lugares. Con esto, un solo lugar de verdad.
+// Fuente única de proyectos — las TRES superficies leen del MISMO array:
+// la vitrina de la home (WorkGallery, los 4 con `homeOrder`), el índice
+// completo (app/work) y el detalle (app/work/[slug]). Antes WorkGallery
+// tenía sus proyectos hardcodeados dentro del componente; al sumar
+// páginas de detalle eso hubiera significado mantener título/categoría/
+// imágenes sincronizados a mano en dos lugares. Con esto, un solo lugar
+// de verdad — y el índice nuevo no agregó una cuarta lista.
 //
-// CONTENIDO (actualizado 2026-08-18): los 5 proyectos son reales —
+// CONTENIDO (actualizado 2026-08-26): los 6 proyectos son reales —
 // láminas del cliente, copy en español. Fecha y país quedan pendientes
-// donde el material no lo confirma. Los 3 placeholders (Experiencia
-// digital, Dirección creativa, Contenido social) se sacaron el mismo día.
+// donde el material no lo confirma; desde 2026-08-26 eso significa
+// campo ausente, no la cadena "pendiente de confirmar" en pantalla. Los
+// 3 placeholders (Experiencia digital, Dirección creativa, Contenido
+// social) se sacaron el 2026-08-18.
 //
 // IMÁGENES: cada proyecto real trae su propio set en public/images
 // (toma-tola-*, netforemost-*, vida-nica-*, monumental-humidors-*,
-// oh-la-lashes-*), sin reutilizar fotos de otras secciones.
+// oh-la-lashes-*, wok-*), sin reutilizar fotos de otras secciones.
 //
 // VIDEO: el tipo "video" está soportado end-to-end (ver ProjectHero), pero
 // ningún proyecto lo usa todavía porque no hay ningún .mp4 real en
 // public/ — deuda de contenido, no de código.
 //
-// CATEGORIES: se remapearon a los 6 servicios reales de VPER (ATL & BTL,
-// Creatividad, Digital, Planeación Estratégica, Audiovisual, Eventos —
-// ver ServicesGrid) en vez de las categorías inventadas que tenía antes
-// esta demo (Brand Strategy, UX/UI Design, etc.), para que el tag de cada
-// proyecto corresponda a un servicio que el sitio realmente ofrece.
+// CATEGORIES: son los servicios reales de VPER, no categorías inventadas
+// como las de la demo original (Brand Strategy, UX/UI Design...), para
+// que el tag de cada proyecto corresponda a un servicio que el sitio de
+// verdad ofrece. Desde 2026-08-26 la lista NO se repite acá: vive en
+// lib/services.ts y el tipo `ServiceName` se deriva de ahí. Este
+// comentario listaba seis nombres a mano y ya había quedado desfasado —
+// decía "Eventos" cuando el grid hacía rato mostraba "Branding".
+
+import type { ServiceName } from "@/lib/services";
 
 // "span" (full/half/third) se sacó 2026-08-12: ProjectGallery pasó de un
 // grid multi-columna con object-cover (recortaba fotos reales) a una sola
 // columna con cada imagen a su alto natural — ya no hay nada que "span"
 // pudiera controlar. Ver comentario en project-gallery.tsx.
+// SECTOR (2026-08-26): el eje que de verdad parte este portafolio. Los
+// seis casos son seis sectores distintos, sin solapamiento — a
+// diferencia de `categories`, donde "Creatividad" está en los seis y por
+// lo tanto no separa nada. Es también el eje que un prospecto usa de
+// verdad ("¿han hecho algo de comida?"). Se agrega ahora, con seis
+// casos, porque con veinte es arqueología.
+export const SECTORS = [
+  "Bebidas",
+  "Tecnología",
+  "Bienes raíces",
+  "Puros",
+  "Estética",
+  "Restaurantes",
+] as const;
+
+export type Sector = (typeof SECTORS)[number];
+
 export interface GalleryImage {
   src: string;
   alt: string;
@@ -36,13 +61,32 @@ export interface WorkItem {
   slug: string;
   title: string;
   subtitle: string;
-  categories: string[];
+  // Vocabulario cerrado: los servicios que el sitio realmente ofrece
+  // (ver lib/services.ts). Era `string[]` — un typo creaba una categoría
+  // nueva y TypeScript aplaudía.
+  categories: ServiceName[];
+  sector: Sector;
   client: string;
-  date: string;
-  country: string;
+  // Opcionales A PROPÓSITO (2026-08-26). Antes eran obligatorios y los
+  // casos sin dato confirmado guardaban la cadena "Fecha pendiente de
+  // confirmar", que se imprimía tal cual en la ficha: una nota interna
+  // honesta que en pantalla se leía como una agencia que no sabe cuándo
+  // hizo su propio trabajo. Ahora el campo que falta simplemente no se
+  // renderiza (ver work/[slug]/page.tsx) y el pendiente queda anotado
+  // donde corresponde: en el comentario del proyecto.
+  date?: string;
+  country?: string;
   description: string;
   hero: { type: "image" | "video"; src: string; poster?: string };
   gallery: GalleryImage[];
+  // Presencia = el proyecto va en la vitrina de la home; el valor = su
+  // posición en el track. Un solo campo en vez de `featured` +
+  // `homeOrder` por separado, que se pueden contradecir.
+  //
+  // POR QUÉ NO `slice(0, 4)`: este array está en orden de llegada, así
+  // que cortar por posición dejaría afuera a WOK — el más nuevo y el
+  // mejor terminado. La home es curaduría, no cronología.
+  homeOrder?: number;
 }
 
 export const workItems: WorkItem[] = [
@@ -71,8 +115,8 @@ export const workItems: WorkItem[] = [
     title: "TOMATO BREW",
     subtitle: "Toma-Tola",
     categories: ["Creatividad", "Audiovisual"],
+    sector: "Bebidas",
     client: "Toma-Tola",
-    date: "Fecha pendiente de confirmar",
     country: "Estados Unidos",
     description:
       "Toma Tola nació de una pregunta sencilla: ¿por qué el jugo de tomate debería sentirse como una opción secundaria? Queríamos crear algo que funcionara como un verdadero ingrediente esencial en la cocina, no como una bebida de una sola dimensión. Por eso lo elaboramos como una receta, con vegetales, lima fresca, hierbas y un final limpio y sabroso. Producido en pequeños lotes, lo perfeccionamos como lo harías en casa: ajustar, equilibrar y repetir. El objetivo siempre fue ofrecer sabor auténtico, ingredientes simples y un producto que quisieras tener siempre a mano. Así, Toma Tola se convirtió en tomate elevado a otro nivel, creado para ir mucho más allá del vaso.\n\nA medida que la marca creció, desarrollamos distintas versiones sin perder nuestra esencia. Simply Delicious ofrece un sabor suave, sabroso y sin picante; Low Sodium Simply Delicious mantiene ese mismo perfil con menos sodio; Originally Delicious es nuestra versión clásica, equilibrada y llena de sabor; y Deliciously Hot aporta un toque más intenso para quienes disfrutan el picante. Podés disfrutar Toma Tola solo, con hielo, en cócteles, marinados, sopas o en cualquier preparación que necesite una base sabrosa.",
@@ -97,6 +141,7 @@ export const workItems: WorkItem[] = [
       { src: "/images/toma-tola-12.webp", alt: "Toma-Tola — collage de marca en uso: consumo, cooler, gorra, sitio web (12)" },
       { src: "/images/toma-tola-13.webp", alt: "Toma-Tola — lámina de cierre de presentación (13)" },
     ],
+    homeOrder: 2,
   },
   {
     // Segundo proyecto real (2026-08-18). Copy original en inglés,
@@ -106,9 +151,8 @@ export const workItems: WorkItem[] = [
     title: "NETFOREMOST",
     subtitle: "Equipos nativos en IA",
     categories: ["Creatividad", "Digital"],
+    sector: "Tecnología",
     client: "NetForemost",
-    date: "Fecha pendiente de confirmar",
-    country: "País pendiente de confirmar",
     description:
       "Construye software más rápido con equipos de delivery nativos en IA.\n\nNetForemost ofrece diseño de producto, desarrollo de software, QA y gestión de proyectos para empresas que necesitan los roles, el proceso y la experiencia tecnológica adecuados para alcanzar sus objetivos de software.",
     hero: { type: "image", src: "/images/netforemost-hero.webp" },
@@ -130,6 +174,7 @@ export const workItems: WorkItem[] = [
       { src: "/images/netforemost-12.webp", alt: "NetForemost — retrato desarrollo nativo en IA (12)" },
       { src: "/images/netforemost-13.webp", alt: "NetForemost — cierre de presentación, Gracias (13)" },
     ],
+    homeOrder: 4,
   },
   {
     // Tercer proyecto real (2026-08-18). Láminas VIDA_NICA_BRANDING-01 y
@@ -143,8 +188,8 @@ export const workItems: WorkItem[] = [
     title: "VIDA NICA",
     subtitle: "Bienes raíces",
     categories: ["Creatividad", "Digital"],
+    sector: "Bienes raíces",
     client: "Vida Nica",
-    date: "Fecha pendiente de confirmar",
     country: "Nicaragua",
     description:
       "En Vida Nica Bienes Raíces, transformamos la manera en que inviertes en Nicaragua, ofreciendo oportunidades exclusivas en bienes raíces con un servicio transparente, profesional y personalizado.\n\nNos especializamos en conectar a inversionistas nacionales e internacionales con propiedades de alto valor, asegurando experiencias de compra, venta y alquiler que reflejen confianza, calidad y crecimiento.\n\nNuestra identidad está arraigada en la esencia de Nicaragua: su cultura vibrante, su riqueza natural y su potencial de desarrollo. Con una imagen moderna y sofisticada, brindamos soluciones inmobiliarias estratégicas que garantizan bienestar, rentabilidad y una inversión segura en el mercado nicaragüense.\n\nVida Nica: donde la exclusividad y la confianza construyen tu futuro.",
@@ -166,6 +211,7 @@ export const workItems: WorkItem[] = [
       { src: "/images/vida-nica-12.webp", alt: "Vida Nica — papelería corporativa (12)" },
       { src: "/images/vida-nica-13.webp", alt: "Vida Nica — cierre de presentación, Gracias (13)" },
     ],
+    homeOrder: 3,
   },
   {
     // Cuarto proyecto real (2026-08-18). Láminas
@@ -180,6 +226,7 @@ export const workItems: WorkItem[] = [
     title: "MONUMENTAL",
     subtitle: "Humidores",
     categories: ["Creatividad", "Audiovisual"],
+    sector: "Puros",
     client: "Monumental Humidors",
     date: "2019",
     country: "Cuba",
@@ -213,8 +260,8 @@ export const workItems: WorkItem[] = [
     title: "LA LASHES",
     subtitle: "Clínica estética",
     categories: ["Creatividad", "Digital"],
+    sector: "Estética",
     client: "Oh! La Lashes",
-    date: "Fecha pendiente de confirmar",
     country: "Nicaragua",
     description:
       "En Oh! La Lashes tenemos una clara misión: destacar lo más hermoso de ti y garantizar que tu imagen y presencia refleje con claridad toda la belleza que emana desde tu interior.\n\nContamos con una amplia gama de servicios de belleza y estética, personal altamente calificado, certificaciones internacionales y servicio de la más alta calidad.",
@@ -236,24 +283,91 @@ export const workItems: WorkItem[] = [
       { src: "/images/oh-la-lashes-13.webp", alt: "Oh! La Lashes — cierre de presentación, Gracias (13)" },
     ],
   },
+  {
+    // Sexto proyecto real (2026-08-26). Láminas WOK BRANDGUIDE-01 y
+    // -03 a -13 (no hay -02). Copy del cliente en español; se corrigió
+    // el "l" suelto de "han sido l transmitidos" y se espaciaron los
+    // guiones de Chuánchéng. Categorías: Creatividad (identidad: logo
+    // vertical/horizontal/isotipo, paleta, Gang of Three, ilustración,
+    // texturas, merch, empaque) + Audiovisual (fotografía de producto
+    // en afiches 10 y 11). Las piezas de redes (08) son Digital, una
+    // lámina de doce — no alcanza para el tag, mismo criterio que el
+    // tótem de Vida Nica. País: Nicaragua está en el copy ("se comparte
+    // con Nicaragua") y en la dirección del empaque (Las Colinas) — no
+    // es una suposición.
+    slug: "wok",
+    title: "WOK",
+    subtitle: "Cocina cantonesa",
+    categories: ["Creatividad", "Audiovisual"],
+    sector: "Restaurantes",
+    client: "WOK Cantonese Kitchen",
+    country: "Nicaragua",
+    description:
+      "WOK nace de una herencia familiar con raíces chinas y del deseo de preservar lo mejor de la cocina cantonesa. Durante generaciones, técnicas, sabores y conocimientos han sido transmitidos dentro de la familia, manteniendo viva una tradición que hoy se comparte con Nicaragua.\n\nInspirados en el concepto chino Chuánchéng — recibir, preservar y transmitir un legado —, cada platillo se prepara con respeto, calidad y pasión. Cada platillo es una forma de transmitir cultura, contar una historia y mantener vivo aquello que una familia ha conservado durante generaciones.\n\nPorque para nosotros cocinar no es solamente servir comida. Es compartir nuestro legado.",
+    hero: { type: "image", src: "/images/wok-hero.webp" },
+    // Galería en el orden original (01, 03–13). El hero de la card es el
+    // mockup de interior (lámina 12), no la -01: la portada de mármol
+    // queda pálida al recorte 16/10 de la home; el letrero con faroles
+    // lee mejor como miniatura, mismo criterio que Monumental (pin) y
+    // Oh! La Lashes (redes).
+    gallery: [
+      { src: "/images/wok-01.webp", alt: "WOK — logo vertical sobre mármol con bambú (01)" },
+      { src: "/images/wok-03.webp", alt: "WOK — paleta de color y tipografía Gang of Three (03)" },
+      { src: "/images/wok-04.webp", alt: "WOK — variantes de logo: isotipo, horizontal y vertical (04)" },
+      { src: "/images/wok-05.webp", alt: "WOK — lámina de texturas de marca (05)" },
+      { src: "/images/wok-06.webp", alt: "WOK — sistema de ilustración: neko, wok, baozi, farol, dragón (06)" },
+      { src: "/images/wok-07.webp", alt: "WOK — merch, camisetas dragón y maneki-neko (07)" },
+      { src: "/images/wok-08.webp", alt: "WOK — piezas para redes: 2x1, abiertos, baozi (08)" },
+      { src: "/images/wok-09.webp", alt: "WOK — mockup de caja para llevar (09)" },
+      { src: "/images/wok-10.webp", alt: "WOK — afiches Una tradición que continúa / Hecho al wok (10)" },
+      { src: "/images/wok-11.webp", alt: "WOK — afiches Hay sabores que te hacen volver / De nuestra familia a tu mesa (11)" },
+      { src: "/images/wok-12.webp", alt: "WOK — mockup de interior con letrero y faroles (12)" },
+      { src: "/images/wok-13.webp", alt: "WOK — cierre de presentación, Gracias (13)" },
+    ],
+    homeOrder: 1,
+  },
 ];
 
 export function getWorkItem(slug: string): WorkItem | undefined {
   return workItems.find((item) => item.slug === slug);
 }
 
-// Orden = el de workItems (el mismo que la home). Loop: el último
-// apunta al primero, para no dejar un callejón sin salida al pie
-// de Oh! La Lashes.
+// Los 4 de la vitrina de la home, en el orden curado por `homeOrder`.
+// El índice /work sigue leyendo `workItems` completo: la home es un
+// subconjunto de la misma fuente, no una lista aparte.
+export function getFeaturedWorkItems(): WorkItem[] {
+  return workItems
+    .filter(
+      (item): item is WorkItem & { homeOrder: number } =>
+        item.homeOrder !== undefined,
+    )
+    .sort((a, b) => a.homeOrder - b.homeOrder);
+}
+
+// El orden de EXHIBICIÓN del archivo: más reciente primero. `workItems`
+// está en orden de llegada (Toma-Tola fue el primero que se montó, WOK
+// el último), que es un dato de mantenimiento — sirve para leer el
+// archivo como changelog, no para decidir qué ve un visitante primero.
+// Una sola función para que el índice /work y el pager del detalle
+// recorran la MISMA secuencia: si el índice mostrara una y el pager
+// otra, "siguiente" llevaría a un caso que en la lista estaba antes.
+export function getArchiveWorkItems(): WorkItem[] {
+  return [...workItems].reverse();
+}
+
+// Recorre el archivo COMPLETO, no la vitrina: que la home muestre 4 no
+// recorta el pager. Loop: el último apunta al primero, para no dejar un
+// callejón sin salida al pie del último caso.
 export function getAdjacentWorkItems(slug: string): {
   prev: WorkItem;
   next: WorkItem;
 } | null {
-  const i = workItems.findIndex((item) => item.slug === slug);
-  if (i < 0 || workItems.length < 2) return null;
-  const n = workItems.length;
+  const items = getArchiveWorkItems();
+  const i = items.findIndex((item) => item.slug === slug);
+  if (i < 0 || items.length < 2) return null;
+  const n = items.length;
   return {
-    prev: workItems[(i - 1 + n) % n]!,
-    next: workItems[(i + 1) % n]!,
+    prev: items[(i - 1 + n) % n]!,
+    next: items[(i + 1) % n]!,
   };
 }

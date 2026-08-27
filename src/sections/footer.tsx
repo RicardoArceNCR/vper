@@ -1,15 +1,12 @@
+import Link from "next/link";
 import { Instagram, Linkedin } from "lucide-react";
 import { FOOTER_NAV_ITEMS } from "@/lib/navigation";
 
 const LOGO = "/images/logo-vper-media.svg";
 
 const IMAGES = {
-  carlos: "/images/a8de85fcd4970bfcc467c2ef735fe8f8ac7284e1.webp",
-  // TODO: esta imagen (b224891b...) muestra la bandera de Panamá, no una
-  // foto real de Jader — mismo tipo de asset placeholder mal puesto que
-  // ya se encontró en 2 de las cards de WorkGallery (ver sesión anterior).
-  // No lo reemplacé por no tener una foto real para poner en su lugar.
-  jader: "/images/b224891bc5b429bcdf1208e28a163266cde48bf2.webp",
+  carlos: "/images/footer-carlos.jpg",
+  jader: "/images/footer-jader.jpg",
 };
 
 // Sin hooks/motion: puede quedarse como server component.
@@ -42,11 +39,18 @@ export default function Footer() {
             <div className="flex flex-col items-center md:items-start shrink-0">
               <h4 className="font-display text-xs font-bold tracking-widest text-[var(--footer-heading)] mb-6 uppercase">NAVEGACIÓN</h4>
               <ul className="flex flex-col gap-3 items-center md:items-start">
+                {/* Antes: <a href={`#${item.id}`}>. El Header ya tenía
+                    arreglado este mismo bug (el ancla relativa solo
+                    funciona parado en "/"); el footer nunca lo recibió,
+                    así que en /work/[slug] los cinco links no hacían
+                    nada. Ahora el href viene de NAV_ITEMS ya absoluto, y
+                    <Link> en vez de <a> para no tirar la navegación de
+                    cliente en cada click. */}
                 {FOOTER_NAV_ITEMS.map((item) => (
-                  <li key={item.id}>
-                    <a href={`#${item.id}`} className="text-xs text-[var(--footer-text)] hover:text-[var(--footer-link-hover)] transition-colors font-medium">
+                  <li key={item.href}>
+                    <Link href={item.href} className="text-xs text-[var(--footer-text)] hover:text-[var(--footer-link-hover)] transition-colors font-medium">
                       {item.label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>

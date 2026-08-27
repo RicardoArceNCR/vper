@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import Header from "@/sections/header";
 import Footer from "@/sections/footer";
 import ProjectHero from "@/components/project-hero";
@@ -36,6 +38,22 @@ export default async function WorkDetailPage({ params }: Props) {
   if (!item) notFound();
   const adjacent = getAdjacentWorkItems(slug);
 
+  // Ficha de metadata. `date` y `country` son opcionales desde
+  // 2026-08-26: el par que no tiene valor no se renderiza, en vez de
+  // imprimir "Fecha pendiente de confirmar" — una nota interna honesta
+  // que en pantalla se leía como una agencia que no sabe cuándo hizo su
+  // propio trabajo. Se arma acá y no en el JSX para que el filtro tenga
+  // un tipo que TypeScript pueda estrechar de verdad.
+  const facts: [string, string | undefined][] = [
+    ["Cliente", item.client],
+    ["Sector", item.sector],
+    ["Fecha", item.date],
+    ["País", item.country],
+  ];
+  const shownFacts = facts.filter(
+    (fact): fact is [string, string] => Boolean(fact[1]),
+  );
+
   return (
     // Textura de fondo fija (pedido 2026-08-12): bg-background de base +
     // bg-image encima — son propiedades CSS distintas (background-color vs
@@ -67,6 +85,25 @@ export default async function WorkDetailPage({ params }: Props) {
               seguridad para que la última línea respire antes del límite
               real del contenedor. */}
           <aside className="min-w-0 lg:sticky lg:top-24 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto flex flex-col gap-6 lg:pr-2 lg:pb-12">
+            {/* Vuelta al listado (2026-08-26). Hasta que existió /work
+                el detalle no tenía padre: el logo iba a la home y el
+                pager al caso siguiente, así que la única forma de "ver
+                los otros" era salirse del portafolio. Va arriba y no
+                solo al pie porque es una salida, no un siguiente paso —
+                se necesita justo cuando el caso no era el que buscabas. */}
+            <div className="px-4 md:px-0">
+              <Link
+                href="/work"
+                className="group inline-flex items-center gap-2 text-overline-sm font-bold text-muted-foreground hover:text-primary transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm"
+              >
+                <ArrowLeft
+                  size={14}
+                  className="transition-transform duration-300 group-hover:-translate-x-1"
+                />
+                TODOS LOS PROYECTOS
+              </Link>
+            </div>
+
             <div className="flex flex-wrap gap-2 px-4 md:px-0">
               {item.categories.map((category) => (
                 <Pill key={category}>{category}</Pill>
@@ -92,25 +129,21 @@ export default async function WorkDetailPage({ params }: Props) {
                   una sola columna) esto también evita que el lector tenga
                   que pasar el bloque de texto largo antes de llegar a la
                   galería, no solo en desktop. */}
-              <dl className="grid grid-cols-3 gap-3 sm:gap-4 pb-6 mb-6 border-b border-border min-w-0">
-                <div className="min-w-0">
-                  <dt className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1">
-                    Cliente
-                  </dt>
-                  <dd className="text-sm font-bold text-foreground break-words">{item.client}</dd>
-                </div>
-                <div className="min-w-0">
-                  <dt className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1">
-                    Fecha
-                  </dt>
-                  <dd className="text-sm font-bold text-foreground break-words">{item.date}</dd>
-                </div>
-                <div className="min-w-0">
-                  <dt className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1">
-                    País
-                  </dt>
-                  <dd className="text-sm font-bold text-foreground break-words">{item.country}</dd>
-                </div>
+              {/* flex-wrap y no grid-cols-3: el número de pares cambia
+                  entre proyectos (3 o 4, según haya fecha y país). Un
+                  grid de 3 columnas con 4 items deja una fila huérfana. */}
+              <dl className="flex flex-wrap gap-x-8 gap-y-4 pb-6 mb-6 border-b border-border min-w-0">
+                {shownFacts.map(([label, value]) => (
+                  <div
+                    key={label}
+                    className="min-w-0 basis-[calc(50%-1rem)] sm:basis-auto sm:min-w-[7rem]"
+                  >
+                    <dt className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1">
+                      {label}
+                    </dt>
+                    <dd className="text-sm font-bold text-foreground break-words">{value}</dd>
+                  </div>
+                ))}
               </dl>
 
               {/* description admite párrafos separados por \n\n (ver

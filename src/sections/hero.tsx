@@ -80,7 +80,7 @@ export default function Hero() {
             size="lg"
             onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
           >
-            AGENDA UNA LLAMADA
+            VER REEL
           </Button>
           <Button
             variant="default"

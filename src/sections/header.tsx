@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "@ui/components/button";
 import ThemeToggle from "@/components/theme-toggle";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@ui/lib/utils";
 import { useActiveSection } from "@/hooks/use-active-section";
-import { NAV_ITEMS, NAV_SECTION_IDS } from "@/lib/navigation";
+import { NAV_ITEMS, NAV_SECTION_IDS, isNavItemActive } from "@/lib/navigation";
 
 const LOGO = "/images/logo-vper-media.svg";
 // px — coincide con el alto normal del header (h-16). Bajado de 80 (h-20)
@@ -50,6 +51,11 @@ function HamburgerIcon({ open }: { open: boolean }) {
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  // La sonda de scroll solo encuentra secciones en la home; fuera de
+  // ella el item activo lo decide el pathname (PROYECTOS en /work y en
+  // /work/[slug]). La regla vive en lib/navigation.ts para que footer y
+  // header no la implementen cada uno a su manera.
+  const pathname = usePathname();
   const activeSection = useActiveSection(NAV_SECTION_IDS);
 
   useEffect(() => {
@@ -116,32 +122,37 @@ export default function Header() {
           </Link>
 
           {/* Mismo bug que el logo: href={`#${id}`} solo funciona parado
-              en "/" — en /work/[slug] no hace nada. href={`/#${id}`}
-              funciona desde cualquier página (Next navega a "/" y
-              scrollea al id).
+              en "/" — en /work/[slug] no hace nada. Desde 2026-08-26 el
+              href ya no se arma acá: cada item de NAV_ITEMS trae el suyo
+              absoluto ("/#services" para las secciones, "/work" para el
+              archivo), así que funciona desde cualquier página.
               El CTA dejó de ser la franja a toda altura (rounded-none,
               pegada al borde del viewport). Ahora es un Button sm
               dentro del nav, mismo --button-radius (16px, casi pill)
               que hero/404/form. */}
           <div className="hidden md:flex items-center gap-6">
             <nav className="flex items-center gap-8">
-              {NAV_ITEMS.map((item) => (
-                <Link
-                  key={item.id}
-                  href={`/#${item.id}`}
-                  className={cn(
-                    navLinkType,
-                    "transition-all duration-300 relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300",
-                    isScrolled && "text-body-xs",
-                    "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm",
-                    activeSection === item.id
-                      ? "text-[var(--nav-item-active)] after:w-full"
-                      : "text-[var(--nav-item-default)] hover:text-[var(--nav-item-hover)] after:w-0 hover:after:w-full",
-                  )}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {NAV_ITEMS.map((item) => {
+                const active = isNavItemActive(item, pathname, activeSection);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      navLinkType,
+                      "transition-all duration-300 relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300",
+                      isScrolled && "text-body-xs",
+                      "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm",
+                      active
+                        ? "text-[var(--nav-item-active)] after:w-full"
+                        : "text-[var(--nav-item-default)] hover:text-[var(--nav-item-hover)] after:w-0 hover:after:w-full",
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
             </nav>
             <ThemeToggle />
             <Button variant="default" size="sm" asChild>
@@ -176,32 +187,36 @@ export default function Header() {
             className="md:hidden fixed inset-0 z-0 flex h-dvh flex-col items-center justify-center bg-[var(--nav-bg)] px-6"
           >
             <nav className="flex flex-col items-center gap-7">
-              {NAV_ITEMS.map((item, i) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    delay: 0.06 * i + 0.08,
-                    duration: 0.35,
-                    ease: [0.25, 1, 0.5, 1],
-                  }}
-                >
-                  <Link
-                    href={`/#${item.id}`}
-                    className={cn(
-                      "font-sans text-h2 font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing) text-center transition-colors",
-                      "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm",
-                      activeSection === item.id
-                        ? "text-[var(--nav-item-active)]"
-                        : "text-[var(--nav-item-default)] hover:text-[var(--nav-item-hover)]",
-                    )}
-                    onClick={() => setMobileMenuOpen(false)}
+              {NAV_ITEMS.map((item, i) => {
+                const active = isNavItemActive(item, pathname, activeSection);
+                return (
+                  <motion.div
+                    key={item.href}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      delay: 0.06 * i + 0.08,
+                      duration: 0.35,
+                      ease: [0.25, 1, 0.5, 1],
+                    }}
                   >
-                    {item.label}
-                  </Link>
-                </motion.div>
-              ))}
+                    <Link
+                      href={item.href}
+                      aria-current={active ? "page" : undefined}
+                      className={cn(
+                        "font-sans text-h2 font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing) text-center transition-colors",
+                        "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm",
+                        active
+                          ? "text-[var(--nav-item-active)]"
+                          : "text-[var(--nav-item-default)] hover:text-[var(--nav-item-hover)]",
+                      )}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </nav>
             <motion.div
               initial={{ opacity: 0, y: 12 }}

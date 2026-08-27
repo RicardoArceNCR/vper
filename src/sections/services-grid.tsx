@@ -3,51 +3,18 @@
 import { motion } from "framer-motion";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import SectionHeader from "@/components/section-header";
+import { SERVICES } from "@/lib/services";
 
-const services = [
-  {
-    id: 1,
-    title: "CREATIVIDAD",
-    desc: "Ideas y conceptos que hacen que una marca sea imposible de ignorar.",
-    icon: "/images/service-creatividad.png",
-    iconBg: "var(--color-main-200)",
-  },
-  {
-    id: 2,
-    title: "BRANDING",
-    desc: "Identidad visual, sistemas y piezas que hacen reconocible a la marca en cada punto de contacto.",
-    icon: "/images/service-branding.png",
-    iconBg: "var(--color-info-300)",
-  },
-  {
-    id: 3,
-    title: "DIGITAL",
-    desc: "Presencia digital, performance y contenido pensado para convertir, no solo para verse bien.",
-    icon: "/images/service-digital.png",
-    iconBg: "var(--color-leaf-200)",
-  },
-  {
-    id: 4,
-    title: "PLANEACIÓN ESTRATÉGICA",
-    desc: "La ruta antes de la ejecución: research, objetivos y el plan que sostiene toda la campaña.",
-    icon: "/images/service-planeacion.png",
-    iconBg: "var(--color-leaf-200)",
-  },
-  {
-    id: 5,
-    title: "AUDIOVISUAL",
-    desc: "Producción de video y fotografía que le da cara y voz a cada historia de marca.",
-    icon: "/images/service-audiovisual.png",
-    iconBg: "var(--color-main-200)",
-  },
-  {
-    id: 6,
-    title: "ATL & BTL",
-    desc: "Estrategias ATL y BTL que conectan tu marca con la audiencia correcta, en el canal correcto.",
-    icon: "/images/service-atl.png",
-    iconBg: "var(--color-info-300)",
-  },
-];
+// Los seis servicios ya no viven acá: se movieron a lib/services.ts
+// porque work-items.ts necesita el MISMO vocabulario para tipar las
+// categorías de cada proyecto. Sacar o renombrar uno ahora rompe el
+// build donde haya un proyecto tagueado con él, en vez de dejar el sitio
+// mostrando una categoría que ya no es un servicio.
+//
+// Los nombres se guardan capitalizados ("Planeación Estratégica") y esta
+// grilla los sube con `uppercase` en CSS: mismos glifos, mismo ancho
+// medido, ningún cambio visual — y la pill del proyecto puede mostrar el
+// mismo dato sin una segunda cadena que mantener.
 
 export default function ServicesGrid() {
   return (
@@ -74,10 +41,10 @@ export default function ServicesGrid() {
           variants={staggerContainer}
           className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6"
         >
-          {services.map((service) => (
+          {SERVICES.map((service) => (
             <motion.article
               variants={fadeInUp}
-              key={service.id}
+              key={service.name}
               className="group flex min-w-0 flex-col rounded-3xl bg-card p-6 md:p-8 border border-transparent hover:border-white/25 transition-colors duration-500"
             >
               <div className="flex min-w-0 items-center gap-4 mb-5">
@@ -92,8 +59,8 @@ export default function ServicesGrid() {
                   />
                 </div>
                 <div className="@container min-w-0 flex-1">
-                  <h3 className="font-display font-black tracking-tight text-foreground max-w-full [font-size:min(0.875rem,calc(100cqi/16))] leading-none">
-                    {service.title}
+                  <h3 className="font-display font-black uppercase tracking-tight text-foreground max-w-full [font-size:min(0.875rem,calc(100cqi/16))] leading-none">
+                    {service.name}
                   </h3>
                 </div>
               </div>

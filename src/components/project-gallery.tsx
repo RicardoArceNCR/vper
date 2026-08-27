@@ -1,4 +1,5 @@
 import type { GalleryImage } from "@/lib/work-items";
+import FadeInImage from "@/components/fade-in-image";
 
 // Rediseñado 2026-08-12: era un grid de 6 columnas que forzaba cada foto a
 // una caja de aspect-ratio fija (21/9 · 4/3 · cuadrado) con object-cover —
@@ -12,8 +13,13 @@ export default function ProjectGallery({ images }: { images: GalleryImage[] }) {
   return (
     <div className="flex flex-col">
       {images.map((img, idx) => (
-        <div key={idx} className="overflow-hidden bg-muted">
-          <img src={img.src} alt={img.alt} className="w-full h-auto block" />
+        <div key={img.src} className="overflow-hidden bg-muted">
+          <FadeInImage
+            src={img.src}
+            alt={img.alt}
+            priority={idx === 0}
+            className="w-full h-auto block"
+          />
         </div>
       ))}
     </div>
