@@ -42,7 +42,7 @@ export default function WorkCard({
     <Link
       href={`/work/${item.slug}`}
       className={cn(
-        "group relative bg-card border border-border overflow-hidden transition-all duration-500 hover:border-foreground/15",
+        "group relative bg-card border border-border overflow-hidden rounded-[var(--card-radius)] transition-all duration-500 hover:border-foreground/15",
         "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)]",
         isFeatured
           ? "shrink-0 w-[78vw] sm:w-[52vw] lg:w-[clamp(360px,42vw,620px)]"
@@ -58,7 +58,7 @@ export default function WorkCard({
           decoding="async"
           className="w-full h-full object-cover object-center transform scale-100 group-hover:scale-105 transition-transform duration-700"
         />
-        <div className="absolute top-4 right-4 z-20 bg-background/80 backdrop-blur-md w-10 h-10 flex items-center justify-center border border-border opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-[-10px] group-hover:translate-y-0">
+        <div className="absolute top-4 right-4 z-20 bg-background/80 backdrop-blur-md w-10 h-10 rounded-full flex items-center justify-center border border-border opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-[-10px] group-hover:translate-y-0">
           <ArrowUpRight size={18} className="text-foreground" />
         </div>
       </div>
@@ -68,7 +68,7 @@ export default function WorkCard({
         </span>
         <h3
           className={cn(
-            "font-bold tracking-tight text-foreground group-hover:text-primary transition-colors",
+            "font-display font-black uppercase tracking-tight text-foreground group-hover:text-primary transition-colors",
             isFeatured ? "text-lg" : "text-base md:text-lg",
           )}
         >
