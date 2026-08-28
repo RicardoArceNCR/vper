@@ -29,13 +29,14 @@ const SECTION_TITLE = (
   <>
     {/* Setup a 30px, golpe a 60px (afinado 2026-08-26). El min() con cqi
         conserva la proporción 1:2 cuando el contenedor se estrecha —
-        ENSEÑÁRTELA a 60px fijos se sale en un 375. El leading lo hereda
-        de .display-title (0.95 / 1): el aire ENTRE blanca y amarilla no
-        es line-height, es este mt — las dos frases son bloques distintos. */}
-    <span className="block [font-size:min(30px,calc(100cqi/26.8))]">
-      Podríamos hablar horas de creatividad.
+        ENSEÑÁRTELA a 60px fijos se sale en un 375. El hueco ENTRE blanca
+        y amarilla es solo el mt del segundo span — no el line-height. */}
+    <span className="block leading-[1.25] [font-size:min(30px,calc(100cqi/26.8))]">
+      Podríamos hablar
+      <br />
+      horas de creatividad.
     </span>
-    <span className="mt-[0.3em] block text-primary [font-size:min(60px,calc(100cqi/13.4))]">
+    <span className="mt-[0.08em] block leading-[1.1] text-primary [font-size:min(60px,calc(100cqi/13.4))]">
       Preferimos enseñártela.
     </span>
   </>

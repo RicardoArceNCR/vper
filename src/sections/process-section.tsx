@@ -44,7 +44,13 @@ export default function ProcessSection() {
         <div className="mb-20">
           <SectionHeader
             eyebrow="METODOLOGÍA"
-            title="LA MAGIA TIENE MÉTODO."
+            title={
+              <>
+                LA MAGIA
+                <br />
+                TIENE MÉTODO.
+              </>
+            }
             description="Y si no, preguntale a Houdini."
             titleClassName="text-primary"
           />
@@ -81,7 +87,7 @@ export default function ProcessSection() {
               </div>
 
               <div className="relative z-10 min-w-0 flex-1 md:flex-none md:flex md:flex-col md:items-center">
-                <span className="text-sm md:text-base font-bold text-primary tracking-widest mb-1 md:mb-3 block">
+                <span className="font-display font-black tracking-tight text-primary mb-1 md:mb-3 block text-xl md:text-2xl">
                   0{step.id}
                 </span>
                 <h3 className="text-base md:text-lg font-bold tracking-wider text-foreground mb-1 md:mb-3 uppercase group-hover:text-primary transition-colors break-words">

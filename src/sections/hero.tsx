@@ -18,10 +18,6 @@ const slides = [
     mobile: "/images/hero-tomatola-mobile.webp",
   },
   {
-    desktop: "/images/hero-flordecana-desktop.webp",
-    mobile: "/images/hero-flordecana-mobile.webp",
-  },
-  {
     desktop: "/images/hero-santa-desktop.webp",
     mobile: "/images/hero-santa-mobile.webp",
   },
@@ -43,7 +39,7 @@ export default function Hero() {
   }, [n]);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
+    <section className="relative h-screen w-full overflow-hidden">
       {slides.map((slide, index) => {
         const isCurrent = index === currentSlide;
         const isPrev = index === (currentSlide - 1 + n) % n;
@@ -81,10 +77,11 @@ export default function Hero() {
 
       <div className="absolute inset-x-0 bottom-0 h-[28%] bg-gradient-to-t from-background via-background/80 to-transparent z-20 pointer-events-none" />
 
-      {/* pt-16 coincide con el alto del header sin scroll (h-16, bajado de
-          h-20 el 2026-08-12) — mismo criterio que antes, solo el valor
-          nuevo. */}
-      <div className="relative z-30 wrap min-w-0 text-center px-4 flex flex-col items-center justify-center h-full pt-16">
+      {/* Anclado al fondo: el degradado de abajo (28%) es el telón de
+          este bloque. No usar h-full + justify-end — el box seguiría
+          midiendo toda la pantalla. pb deja aire del borde; el header
+          ya no pisa este contenido. */}
+      <div className="absolute inset-x-0 bottom-0 z-30 wrap min-w-0 text-center px-4 flex flex-col items-center pb-10 md:pb-16">
         <div className="@container min-w-0 w-full">
           <h1 className="font-display display-title-hero font-extrabold tracking-tight max-w-5xl mx-auto mb-8 text-foreground [text-shadow:0_2px_28px_rgba(0,0,0,0.55)]">
             SIEMPRE HAY ALGO MÁS GRANDE POR CREAR.
