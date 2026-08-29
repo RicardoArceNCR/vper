@@ -68,3 +68,11 @@ starter y del design system— viven en `misitio` (`docs/patterns/`,
 `docs/decisions/`). Acá queda solo lo específico de VPER: este archivo, el
 `README.md` y `docs/guia-desarrollador.md` (el handoff al desarrollador del
 cliente).
+
+**Inglés / i18n:** el cliente se lo pidió al desarrollador del sitio final
+(Vite). El reparto está en `misitio` ADR 0019: el estudio entrega copy
+aprobado, diccionario plano (cero imports de Next) y el diseño mirado en
+los dos idiomas — el riesgo real es **vertical** (hero `h-dvh`, no el
+ancho de Obviously Wide). El mecanismo (`app/[locale]/`, `next-intl`,
+`hreflang`) no se construye acá: se tira en el port. El ADR 0018 es el
+mecanismo del starter, no de este preview.
