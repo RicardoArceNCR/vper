@@ -18,16 +18,19 @@ export default function Footer() {
   // daba dos líneas paralelas separadas por esa franja.
   return (
     <footer className="bg-[var(--footer-bg)] pt-20 pb-10">
-      <div className="wrap">
-        <div className="flex flex-col md:flex-row md:justify-between gap-12 md:gap-16 mb-16 text-center md:text-left">
-            <div className="flex flex-col items-center md:items-start md:max-w-xs shrink-0">
+      <div className="wrap min-w-0">
+        <div className="flex min-w-0 flex-col md:flex-row md:justify-between gap-12 md:gap-16 mb-16 text-center md:text-left">
+            <div className="flex min-w-0 w-full flex-col items-center md:max-w-xs md:items-start">
               {/* El SVG del nav es blanco sólido: en el header funciona
                   porque el vidrio es --nav-bg (inverse, oscuro en los
                   dos modos). El footer es --footer-bg (papel en claro),
-                  así que el wordmark se pinta con currentColor. */}
+                  así que el wordmark se pinta con currentColor.
+                  viewBox 238×19: h-8 w-auto pide ~400px y con shrink-0
+                  se come NAVEGACIÓN. Es Obviously Wide, no un bug de
+                  SVG en general — mismo min-w-0 que display-title. */}
               <svg
                 viewBox={`0 0 ${VB.w} ${VB.h}`}
-                className="h-8 md:h-9 w-auto mb-6 text-[var(--footer-heading)]"
+                className="mb-6 h-auto w-full max-w-full text-[var(--footer-heading)]"
                 role="img"
                 aria-label="VPER Media"
               >
@@ -53,7 +56,7 @@ export default function Footer() {
               </div>
             </div>
 
-            <div className="flex flex-col items-center md:items-start shrink-0">
+            <div className="flex min-w-0 flex-col items-center md:items-start">
               <h4 className="font-display text-xs font-bold tracking-widest text-[var(--footer-heading)] mb-6 uppercase">NAVEGACIÓN</h4>
               <ul className="flex flex-col gap-3 items-center md:items-start">
                 {/* Antes: <a href={`#${item.id}`}>. El Header ya tenía
@@ -73,7 +76,7 @@ export default function Footer() {
               </ul>
             </div>
 
-            <div className="flex flex-col items-center md:items-start shrink-0">
+            <div className="flex min-w-0 flex-col items-center md:items-start">
               <h4 className="font-display text-xs font-bold tracking-widest text-[var(--footer-heading)] mb-6 uppercase">CONTACTO</h4>
               {/* Mobile: 2 columnas (pedido explícito) — desktop vuelve a
                   1 columna apilada (md:flex-col), que es donde hay más

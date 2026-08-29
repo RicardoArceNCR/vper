@@ -370,6 +370,13 @@ En grids de metadata (Cliente / Fecha / País) cada celda lleva
 `min-w-0` y el valor `break-words`. Si no, la celda se expande al
 min-content y se corta el borde derecho en mobile.
 
+El wordmark del footer (`src/lib/vper-wordmark.ts`, viewBox 238×19) es
+la misma trampa con otra etiqueta. No es un bug genérico de SVG: un
+isotipo 1:1 con `h-8 w-auto` cabe. Este dibujo es Obviously Wide, así
+que `h-8 w-auto` pide ~400px y, en un flex con `shrink-0`, se come
+NAVEGACIÓN hasta en mobile. La columna lleva `min-w-0`; el `<svg>`
+va `w-full max-w-full h-auto`.
+
 ---
 
 ## 7. Qué revisar en este repo

@@ -22,5 +22,6 @@ Al agregar o editar un titular `font-display`:
 2. El padre inmediato: `@container min-w-0`.
 3. Ancestros flex/grid hasta el wrap: `min-w-0`.
 4. En grids de metadata (Cliente / Fecha / País): cada celda `min-w-0`, el valor `break-words`.
+5. El wordmark SVG (`vper-wordmark`, viewBox 238×19) es la misma letra, no un icono. `h-8 w-auto` pide ~400px; con `shrink-0` se come la columna de al lado (footer → NAVEGACIÓN). Un isotipo cuadrado no hace esto — no es un bug genérico de SVG. Columna `min-w-0`, `<svg>` con `w-full max-w-full h-auto`.
 
 No "arreglés" el recorte bajando el tipo en desktop ni con `break-all`.

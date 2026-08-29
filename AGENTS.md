@@ -35,7 +35,8 @@ leen este archivo de forma nativa; Claude Code no, por eso existe
   se borra la regla en el mismo cambio.
 - Una fuente de display ancha (Obviously Wide) ensancha cualquier flex o
   grid que no tenga `min-w-0`. El síntoma casi nunca aparece en el titular,
-  sino en el texto de al lado.
+  sino en el texto de al lado. El wordmark SVG (238×19) es el mismo caso:
+  `h-* w-auto` no es un icono, pide ~12.5 veces el alto.
 
 ## Antes de cerrar
 
