@@ -77,11 +77,12 @@ export default function Hero() {
 
       <div className="absolute inset-x-0 bottom-0 h-[28%] bg-gradient-to-t from-background via-background/80 to-transparent z-20 pointer-events-none" />
 
-      {/* Anclado al fondo. pb-[40px] en mobile sube título + copy +
-          botones; el margin en el botón no expandía el box. md:pb-16. */}
-      <div className="absolute inset-x-0 bottom-0 z-30 wrap min-w-0 text-center px-4 flex flex-col items-center pb-[40px] md:pb-16">
+      {/* Anclado al fondo. Mobile: un paso menos entre título/copy,
+          10px menos de pb que los 40px. El margin en el botón no
+          expandía el box. */}
+      <div className="absolute inset-x-0 bottom-0 z-30 wrap min-w-0 text-center px-4 flex flex-col items-center pb-[30px] md:pb-16">
         <div className="@container min-w-0 w-full">
-          <h1 className="font-display display-title-hero font-extrabold tracking-tight max-w-5xl mx-auto mb-8 text-foreground [text-shadow:0_2px_28px_rgba(0,0,0,0.55)]">
+          <h1 className="font-display display-title-hero font-extrabold tracking-tight max-w-5xl mx-auto mb-6 md:mb-8 text-foreground [text-shadow:0_2px_28px_rgba(0,0,0,0.55)]">
             SIEMPRE HAY ALGO MÁS GRANDE POR CREAR.
           </h1>
         </div>
@@ -90,7 +91,7 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.8 }}
-          className="text-body-sm md:text-body-lg text-muted-foreground dark:text-foreground max-w-2xl font-medium mb-12 [text-shadow:0_2px_20px_rgba(0,0,0,0.5)]"
+          className="text-body-sm md:text-body-lg text-muted-foreground dark:text-foreground max-w-2xl font-medium mb-10 md:mb-12 [text-shadow:0_2px_20px_rgba(0,0,0,0.5)]"
         >
           Las buenas ideas tienen un pequeño problema: nunca se quedan quietas. Las
           convertimos en campañas, contenido y experiencias para descubrir hasta dónde
