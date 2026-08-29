@@ -152,6 +152,43 @@
   animation-play-state: paused;
 }
 
+/* Hero intro: el copy espera a `.hero-ready` (fondo decodificado).
+   Sin eso, opacity 0 — no animar encima de un placeholder. 8px de y
+   es compositing. Stagger corto: título → copy → CTAs. */
+@keyframes hero-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-enter {
+  opacity: 0;
+}
+
+.hero-ready .hero-title-enter {
+  animation: hero-enter 0.5s cubic-bezier(0.25, 1, 0.5, 1) 0.04s both;
+}
+
+.hero-ready .hero-copy-enter {
+  animation: hero-enter 0.45s cubic-bezier(0.25, 1, 0.5, 1) 0.12s both;
+}
+
+.hero-ready .hero-cta-enter {
+  animation: hero-enter 0.45s cubic-bezier(0.25, 1, 0.5, 1) 0.2s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-enter {
+    opacity: 1;
+    animation: none;
+  }
+}
+
 /* Vidrio negro del nav: el frosted se ve porque el fill es semitransparente,
    no porque el blur sea grande. 8px en una franja de 56–64px es barato;
    backdrop-blur-xl / saturate() / animar el filtro sí cuestan. El blur
