@@ -4,6 +4,12 @@ globs: src/**/*.{tsx,css}
 alwaysApply: true
 ---
 
+> **Fuente canónica: `misitio/docs/patterns/0002-titulos-display-no-desbordan.md`** (ADR 0017).
+> Esta copia vive acá porque las secciones que sufren el bug están en
+> este repo y Cursor la carga sola por `globs`. La versión de `misitio`
+> es la generalizada, la que hereda cualquier proyecto nuevo. Si
+> cambiás la regla, cambiala allá también — o se desfasan.
+
 # Títulos display no desbordan el layout
 
 Obviously Wide es muy ancha (`SELECCIONADOS.` = 13.2em, `NETFOREMOST` = 11.2em). Un `text-4xl` / `text-6xl` en `font-display` no cabe; la palabra no parte.

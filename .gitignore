@@ -27,3 +27,8 @@ public/images/Artboard*.svg
 public/images/*@7x.png
 public/images/portada-2.png
 public/images/MOCKUPS-TOMA-TOLA.png
+
+# Artefactos temporales de QA visual (capturas, perfil de Chrome, scripts sueltos).
+# Nombrar así cualquier cosa de una sesión que no deba llegar a un commit.
+.tmp-*
+.worktrees/

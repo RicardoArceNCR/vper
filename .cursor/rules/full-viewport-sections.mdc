@@ -4,6 +4,12 @@ globs: src/sections/**/*.tsx
 alwaysApply: false
 ---
 
+> **Fuente canónica: `misitio/docs/patterns/0001-secciones-full-viewport.md`** (ADR 0017).
+> Esta copia vive acá porque las secciones que sufren el bug están en
+> este repo y Cursor la carga sola por `globs`. La versión de `misitio`
+> es la generalizada, la que hereda cualquier proyecto nuevo. Si
+> cambiás la regla, cambiala allá también — o se desfasan.
+
 # Secciones full-viewport (hero, vitrina sticky)
 
 `overflow-hidden` en un `h-screen` / `h-dvh` / sticky a 100vh recorta **los dos ejes**. El carrusel solo necesita clip horizontal; el hero recorta el Ken Burns. No lo uses como default.

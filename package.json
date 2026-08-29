@@ -12,7 +12,9 @@
     "start": "next start",
     "lint": "next lint",
     "check": "tsc --noEmit",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "quality": "pnpm check && pnpm lint && pnpm build"
   },
   "dependencies": {
     "@misitio/ui": "github:RicardoArceNCR/misitio-ui#v0.1.4",
