@@ -1,0 +1,21 @@
+---
+description: Secciones a pantalla completa — overflow, dvh y aire (padding vs margin)
+globs: src/sections/**/*.tsx
+alwaysApply: false
+---
+
+# Secciones full-viewport (hero, vitrina sticky)
+
+`overflow-hidden` en un `h-screen` / `h-dvh` / sticky a 100vh recorta **los dos ejes**. El carrusel solo necesita clip horizontal; el hero recorta el Ken Burns. No lo uses como default.
+
+## Horizontal vs vertical (no es el mismo bug)
+
+- **Título display que ensancha el flex** → regla `display-titles.mdc` (`min-w-0`, `display-title`).
+- **PORTAFOLIO / fadeInUp recortado arriba** → el `overflow-hidden` del sticky se comió el `y:0` de la animación. Clip solo X: `overflow-x-clip overflow-y-visible`, más `pt` de aire.
+- **Aire debajo de un bloque anclado al fondo (hero)** → el overlay va `absolute bottom-0`. El `margin` de un hijo con `transform` (Framer Motion) no agranda ese box y `overflow-hidden` se lo come. El aire va en **`padding-bottom` del box anclado**, no en el botón. Mobile: `h-dvh`, no `h-screen` (100vh se mete detrás de la barra).
+
+## Checklist
+
+1. ¿El clip es solo del track horizontal? `overflow-x-clip`, no `overflow-hidden`.
+2. ¿Hay que subir título + copy + botones respecto al borde? `pb-*` en el contenedor `bottom-0`, no `mb-*` en un `motion.*`.
+3. ¿La sección es el viewport del teléfono? `h-dvh`.

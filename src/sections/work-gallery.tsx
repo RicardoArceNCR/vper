@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { motion, useScroll, useTransform, useReducedMotion, useSpring } from "framer-motion";
 import SectionHeader from "@/components/section-header";
 import WorkCard from "@/components/work-card";
@@ -45,20 +45,23 @@ const SECTION_DESCRIPTION =
   "Una selección de retos que se convirtieron en ideas. Y de ideas que terminaron siendo mucho más.";
 const SECTION_TITLE_CLASS = "uppercase";
 
-// El link al archivo. Comparte la fila con la barra de progreso en vez
-// de sumar altura propia: dentro de un sticky h-screen, cada bloque
-// nuevo se come el aire de las cards.
+// El link al archivo. No es un Button gold: ese rol ya lo tiene
+// ¿NOS REUNIMOS? y un segundo pill en esta fila pelearía con las cards.
+// Label + círculo es el mismo gesto que el badge de WorkCard, sin
+// sumar altura propia (el sticky h-screen no aguanta otro bloque).
 function ArchiveLink() {
   return (
     <Link
       href="/work"
-      className="group inline-flex items-center gap-2 font-sans text-body-sm font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing) text-muted-foreground hover:text-primary transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm"
+      className="group inline-flex items-center gap-3 font-sans text-body-sm font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing) text-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm"
     >
       Ver todos los proyectos
-      <ArrowRight
-        size={14}
-        className="transition-transform duration-300 group-hover:translate-x-1"
-      />
+      <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-border bg-background/80 transition-colors duration-300 group-hover:border-primary group-hover:bg-primary group-hover:text-[var(--button-primary-text)]">
+        <ArrowUpRight
+          size={16}
+          className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+        />
+      </span>
     </Link>
   );
 }
@@ -94,7 +97,7 @@ export default function WorkGallery() {
 
   if (prefersReducedMotion) {
     return (
-      <section id="work" className="py-24 md:py-32 bg-background border-b border-border">
+      <section id="work" className="py-24 md:py-32 bg-background">
         <div className="wrap min-w-0 mb-12">
           <SectionHeader
             eyebrow="PORTAFOLIO"
@@ -110,7 +113,7 @@ export default function WorkGallery() {
             </div>
           ))}
         </div>
-        <div className="wrap mt-10">
+        <div className="wrap mt-10 flex justify-center md:justify-end">
           <ArchiveLink />
         </div>
       </section>
@@ -124,9 +127,11 @@ export default function WorkGallery() {
       className="relative bg-background"
       style={{ height: `${runwayVh}vh` }}
     >
-      {/* top-16 coincide con el alto del header sin scroll (h-16, bajado
-          de h-20 el 2026-08-12). */}
-      <div className="sticky top-16 h-screen flex flex-col justify-start pt-6 md:justify-center md:pt-0 overflow-hidden border-b border-border">
+      {/* top-16 = header. El clip del carrusel tiene que ser solo
+          horizontal: overflow-hidden también afeitaba PORTAFOLIO (el
+          fadeInUp lo deja en y:0 contra el borde). overflow-x-clip no
+          fuerza overflow-y a hidden. pt extra = aire tras la animación. */}
+      <div className="sticky top-16 h-screen flex flex-col justify-start pt-6 pb-6 md:justify-center md:pt-10 md:pb-8 overflow-x-clip overflow-y-visible">
         <div className="wrap min-w-0 mb-4 md:mb-14">
           <SectionHeader
             eyebrow="PORTAFOLIO"
@@ -148,7 +153,7 @@ export default function WorkGallery() {
           <div className="shrink-0 w-[12vw]" aria-hidden="true" />
         </motion.div>
 
-        <div className="wrap mt-10 md:mt-14 flex flex-wrap items-center justify-between gap-4">
+        <div className="wrap mt-10 md:mt-14 flex flex-col items-center gap-4 md:flex-row md:justify-between">
           <div className="h-[2px] w-full max-w-xs bg-border rounded-full overflow-hidden">
             <motion.div
               className="h-full w-full bg-primary rounded-full"
