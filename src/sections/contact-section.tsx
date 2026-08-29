@@ -14,16 +14,12 @@ const CONTACT_ITEMS = [
 
 export default function ContactSection() {
   return (
-    // Mismo fondo fijo que las páginas de proyecto (2026-08-12, pedido
-    // explícito): bg-muted de base + bg-image encima — son propiedades CSS
-    // distintas (background-color vs -image), no colisionan. bg-fixed la
-    // deja pegada al viewport mientras el contenido scrollea encima. El
-    // asset ya es casi negro sobre negro, no compite con el texto — no
-    // hace falta bajarle opacity aparte (ver /work/[slug]/page.tsx, mismo
-    // criterio).
+    // Mismo fondo fijo que servicios y las fichas de proyecto: color de
+    // página + textura. El webp solo pinta en oscuro; en claro queda
+    // bg-background (blanco), sin invert ni un gris distinto.
     <section
       id="contact"
-      className="py-24 md:py-32 bg-muted bg-[url('/images/bg-vper-pattern.webp')] bg-fixed bg-cover bg-center"
+      className="py-24 md:py-32 bg-background bg-brand-texture"
     >
       <div className="wrap min-w-0">
         <div className="mb-12 md:mb-16">

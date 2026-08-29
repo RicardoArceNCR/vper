@@ -90,6 +90,15 @@
     }
   }
 
+  /* Textura de sección (contacto, servicios, ficha de work).
+     --brand-section-texture es none en claro y el webp en oscuro. */
+  .bg-brand-texture {
+    background-image: var(--brand-section-texture);
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+  }
+
   /* Obviously Wide: "SELECCIONADOS." mide 13.2em (medido en el .woff2).
      El tamaño es el ancho del @container / 13.4, techo text-6xl (3.75rem).
      El padre TIENE que estar acotado (min-w-0) — si el flex item crece

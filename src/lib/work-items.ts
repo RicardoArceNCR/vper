@@ -101,7 +101,7 @@ export const workItems: WorkItem[] = [
     // tipografía — visible en la lámina de marca, y el desarrollo de las 4
     // variantes de producto) + "Audiovisual" como secundaria (todo lo
     // entregado acá es producción fotográfica de producto/lifestyle, no
-    // solo el concepto). No entra en "Planeación Estratégica" ni "Digital"
+    // solo el concepto). No entra en "Planeación Estratégica" ni "Digital & Web"
     // porque no hay research/plan de medios ni entregable digital visible
     // en el material que se compartió — si más adelante se suma esa parte
     // del proyecto, se le agrega esa categoría también.
@@ -146,11 +146,11 @@ export const workItems: WorkItem[] = [
   {
     // Segundo proyecto real (2026-08-18). Copy original en inglés,
     // traducido al español (el sitio está en español). Categorías
-    // acordadas: Creatividad + Digital.
+    // acordadas: Creatividad + Digital & Web.
     slug: "netforemost",
     title: "NETFOREMOST",
     subtitle: "Equipos nativos en IA",
-    categories: ["Creatividad", "Digital"],
+    categories: ["Creatividad", "Digital & Web"],
     sector: "Tecnología",
     client: "NetForemost",
     description:
@@ -180,14 +180,14 @@ export const workItems: WorkItem[] = [
     // Tercer proyecto real (2026-08-18). Láminas VIDA_NICA_BRANDING-01 y
     // -03 a -13 (no hay -02). Copy del cliente, con la "у" cirílica del
     // pegado convertida a "y". Categorías: Creatividad (identidad: logo,
-    // paleta, tipo Meditative, papelería) + Digital (Facebook, Instagram,
+    // paleta, tipo Meditative, papelería) + Digital & Web (Facebook, Instagram,
     // stories). El tótem (11) es ATL, una pieza de doce — no alcanza
     // para taguear ATL & BTL. País: Nicaragua está en el copy ("inviertes
     // en Nicaragua", "mercado nicaragüense"), no es una suposición.
     slug: "vida-nica",
     title: "VIDA NICA",
     subtitle: "Bienes raíces",
-    categories: ["Creatividad", "Digital"],
+    categories: ["Creatividad", "Digital & Web"],
     sector: "Bienes raíces",
     client: "Vida Nica",
     country: "Nicaragua",
@@ -253,13 +253,13 @@ export const workItems: WorkItem[] = [
   {
     // Quinto proyecto real (2026-08-18). Láminas OH_LA_LASHES_BRANDING-01
     // y -03 a -13 (no hay -02). Copy del cliente en español. Categorías:
-    // Creatividad (identidad, paleta, papelería, merch) + Digital (feed
+    // Creatividad (identidad, paleta, papelería, merch) + Digital & Web (feed
     // de redes). El mupi/valla (07) es ATL, una pieza de doce. País:
     // Nicaragua — Managua y +505 en la tarjeta, no es una suposición.
     slug: "oh-la-lashes",
     title: "LA LASHES",
     subtitle: "Clínica estética",
-    categories: ["Creatividad", "Digital"],
+    categories: ["Creatividad", "Digital & Web"],
     sector: "Estética",
     client: "Oh! La Lashes",
     country: "Nicaragua",
@@ -290,7 +290,7 @@ export const workItems: WorkItem[] = [
     // guiones de Chuánchéng. Categorías: Creatividad (identidad: logo
     // vertical/horizontal/isotipo, paleta, Gang of Three, ilustración,
     // texturas, merch, empaque) + Audiovisual (fotografía de producto
-    // en afiches 10 y 11). Las piezas de redes (08) son Digital, una
+    // en afiches 10 y 11). Las piezas de redes (08) son Digital & Web, una
     // lámina de doce — no alcanza para el tag, mismo criterio que el
     // tótem de Vida Nica. País: Nicaragua está en el copy ("se comparte
     // con Nicaragua") y en la dirección del empaque (Las Colinas) — no

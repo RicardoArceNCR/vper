@@ -9,10 +9,10 @@ import {
 
 /* ─────────────────────────────────────────────────────────────────────
    Wordmark que se "enciende" bajo el cursor. Mismo principio que el
-   footer de resend.com: el logo vive apagado (blanco al 5%, casi el
-   negro del fondo) y el
-   cursor revela el CONTORNO de las letras a través de una máscara
-   radial que sigue al mouse.
+   footer de resend.com: el logo vive apagado (currentColor al 6%) y
+   el cursor revela el CONTORNO de las letras a través de una máscara
+   radial que sigue al mouse. En oscuro es luz sobre negro; en claro,
+   tinta sobre el mismo --footer-bg — no se deja un bloque negro.
 
    Ojo con los radios si se tocan: el wordmark es 238×19 (12.5:1), mucho
    más chato que el 377×81 de la referencia, así que el mismo radio en
@@ -30,7 +30,7 @@ const GLOW_R = 22; // radio del foco que revela el contorno
 const WASH_R = 90; // halo amplio, da el "ambiente" alrededor del foco
 const AMBIENT_STROKE = 0.9; // grosor del trazo difuminado
 const BLUR = 19; // difusión del glow
-const BASE_FILL = 0.05; // wordmark apagado — tira a negro, no a gris
+const BASE_FILL = 0.06; // wordmark apagado — currentColor, no un blanco fijo
 const CORE_STROKE = 0.16; // filo brillante
 const WASH_STROKE = 0.3;
 const SWEEP_STEP = 0.0042; // fracción del ancho por frame (fallback touch)
@@ -61,7 +61,7 @@ function BaseMark({ label }: { label?: string }) {
         ? { role: "img" as const, "aria-label": label }
         : { "aria-hidden": true })}
     >
-      <Glyphs fill={`rgba(255,255,255,${BASE_FILL})`} />
+      <Glyphs fill={`color-mix(in srgb, currentColor ${BASE_FILL * 100}%, transparent)`} />
     </svg>
   );
 }
@@ -106,9 +106,9 @@ function GlowOverlay({ uid }: { uid: string }) {
           cy={VB.h / 2}
           r={GLOW_R}
         >
-          <stop offset="0%" stopColor="rgba(255,255,255,1)" />
-          <stop offset="10%" stopColor="rgba(255,255,255,0.5)" />
-          <stop offset="100%" stopColor="rgba(255,255,255,0.04)" />
+          <stop offset="0%" stopColor="currentColor" stopOpacity="1" />
+          <stop offset="10%" stopColor="currentColor" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0.04" />
         </radialGradient>
 
         <radialGradient
@@ -119,8 +119,8 @@ function GlowOverlay({ uid }: { uid: string }) {
           cy={VB.h / 2}
           r={WASH_R}
         >
-          <stop offset="0%" stopColor="rgba(255,255,255,1)" />
-          <stop offset="10%" stopColor="rgba(255,255,255,0)" />
+          <stop offset="0%" stopColor="currentColor" stopOpacity="1" />
+          <stop offset="10%" stopColor="currentColor" stopOpacity="0" />
         </radialGradient>
 
         <filter id={fGlow} x="-100%" y="-100%" width="300%" height="300%">
@@ -155,7 +155,8 @@ function GlowOverlay({ uid }: { uid: string }) {
       <g filter={`url(#${fAmb})`}>
         <Glyphs
           {...outline}
-          stroke="rgba(255,255,255,0.4)"
+          stroke="currentColor"
+          strokeOpacity={0.4}
           strokeWidth={AMBIENT_STROKE}
           mask={`url(#${mask})`}
         />
@@ -336,9 +337,9 @@ export default function GlowMark() {
   return (
     <section
       ref={rootRef}
-      // Banda negra fija: el efecto es luz sobre negro, no tiene lectura
-      // en tema claro. Por eso no usa bg-background ni los tokens del DS.
-      className="relative isolate hidden overflow-hidden bg-black px-4 pt-6 md:block md:px-8 md:pt-10"
+      // Oscuro: void negro (luz sobre negro). Claro: mismo papel que el
+      // footer; el wordmark y la linterna van en currentColor (tinta).
+      className="relative isolate hidden overflow-hidden bg-[var(--footer-bg)] text-foreground px-4 pt-6 md:block md:px-8 md:pt-10 dark:bg-black"
     >
       {/* La caja del wordmark mide el alto COMPLETO — el 12% de abajo
           existe, solo queda debajo de la superficie del footer. Así el

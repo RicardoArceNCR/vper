@@ -382,6 +382,20 @@
   --button-primary-text-hover: #ffffff;
   --button-primary-border-hover: color-mix(in srgb, white 18%, transparent);
   --button-primary-bg-press: #1a1a1a;
+
+  /* Textura de sección (radios VPER). El raster es carbón sobre negro,
+     pensado para desaparecer en oscuro. En claro se deja none: un
+     invert() del webp sube el contraste y mancha el fondo; si hace
+     falta textura en claro, es otro asset (misma composición, lumi-
+     nancia invertida en Figma), no un filtro. */
+  --brand-section-texture: none;
+
+  /* Light: el paquete deja tertiary en 400 (#bebebe) y la página en
+     50 (#fafafa). Los <p> muted se leían pálidos: 500 seguía lavado
+     sobre blanco, así que son 600. Página blanca, no #fafafa. */
+  --text-tertiary: var(--color-neutral-600);
+  --background-page: #ffffff;
+  --background-base: #ffffff;
 }
 
 .dark {
@@ -390,6 +404,16 @@
      (amber/300 sobre neutral/950 da 12.8:1 en oscuro también) — no se
      redefine acá, ya vale desde :root. */
   --brand-strong: #fed7a4; /* amber/200 — más claro en oscuro */
+
+  /* Un stop más claro que el paquete (neutral-600 → 500). Es el
+     `--muted-foreground` de los <p> (section headers, proceso,
+     detalle de work): #808080 se leía apagado sobre fondo de página. */
+  --text-tertiary: var(--color-neutral-500);
+
+  --brand-section-texture: url("/images/bg-vper-pattern.webp");
+
+  --background-page: var(--color-neutral-950);
+  --background-base: var(--color-neutral-950);
 
   --text-brand: #fdbf66; /* amber/300, 12.82:1 en oscuro */
   --text-brand-accent: var(--brand-main);

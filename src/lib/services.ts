@@ -31,8 +31,10 @@ export const SERVICES = [
     iconBg: "var(--color-info-300)",
   },
   {
-    name: "Digital",
-    desc: "Ideas, contenido, medios y datos moviéndose a la velocidad de la gente. Porque el mundo digital cambia todos los días. Nosotros también.",
+    // Un slot, no una séptima card: el cliente pidió sumar desarrollo web
+    // al slide Digital (2026-08-29). El & sigue el patrón de ATL & BTL.
+    name: "Digital & Web",
+    desc: "Desarrollo web, contenido, medios y datos moviéndose a la velocidad de la gente. Porque el mundo digital cambia todos los días. Nosotros también.",
     icon: "/images/service-digital.png",
     iconBg: "var(--color-leaf-200)",
   },

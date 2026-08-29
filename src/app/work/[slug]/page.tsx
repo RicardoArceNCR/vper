@@ -55,13 +55,9 @@ export default async function WorkDetailPage({ params }: Props) {
   );
 
   return (
-    // Textura de fondo fija (pedido 2026-08-12): bg-background de base +
-    // bg-image encima — son propiedades CSS distintas (background-color vs
-    // -image), no colisionan. bg-fixed la deja pegada al viewport mientras
-    // el contenido scrollea encima, como watermark. El asset ya es
-    // extremadamente oscuro (negro casi sobre negro) así que no compite
-    // con el texto — no hace falta bajarle opacity aparte.
-    <div className="min-h-screen bg-background bg-[url('/images/bg-vper-pattern.webp')] bg-fixed bg-cover bg-center text-foreground selection:bg-primary selection:text-primary-foreground flex flex-col overflow-x-clip">
+    // Textura de fondo fija (pedido 2026-08-12). El webp solo pinta en
+    // oscuro; en claro queda bg-background. Ver --brand-section-texture.
+    <div className="min-h-screen bg-background bg-brand-texture text-foreground selection:bg-primary selection:text-primary-foreground flex flex-col overflow-x-clip">
       <Header />
 
       <main className="flex-1 pt-28 pb-24 md:pb-32">

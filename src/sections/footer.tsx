@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { Facebook, Instagram, Linkedin } from "lucide-react";
 import { FOOTER_NAV_ITEMS } from "@/lib/navigation";
-
-const LOGO = "/images/logo-vper-media.svg";
+import {
+  VPER_WORDMARK_PATHS as PATHS,
+  VPER_WORDMARK_VIEWBOX as VB,
+} from "@/lib/vper-wordmark";
 
 const IMAGES = {
   carlos: "/images/footer-carlos.jpg",
@@ -19,10 +21,20 @@ export default function Footer() {
       <div className="wrap">
         <div className="flex flex-col md:flex-row md:justify-between gap-12 md:gap-16 mb-16 text-center md:text-left">
             <div className="flex flex-col items-center md:items-start md:max-w-xs shrink-0">
-              {/* Antes era texto ("VPER.MEDIA" armado con spans) — pedido
-                  explícito: el SVG real del nav (mismo logo-vper-media.svg
-                  que usa Header), no una recreación tipográfica aparte. */}
-              <img src={LOGO} alt="VPER Media" className="h-8 md:h-9 w-auto mb-6" />
+              {/* El SVG del nav es blanco sólido: en el header funciona
+                  porque el vidrio es --nav-bg (inverse, oscuro en los
+                  dos modos). El footer es --footer-bg (papel en claro),
+                  así que el wordmark se pinta con currentColor. */}
+              <svg
+                viewBox={`0 0 ${VB.w} ${VB.h}`}
+                className="h-8 md:h-9 w-auto mb-6 text-[var(--footer-heading)]"
+                role="img"
+                aria-label="VPER Media"
+              >
+                {PATHS.map((d, i) => (
+                  <path key={i} d={d} fill="currentColor" />
+                ))}
+              </svg>
               <p className="text-xs text-[var(--footer-text)] leading-relaxed font-medium mb-6 max-w-xs text-center md:text-left">
                 Creamos. Aprendemos. Volvemos a crear.
                 <br />

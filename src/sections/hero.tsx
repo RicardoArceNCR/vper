@@ -95,7 +95,9 @@ export default function Hero() {
         );
       })}
 
-      <div className="absolute inset-x-0 bottom-0 h-[28%] bg-gradient-to-t from-background via-background/80 to-transparent z-20 pointer-events-none" />
+      {/* El fade es negro siempre: from-background en claro es blanco y
+          se come el copy. El hero es foto, no superficie de página. */}
+      <div className="absolute inset-x-0 bottom-0 h-[28%] bg-gradient-to-t from-black via-black/75 to-transparent z-20 pointer-events-none" />
 
       {/* Anclado al fondo. Mobile: menos aire entre título/copy
           (más en el p). El margin en el botón no expandía el box. */}
@@ -103,12 +105,12 @@ export default function Hero() {
         className={`absolute inset-x-0 bottom-0 z-30 wrap min-w-0 text-center px-4 flex flex-col items-center pb-[30px] md:pb-16 ${bgReady || prefersReducedMotion ? "hero-ready" : ""}`}
       >
         <div className="@container min-w-0 w-full">
-          <h1 className="hero-enter hero-title-enter font-display display-title-hero font-extrabold tracking-tight max-w-5xl mx-auto mb-4 md:mb-8 text-foreground [text-shadow:0_2px_28px_rgba(0,0,0,0.55)]">
+          <h1 className="hero-enter hero-title-enter font-display display-title-hero font-extrabold tracking-tight max-w-5xl mx-auto mb-4 md:mb-8 text-white [text-shadow:0_2px_28px_rgba(0,0,0,0.55)]">
             SIEMPRE HAY ALGO MÁS GRANDE POR CREAR.
           </h1>
         </div>
 
-        <p className="hero-enter hero-copy-enter text-body-sm md:text-body-lg text-muted-foreground dark:text-foreground max-w-2xl font-medium mb-6 md:mb-12 [text-shadow:0_2px_20px_rgba(0,0,0,0.5)]">
+        <p className="hero-enter hero-copy-enter text-body-sm md:text-body-lg text-white/90 max-w-2xl font-medium mb-6 md:mb-12 [text-shadow:0_2px_20px_rgba(0,0,0,0.5)]">
           Las buenas ideas tienen un pequeño problema: nunca se quedan quietas. Las
           convertimos en campañas, contenido y experiencias para descubrir hasta dónde
           pueden llegar.

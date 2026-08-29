@@ -18,7 +18,10 @@ import { SERVICES } from "@/lib/services";
 
 export default function ServicesGrid() {
   return (
-    <section id="services" className="py-24 md:py-32 bg-background border-b border-border">
+    <section
+      id="services"
+      className="py-24 md:py-32 bg-background bg-brand-texture border-b border-border"
+    >
       <div className="wrap max-w-[1217px] mx-auto">
         <div className="mb-16 md:mb-20">
           <SectionHeader
@@ -41,7 +44,7 @@ export default function ServicesGrid() {
             <motion.article
               variants={fadeInUp}
               key={service.name}
-              className="group flex min-w-0 flex-col rounded-3xl bg-card p-6 md:p-8 border border-transparent hover:border-white/25 transition-colors duration-500"
+              className="group flex min-w-0 flex-col rounded-3xl bg-card p-6 md:p-8 border border-transparent hover:border-foreground/25 transition-colors duration-500"
             >
               <div className="flex min-w-0 items-center gap-4 mb-5">
                 <div
@@ -55,12 +58,12 @@ export default function ServicesGrid() {
                   />
                 </div>
                 <div className="@container min-w-0 flex-1">
-                  <h3 className="font-display font-black uppercase tracking-tight text-foreground max-w-full [font-size:min(0.875rem,calc(100cqi/16))] leading-none">
+                  <h3 className="font-display font-black uppercase tracking-tight text-foreground max-w-full [font-size:min(1rem,calc(100cqi/14))] leading-none">
                     {service.name}
                   </h3>
                 </div>
               </div>
-              <p className="text-body-md text-foreground/80 leading-relaxed">
+              <p className="text-body-md text-foreground/90 leading-relaxed">
                 {service.desc}
               </p>
             </motion.article>
