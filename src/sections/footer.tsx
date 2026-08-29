@@ -38,7 +38,7 @@ export default function Footer() {
                   <path key={i} d={d} fill="currentColor" />
                 ))}
               </svg>
-              <p className="text-xs text-[var(--footer-text)] leading-relaxed font-medium mb-6 max-w-xs text-center md:text-left">
+              <p className="text-body-sm text-[var(--footer-text)] font-medium mb-6 max-w-xs text-center md:text-left">
                 Creamos. Aprendemos. Volvemos a crear.
                 <br />
                 Siempre hay algo más grande por crear.
@@ -68,7 +68,10 @@ export default function Footer() {
                     cliente en cada click. */}
                 {FOOTER_NAV_ITEMS.map((item) => (
                   <li key={item.href}>
-                    <Link href={item.href} className="text-xs text-[var(--footer-text)] hover:text-[var(--footer-link-hover)] transition-colors font-medium">
+                    <Link
+                      href={item.href}
+                      className="relative inline-block text-xs font-medium text-[var(--footer-text)] transition-all duration-300 after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all after:duration-300 hover:text-[var(--footer-heading)] hover:after:w-full"
+                    >
                       {item.label}
                     </Link>
                   </li>
@@ -91,7 +94,7 @@ export default function Footer() {
                   </div>
                   <div className="flex flex-col items-center md:items-start">
                     <span className="text-xs md:text-base font-bold text-[var(--footer-heading)] block tracking-wide">CARLOS ESCOBAR</span>
-                    <a href="mailto:carlos@vpermedia.com" className="text-[10px] md:text-sm text-[var(--footer-text)] hover:text-[var(--footer-link-hover)] transition-colors block font-medium">carlos@vpermedia.com</a>
+                    <a href="mailto:carlos@vpermedia.com" className="text-[10px] md:text-sm text-[var(--footer-text)] hover:text-primary transition-colors block font-medium">carlos@vpermedia.com</a>
                     <a href="tel:+50577824749" className="text-[10px] md:text-sm text-[var(--footer-text)] block font-medium">+505 7782-4749</a>
                   </div>
                 </div>
@@ -102,7 +105,7 @@ export default function Footer() {
                   </div>
                   <div className="flex flex-col items-center md:items-start">
                     <span className="text-xs md:text-base font-bold text-[var(--footer-heading)] block tracking-wide">JADER VANEGAS</span>
-                    <a href="mailto:jader@vpermedia.com" className="text-[10px] md:text-sm text-[var(--footer-text)] hover:text-[var(--footer-link-hover)] transition-colors block font-medium">jader@vpermedia.com</a>
+                    <a href="mailto:jader@vpermedia.com" className="text-[10px] md:text-sm text-[var(--footer-text)] hover:text-primary transition-colors block font-medium">jader@vpermedia.com</a>
                     <a href="tel:+50768967401" className="text-[10px] md:text-sm text-[var(--footer-text)] block font-medium">+507 6896-7401</a>
                   </div>
                 </div>

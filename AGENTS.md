@@ -14,6 +14,11 @@ leen este archivo de forma nativa; Claude Code no, por eso existe
 - **No se toca `@misitio/ui` desde acá, ni se forkean los tokens de Figma.**
   La marca se pisa en `src/app/brand.css`, cargado **después** del bridge.
   Ese archivo es el tablero completo: tipografía, escalas, paleta y botón.
+  Un hex o un `text-[39px]` en un componente no entra al tablero. Si el
+  usuario pega un color (ej. `#E84C52`), se mapea al stop más cercano de
+  la paleta VPER (`#FDBF66` / `#5EB2E3` / `#D55856` / `#74BDB7`) o se
+  para: entra por Figma, no se inventa `--brand-red`. Regla:
+  `.cursor/rules/no-valores-fuera-del-ds.mdc`.
 - **Orden de carga de CSS — contrato, no sugerencia.** En `layout.tsx`:
   `@misitio/ui/tokens.css` → `tokens-dark.css` → `./globals.css`. Y dentro
   de `globals.css`, `@import "@misitio/ui/theme-bridge.css"` después de
@@ -22,9 +27,10 @@ leen este archivo de forma nativa; Claude Code no, por eso existe
   nunca por rama. `vercel.json` reescribe la URL SSH a HTTPS antes de
   `pnpm install`: sin eso el build de Vercel falla con
   `Host key verification failed`, repo público o no.
-- **Las secciones full-viewport y los títulos display tienen trampas
-  conocidas.** Están en `.cursor/rules/` — Cursor las carga sola por
-  `globs`. Si usás otro agente, leelas antes de tocar `src/sections/`.
+- **Las secciones full-viewport, los títulos display y los valores del DS
+  tienen trampas conocidas.** Están en `.cursor/rules/` — Cursor las carga
+  sola. Si usás otro agente, leelas antes de tocar `src/sections/` o
+  `brand.css`.
 - **`next/image` no se usa acá, y la regla `no-img-element` está apagada**
   en `eslint.config.mjs` con el motivo escrito al lado. El sitio final lo
   arma el cliente en Vite (`docs/guia-desarrollador.md` pide portar

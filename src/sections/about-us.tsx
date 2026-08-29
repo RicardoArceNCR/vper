@@ -129,7 +129,7 @@ export default function AboutUs() {
           className="text-center mb-12 md:mb-16"
         >
           <div className="@container min-w-0 w-full mb-8 md:mb-10">
-            <span className="text-xs font-bold tracking-[0.3em] text-primary mb-4 block">
+            <span className="text-xs font-bold tracking-[0.3em] text-[var(--text-eyebrow)] mb-4 block">
               NOSOTROS
             </span>
             <h2 className="font-display display-title font-black tracking-tight text-primary">

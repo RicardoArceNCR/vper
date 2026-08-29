@@ -114,7 +114,7 @@ export default async function WorkDetailPage({ params }: Props) {
               <h1 className="font-display display-title font-black tracking-tight max-w-full mb-3">
                 {item.title}
               </h1>
-              <span className="text-xs font-bold tracking-widest text-primary uppercase block mb-6">
+              <span className="text-xs font-bold tracking-widest text-[var(--text-eyebrow)] uppercase block mb-6">
                 {item.subtitle}
               </span>
 

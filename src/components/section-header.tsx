@@ -42,7 +42,7 @@ export default function SectionHeader({
           w-full: con items-center el item se encogería al texto y cqi
           se persigue con el contenido. */}
       <div className="@container min-w-0 w-full lg:flex-1">
-        <span className="text-xs font-bold tracking-[0.3em] text-primary mb-4 block">
+        <span className="text-xs font-bold tracking-[0.3em] text-[var(--text-eyebrow)] mb-4 block">
           {eyebrow}
         </span>
         <h2

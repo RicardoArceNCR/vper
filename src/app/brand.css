@@ -181,6 +181,10 @@
   --text-on-brand: #0e0e0e;
   --text-brand: #8f5f06; /* amber/700, 5.52:1 en claro */
   --text-brand-accent: #237974; /* jade/700 — mismo rol que success-text */
+  /* Eyebrow / etiqueta (PORTAFOLIO, SERVICIOS…). Clay/600, el
+     danger de la paleta VPER — no un hex suelto. Amber queda para
+     CTAs y la palabra destacada del h2. */
+  --text-eyebrow: var(--color-accent-600);
 
   --feedback-error-icon: #d55856; /* clay/600 */
   --feedback-error-border: #d55856;
@@ -412,8 +416,14 @@
 
   --brand-section-texture: url("/images/bg-vper-pattern.webp");
 
-  --background-page: var(--color-neutral-950);
-  --background-base: var(--color-neutral-950);
+  /* Mismo criterio que el claro (#ffffff, no fafafa): la página es
+     negro puro, no neutral-950 (#0a0a0a). Es el negro del ticker de
+     logos; PORTAFOLIO y el resto con bg-background lo heredan. El
+     ticker sigue `bg-black` porque en claro también es escenario
+     oscuro (reverse). */
+  --background-page: #000000;
+  --background-base: #000000;
+  --footer-bg: var(--background-page);
 
   --text-brand: #fdbf66; /* amber/300, 12.82:1 en oscuro */
   --text-brand-accent: var(--brand-main);
@@ -444,7 +454,7 @@
   /* Escalera de 4 niveles (revisión de sitio completo, 2026-08-12; card
      re-oscurecida el mismo día tras feedback directo sobre WorkGallery —
      "los grises de las tarjetas siguen pareciendo muy claros"):
-       página (bg-background)  → --background-page  → neutral/950 #0a0a0a
+       página (bg-background)  → --background-page  → #000000
        sección (bg-muted)      → --background-subtle → neutral/900 #181818
        card (bg-card, --surface-accent-bg) → ESTE valor, #2a2a2a
        borde por defecto (border-border/card-border/input-border)
@@ -490,7 +500,7 @@
      subtle, #181818), así que en vez de una card más CLARA que su fondo
      (patrón "raised" del resto del sitio), esta se hunde: más OSCURA que
      la sección, casi al nivel de la página (var(--background-page), hoy
-     #0a0a0a) — un "vacío" recortado en el gris de la sección. Contraste
+     #000000) — un "vacío" recortado en el gris de la sección. Contraste
      de relleno contra la sección queda deliberadamente sutil (1.11:1,
      nada de texto se apoya en esa diferencia) porque quien define la
      forma de la card ya no es el relleno — es --border-strong (#808080),

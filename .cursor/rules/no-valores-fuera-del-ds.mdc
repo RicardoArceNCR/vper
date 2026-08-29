@@ -1,0 +1,31 @@
+---
+description: No hex ni tipo sueltos — paleta y type scale viven en tokens + brand.css
+globs: src/**/*.{tsx,css}
+alwaysApply: true
+---
+
+# No valores fuera del design system
+
+`@misitio/ui` + `src/app/brand.css` son la paleta. Un hex o un `text-[39px]`
+en un componente no entra al tablero: `brand.css` no puede corregirlo.
+
+Paleta VPER (sección 4 de `brand.css`, tabla del README):
+
+| Rol | Hex | Token |
+|---|---|---|
+| CTA / brand | `#FDBF66` | `--brand-action`, `text-primary` |
+| Sky | `#5EB2E3` | `--brand-sky` |
+| Danger | `#D55856` | `--color-accent-600`, `--feedback-error-*` |
+| Teal | `#74BDB7` | `--brand-leaf` |
+
+Si el usuario pega un hex (ej. `#E84C52`):
+
+1. Mapealo al stop **más cercano** de esa tabla. Decí cuál y por qué.
+2. No creés `--brand-red`, `text-[#…]`, ni un stop suelto en la escala.
+3. Si ninguno sirve: paramé. Entra por Figma, o se pisa un `--brand-*`
+   / `--feedback-*` **que ya existe**. No implementes el hex.
+
+`brand.css` pisa valores de tokens existentes. No inventa una quinta familia.
+
+Tipo: `text-body-*`, `text-h*`, `display-title`. No `text-4xl` ni
+`text-[39px]` — el token no participa.

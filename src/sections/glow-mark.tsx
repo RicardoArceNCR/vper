@@ -339,7 +339,7 @@ export default function GlowMark() {
       ref={rootRef}
       // Oscuro: void negro (luz sobre negro). Claro: mismo papel que el
       // footer; el wordmark y la linterna van en currentColor (tinta).
-      className="relative isolate hidden overflow-hidden bg-[var(--footer-bg)] text-foreground px-4 pt-6 md:block md:px-8 md:pt-10 dark:bg-black"
+      className="relative isolate hidden overflow-hidden bg-[var(--footer-bg)] text-foreground px-4 pt-6 md:block md:px-8 md:pt-10"
     >
       {/* La caja del wordmark mide el alto COMPLETO — el 12% de abajo
           existe, solo queda debajo de la superficie del footer. Así el
