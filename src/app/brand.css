@@ -400,6 +400,12 @@
   --text-tertiary: var(--color-neutral-600);
   --background-page: #ffffff;
   --background-base: #ffffff;
+  /* El vidrio del nav es oscuro en los dos modos. El paquete deja
+     --nav-logo-text en --text-primary: en claro es tinta y la
+     hamburguesa se apaga. --nav-bg pasa a 900 (inverse); el overlay
+     mobile debe ser el mismo void que en oscuro. */
+  --nav-bg: #000000;
+  --nav-logo-text: var(--color-neutral-50);
 }
 
 .dark {
@@ -424,6 +430,8 @@
   --background-page: #000000;
   --background-base: #000000;
   --footer-bg: var(--background-page);
+  --nav-bg: #000000;
+  --nav-logo-text: var(--color-neutral-50);
 
   --text-brand: #fdbf66; /* amber/300, 12.82:1 en oscuro */
   --text-brand-accent: var(--brand-main);

@@ -112,7 +112,7 @@ export default function ContactSection() {
 
               <Button
                 type="submit"
-                className="h-12 w-full transition-all duration-300 hover:translate-y-[-2px] shadow-[0_4px_20px_color-mix(in_srgb,var(--brand-main)_20%,transparent)] hover:shadow-[0_8px_30px_color-mix(in_srgb,var(--brand-main)_40%,transparent)]"
+                className="h-12 w-full transition-all duration-300 hover:translate-y-[-2px] shadow-[0_4px_20px_color-mix(in_srgb,var(--color-neutral-500)_20%,transparent)] hover:shadow-[0_8px_30px_color-mix(in_srgb,var(--color-neutral-400)_40%,transparent)]"
               >
                 EMPECEMOS
               </Button>

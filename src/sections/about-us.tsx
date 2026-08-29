@@ -83,7 +83,7 @@ function TeamMemberCard({
           className="size-full object-cover object-top transition-transform duration-[1.2s] ease-out group-hover:scale-[1.06]"
         />
       </div>
-      <h3 className="font-display display-title-sm font-black tracking-tight text-foreground mb-3">
+      <h3 className="font-display font-black tracking-tight text-foreground mb-3 break-words text-h5 md:display-title-sm">
         {name}
       </h3>
       <p className="text-sm font-medium text-foreground/90 mb-2">{role}</p>

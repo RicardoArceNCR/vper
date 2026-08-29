@@ -162,7 +162,7 @@ export default function Header() {
 
           <button
             type="button"
-            className="md:hidden -mr-2 flex size-11 items-center justify-center text-[var(--nav-logo-text)]"
+            className="md:hidden pr-1 flex size-11 items-center justify-center text-[var(--nav-logo-text)]"
             onClick={() => setMobileMenuOpen((open) => !open)}
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-nav"
@@ -184,7 +184,7 @@ export default function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="md:hidden fixed inset-0 z-0 flex h-dvh flex-col items-center justify-center bg-[var(--nav-bg)] px-6"
+            className="md:hidden fixed inset-0 z-0 flex h-dvh flex-col items-center justify-center bg-[var(--nav-bg)] px-6 pt-16"
           >
             <nav className="flex flex-col items-center gap-7">
               {NAV_ITEMS.map((item, i) => {
@@ -204,7 +204,7 @@ export default function Header() {
                       href={item.href}
                       aria-current={active ? "page" : undefined}
                       className={cn(
-                        "font-sans text-h2 font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing) text-center transition-colors",
+                        "font-sans text-h4 font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing) text-center transition-colors",
                         "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)] focus-visible:rounded-sm",
                         active
                           ? "text-[var(--nav-item-active)]"
