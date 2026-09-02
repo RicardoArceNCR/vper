@@ -77,7 +77,7 @@ function TeamMemberCard({
       className="group @container flex min-w-0 flex-col text-left"
     >
       <div className="hover-brand-ring relative mb-4 rounded-2xl transition-shadow duration-500 group-hover:shadow-[0_0_28px_color-mix(in_srgb,var(--brand-main)_16%,transparent)]">
-        <div className="aspect-[3/4] overflow-hidden rounded-2xl bg-muted">
+        <div className="aspect-[3/4] overflow-hidden bg-muted">
           <img
             src={photo}
             alt={name}

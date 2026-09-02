@@ -187,23 +187,31 @@
     padding-bottom: 0;
   }
 
-  /* Trazo hover: mismo recorrido que el titular, en conic para que
-     dé la vuelta al radio. La animación SOLO corre en :hover de un
-     card (un repaint chico). prefers-reduced-motion lo deja quieto. */
+  /* Trazo: padding 1px + fondo conic. El hijo tiene que LLENAR el
+     marco (grid estira la fila: si no, el conic se ve como una bandeja
+     abajo). overflow+radius inherit: el arco no se afeita. iOS no
+     traga mask-composite. */
   .hover-brand-ring {
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 1px;
+    background: var(--hover-ring-rest, transparent);
   }
 
-  .hover-brand-ring::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 2;
+  .hover-brand-ring > * {
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
     border-radius: inherit;
-    padding: 1px;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 500ms;
+  }
+
+  .hover-brand-ring-rest {
+    --hover-ring-rest: var(--card-border);
+  }
+
+  .hover-brand-ring:hover,
+  .group:hover .hover-brand-ring {
     background: conic-gradient(
       from var(--brand-ring-angle),
       var(--brand-sky),
@@ -211,25 +219,12 @@
       var(--brand-action),
       var(--brand-sky)
     );
-    mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    mask-composite: exclude;
-    -webkit-mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-  }
-
-  .hover-brand-ring:hover::after,
-  .group:hover .hover-brand-ring::after {
-    opacity: 1;
     animation: brand-ring-spin 5s linear infinite;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hover-brand-ring:hover::after,
-    .group:hover .hover-brand-ring::after {
+    .hover-brand-ring:hover,
+    .group:hover .hover-brand-ring {
       animation: none;
     }
   }
