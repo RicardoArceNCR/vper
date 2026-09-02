@@ -147,6 +147,40 @@
     padding-bottom: 0.12em;
   }
 
+  /* Titulares display (no el hero): recorrido BTL con sky, clay y
+     action. Fallback --brand-action. title-solid apaga el clip en el
+     h2 cuando el golpe va en un span hijo (PORTAFOLIO).
+     pb: background-clip:text recorta el overshoot de O/U/C/punto
+     contra el line-box (lh 0.95). Misma trampa que .hero-script-word. */
+  .title-brand-gradient {
+    color: var(--brand-action);
+    padding-bottom: 0.14em;
+  }
+
+  @supports (background-clip: text) or (-webkit-background-clip: text) {
+    .title-brand-gradient {
+      background-image: linear-gradient(
+        90deg,
+        var(--brand-sky) 0%,
+        var(--color-accent-600) 42%,
+        var(--brand-action) 100%
+      );
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  .title-solid {
+    background-image: none;
+    background-clip: unset;
+    -webkit-background-clip: unset;
+    color: inherit;
+    -webkit-text-fill-color: unset;
+    padding-bottom: 0;
+  }
+
   @media (min-width: 768px) {
     .display-title,
     .display-title-sm,

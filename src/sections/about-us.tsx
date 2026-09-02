@@ -83,7 +83,7 @@ function TeamMemberCard({
           className="size-full object-cover object-top transition-transform duration-[1.2s] ease-out group-hover:scale-[1.06]"
         />
       </div>
-      <h3 className="font-display font-black tracking-tight text-foreground mb-3 break-words text-h5 md:display-title-sm">
+      <h3 className="font-display font-black tracking-tight text-foreground mb-3 break-words pb-[0.15em] text-h5 md:display-title-sm">
         {name}
       </h3>
       <p className="text-sm font-medium text-foreground/90 mb-2">{role}</p>
@@ -132,7 +132,7 @@ export default function AboutUs() {
             <span className="text-xs font-bold tracking-[0.3em] text-[var(--text-eyebrow)] mb-4 block">
               NOSOTROS
             </span>
-            <h2 className="font-display display-title font-black tracking-tight text-primary">
+            <h2 className="font-display display-title font-black tracking-tight title-brand-gradient">
               CINCO DIRECTORES.
               <br />
               MUCHAS IDEAS.

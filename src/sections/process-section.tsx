@@ -135,7 +135,6 @@ export default function ProcessSection() {
               </>
             }
             description="Y si no, preguntale a Houdini."
-            titleClassName="text-primary"
           />
           <p className="text-sm md:text-base text-muted-foreground font-medium mt-10 md:mt-12 max-w-3xl">
             Detrás de cada idea que parece simple hay preguntas, estrategia, criterio,

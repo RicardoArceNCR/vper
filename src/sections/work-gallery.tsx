@@ -31,19 +31,19 @@ const SECTION_TITLE = (
         conserva la proporción 1:2 cuando el contenedor se estrecha —
         ENSEÑÁRTELA a 60px fijos se sale en un 375. El hueco ENTRE blanca
         y amarilla es solo el mt del segundo span — no el line-height. */}
-    <span className="font-sans font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing) block leading-[1.25] [font-size:min(30px,calc(100cqi/26.8))]">
+    <span className="font-sans font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing) text-foreground block leading-[1.25] [font-size:min(30px,calc(100cqi/26.8))]">
       Podríamos hablar
       <br />
       horas de creatividad.
     </span>
-    <span className="mt-[0.08em] block leading-[1.1] text-primary [font-size:min(60px,calc(100cqi/13.4))]">
+    <span className="title-brand-gradient mt-[0.08em] block leading-[1.1] [font-size:min(60px,calc(100cqi/13.4))]">
       Preferimos enseñártela.
     </span>
   </>
 );
 const SECTION_DESCRIPTION =
   "Una selección de retos que se convirtieron en ideas. Y de ideas que terminaron siendo mucho más.";
-const SECTION_TITLE_CLASS = "uppercase";
+const SECTION_TITLE_CLASS = "uppercase title-solid";
 
 // El link al archivo. No es un Button gold: ese rol ya lo tiene
 // ¿NOS REUNIMOS? y un segundo pill en esta fila pelearía con las cards.

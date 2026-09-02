@@ -28,7 +28,7 @@ export default function ServicesGrid() {
             eyebrow="SERVICIOS"
             title="Una buena idea necesita más que una chispa."
             description="Estrategia para guiarla, creatividad para darle forma, digital y medios para moverla, y producción para hacerla realidad."
-            titleClassName="uppercase text-primary"
+            titleClassName="uppercase"
             align="center"
           />
         </div>

@@ -47,7 +47,7 @@ export default function SectionHeader({
         </span>
         <h2
           className={cn(
-            "font-display display-title font-black tracking-tight max-w-full",
+            "font-display display-title font-black tracking-tight max-w-full title-brand-gradient",
             titleClassName,
           )}
         >
