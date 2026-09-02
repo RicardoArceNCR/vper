@@ -400,12 +400,18 @@
   --text-tertiary: var(--color-neutral-600);
   --background-page: #ffffff;
   --background-base: #ffffff;
-  /* El vidrio del nav es oscuro en los dos modos. El paquete deja
-     --nav-logo-text en --text-primary: en claro es tinta y la
-     hamburguesa se apaga. --nav-bg pasa a 900 (inverse); el overlay
-     mobile debe ser el mismo void que en oscuro. */
-  --nav-bg: #000000;
-  --nav-logo-text: var(--color-neutral-50);
+  /* Light: el paquete pinta el nav inverse (fondo 900, items
+     --text-inverse-*). Sobre página blanca eso deja logo y labels
+     en tinta clara. Acá el nav es papel, como el resto del modo:
+     wordmark y hamburguesa en --text-primary, items en 700 (600
+     era --text-secondary y se leía lavado en text-body-sm). El
+     active NO va a --brand-main: #FDBF66 sobre blanco no pasa
+     contraste; el underline after:bg-primary ya marca la sección. */
+  --nav-bg: var(--background-page);
+  --nav-logo-text: var(--text-primary);
+  --nav-item-default: var(--color-neutral-700);
+  --nav-item-hover: var(--text-primary);
+  --nav-item-active: var(--text-primary);
 }
 
 .dark {
@@ -432,6 +438,9 @@
   --footer-bg: var(--background-page);
   --nav-bg: #000000;
   --nav-logo-text: var(--color-neutral-50);
+  --nav-item-default: var(--text-secondary);
+  --nav-item-hover: var(--text-primary);
+  --nav-item-active: var(--brand-main);
 
   --text-brand: #fdbf66; /* amber/300, 12.82:1 en oscuro */
   --text-brand-accent: var(--brand-main);

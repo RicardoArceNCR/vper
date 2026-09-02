@@ -21,11 +21,7 @@ export default function Footer() {
       <div className="wrap min-w-0">
         <div className="flex min-w-0 flex-col md:flex-row md:justify-between gap-12 md:gap-16 mb-16 text-center md:text-left">
             <div className="flex min-w-0 w-full flex-col items-center md:max-w-xs md:items-start">
-              {/* El SVG del nav es blanco sólido: en el header funciona
-                  porque el vidrio es --nav-bg (inverse, oscuro en los
-                  dos modos). El footer es --footer-bg (papel en claro),
-                  así que el wordmark se pinta con currentColor.
-                  viewBox 238×19: h-8 w-auto pide ~400px y con shrink-0
+              {/* viewBox 238×19: h-8 w-auto pide ~400px y con shrink-0
                   se come NAVEGACIÓN. Es Obviously Wide, no un bug de
                   SVG en general — mismo min-w-0 que display-title. */}
               <svg

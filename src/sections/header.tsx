@@ -9,8 +9,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@ui/lib/utils";
 import { useActiveSection } from "@/hooks/use-active-section";
 import { NAV_ITEMS, NAV_SECTION_IDS, isNavItemActive } from "@/lib/navigation";
-
-const LOGO = "/images/logo-vper-media.svg";
+import {
+  VPER_WORDMARK_PATHS as PATHS,
+  VPER_WORDMARK_VIEWBOX as VB,
+} from "@/lib/vper-wordmark";
 // px — coincide con el alto normal del header (h-16). Bajado de 80 (h-20)
 // el 2026-08-12: el estado inicial (sin scroll) se veía sobredimensionado
 // — logo, texto de nav y alto del header, los tres a la vez. El
@@ -111,14 +113,22 @@ export default function Header() {
             className="flex items-center gap-2 group"
             onClick={() => setMobileMenuOpen(false)}
           >
-            <img
-              src={LOGO}
-              alt="VPER Media"
+            {/* currentColor ← --nav-logo-text: tinta en claro, papel
+                en oscuro. El SVG de /images/ es blanco sólido y no
+                sigue el token. viewBox 238×19: h-8 pide ~400px. */}
+            <svg
+              viewBox={`0 0 ${VB.w} ${VB.h}`}
               className={cn(
-                "h-7 md:h-8 w-auto origin-left transition-all duration-300 group-hover:opacity-80",
+                "h-7 md:h-8 w-auto aspect-[238/19] origin-left text-[var(--nav-logo-text)] transition-all duration-300 group-hover:opacity-80",
                 isScrolled ? "scale-50" : "scale-100",
               )}
-            />
+              role="img"
+              aria-label="VPER Media"
+            >
+              {PATHS.map((d, i) => (
+                <path key={i} d={d} fill="currentColor" />
+              ))}
+            </svg>
           </Link>
 
           {/* Mismo bug que el logo: href={`#${id}`} solo funciona parado

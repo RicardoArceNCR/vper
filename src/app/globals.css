@@ -213,6 +213,14 @@
   background-color: color-mix(in srgb, var(--nav-bg) 72%, transparent);
 }
 
+/* Light: 55% de blanco sobre el hero oscuro sale gris y el texto
+   no llega a contraste. Fondo papel, sin frost — el pedido es
+   barra blanca, no vidrio. */
+html:not(.dark) .nav-glass,
+html:not(.dark) .nav-glass-scrolled {
+  background-color: var(--nav-bg);
+}
+
 /* Overlay mobile a pantalla completa: misma tinta que el nav, sin blur
    (un backdrop-filter a 100dvh sí es caro). La barra se funde con el panel. */
 .nav-glass-open {
