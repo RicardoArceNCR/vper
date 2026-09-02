@@ -31,7 +31,7 @@ const SECTION_TITLE = (
         conserva la proporción 1:2 cuando el contenedor se estrecha —
         ENSEÑÁRTELA a 60px fijos se sale en un 375. El hueco ENTRE blanca
         y amarilla es solo el mt del segundo span — no el line-height. */}
-    <span className="block leading-[1.25] [font-size:min(30px,calc(100cqi/26.8))]">
+    <span className="font-sans font-(weight:--button-font-weight) uppercase tracking-(--button-letter-spacing) block leading-[1.25] [font-size:min(30px,calc(100cqi/26.8))]">
       Podríamos hablar
       <br />
       horas de creatividad.
