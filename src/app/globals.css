@@ -129,6 +129,24 @@
     line-height: 0.95;
   }
 
+  /* Lockup: la Wide envuelve; Crear. es otra fila del flex, no un
+     <br> ni absolute (top/left se rompe al cambiar el clamp). Yellowtail
+     se sale del em-box hacia arriba: lh 0.4 pega Crear. a POR
+     (afinado en DevTools); pb para que no recorte el trazo. */
+  .hero-script-word {
+    display: block;
+    flex-shrink: 0;
+    font-family: var(--brand-font-script);
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 0;
+    font-size: 3em;
+    line-height: 0.4;
+    color: var(--brand-action);
+    margin-top: 0.06em;
+    padding-bottom: 0.12em;
+  }
+
   @media (min-width: 768px) {
     .display-title,
     .display-title-sm,

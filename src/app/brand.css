@@ -44,6 +44,17 @@
   font-display: swap;
 }
 
+/* Yellowtail — acento del hero (última palabra). OFL, self-host.
+   Latin (CREAR.). Si entra una palabra con acento, hay que sumar
+   el corte latin-ext; ver public/fonts/README.md. */
+@font-face {
+  font-family: "Yellowtail";
+  src: url("/fonts/Yellowtail-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* ═══════════════════════════════════════════════════════════════
      1. FAMILIAS
@@ -53,6 +64,7 @@
      (--typography-family-body / -mono) — NO redefinirlos acá. */
   --typography-family-display: "Obviously Wide Blck", sans-serif;
   --brand-font-display: "Obviously Wide Blck";
+  --brand-font-script: "Yellowtail", cursive;
   --brand-font-body: "Montserrat";
   --brand-font-mono: "IBM Plex Mono";
 
