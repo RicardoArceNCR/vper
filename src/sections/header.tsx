@@ -103,23 +103,23 @@ export default function Header() {
           mobileMenuOpen && "nav-glass-open",
         )}
       >
-        <div className="wrap flex items-center justify-between h-full gap-6">
+        <div className="wrap flex min-w-0 items-center justify-between h-full gap-3 md:gap-6">
           {/* Antes href="#" — en el home eso no rompía nada visible (era
               un anchor a sí mismo), pero en cualquier otra página
               (/work/[slug]) no navegaba a ningún lado, solo agregaba "#"
               a la URL actual. Link a "/" real. */}
           <Link
             href="/"
-            className="flex items-center gap-2 group"
+            className="flex min-w-0 items-center group"
             onClick={() => setMobileMenuOpen(false)}
           >
-            {/* currentColor ← --nav-logo-text: tinta en claro, papel
-                en oscuro. El SVG de /images/ es blanco sólido y no
-                sigue el token. viewBox 238×19: h-8 pide ~400px. */}
+            {/* currentColor ← --nav-logo-text. viewBox 238×19: h-7 pide
+                ~350px y el hamburguesa se sale del 390. Columna min-w-0,
+                svg max-w-full — mismo caso que el footer. */}
             <svg
               viewBox={`0 0 ${VB.w} ${VB.h}`}
               className={cn(
-                "h-7 md:h-8 w-auto aspect-[238/19] origin-left text-[var(--nav-logo-text)] transition-all duration-300 group-hover:opacity-80",
+                "block h-auto w-full max-h-7 max-w-full origin-left text-[var(--nav-logo-text)] transition-all duration-300 group-hover:opacity-80 md:max-h-8",
                 isScrolled ? "scale-50" : "scale-100",
               )}
               role="img"
@@ -172,7 +172,7 @@ export default function Header() {
 
           <button
             type="button"
-            className="md:hidden pr-1 flex size-11 items-center justify-center text-[var(--nav-logo-text)]"
+            className="md:hidden shrink-0 flex size-11 items-center justify-center text-[var(--nav-logo-text)]"
             onClick={() => setMobileMenuOpen((open) => !open)}
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-nav"
