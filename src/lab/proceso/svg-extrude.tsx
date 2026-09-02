@@ -1,23 +1,30 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, type RefObject } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { GlassMaterial } from "./glass-material";
+import {
+  ICON_SPIN_HOVER,
+  ICON_SPIN_IDLE,
+  ICON_TILT_DAMP,
+  ICON_TILT_HOVER,
+  ICON_TILT_IDLE,
+} from "./process-icon-shared";
 
 const FIT = 1.55;
 
 type SvgExtrudeProps = {
   url: string;
   color: string;
+  hoverRef: RefObject<boolean>;
 };
 
-export function SvgExtrude({ url, color }: SvgExtrudeProps) {
+export function SvgExtrude({ url, color, hoverRef }: SvgExtrudeProps) {
   const data = useLoader(SVGLoader, url);
   const meshRef = useRef<THREE.Mesh>(null);
-  const hovered = useRef(false);
 
   const geometry = useMemo(() => {
     const shapes = data.paths.flatMap((path) => path.toShapes());
@@ -62,26 +69,17 @@ export function SvgExtrude({ url, color }: SvgExtrudeProps) {
   useFrame((_, delta) => {
     const mesh = meshRef.current;
     if (!mesh) return;
-    mesh.rotation.y += delta * (hovered.current ? 0.9 : 0.28);
+    mesh.rotation.y += delta * (hoverRef.current ? ICON_SPIN_HOVER : ICON_SPIN_IDLE);
     mesh.rotation.x = THREE.MathUtils.damp(
       mesh.rotation.x,
-      hovered.current ? 0.18 : 0.06,
-      6,
+      hoverRef.current ? ICON_TILT_HOVER : ICON_TILT_IDLE,
+      ICON_TILT_DAMP,
       delta,
     );
   });
 
   return (
-    <mesh
-      ref={meshRef}
-      geometry={geometry}
-      onPointerOver={() => {
-        hovered.current = true;
-      }}
-      onPointerOut={() => {
-        hovered.current = false;
-      }}
-    >
+    <mesh ref={meshRef} geometry={geometry}>
       <GlassMaterial color={color} />
     </mesh>
   );

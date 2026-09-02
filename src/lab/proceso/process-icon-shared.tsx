@@ -3,6 +3,13 @@
 import { useEffect, useState, type RefObject } from "react";
 import { type LabIcon } from "./icons";
 
+/** Idle / hover del spin 3D. El hover lo dispara la tarjeta, no el mesh. */
+export const ICON_SPIN_IDLE = 0.28;
+export const ICON_SPIN_HOVER = 1.3;
+export const ICON_TILT_IDLE = 0.06;
+export const ICON_TILT_HOVER = 0.26;
+export const ICON_TILT_DAMP = 8;
+
 export function useInView(ref: RefObject<HTMLElement | null>, initial = false) {
   const [inView, setInView] = useState(initial);
 

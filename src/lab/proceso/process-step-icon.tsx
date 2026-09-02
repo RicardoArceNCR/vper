@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, type RefObject } from "react";
 import { Canvas } from "@react-three/fiber";
 import { PerspectiveCamera } from "@react-three/drei";
 import * as THREE from "three";
@@ -20,24 +20,35 @@ function FallbackShape({ color }: { color: string }) {
   );
 }
 
-function IconModel({ icon, color }: { icon: LabIcon; color: string }) {
+function IconModel({
+  icon,
+  color,
+  hoverRef,
+}: {
+  icon: LabIcon;
+  color: string;
+  hoverRef: RefObject<boolean>;
+}) {
   if (icon.source === "glb") {
     return (
       <GlbIcon
         url={icon.glb}
         color={color}
         restRotation={icon.restRotation}
+        visualScale={icon.visualScale}
         flame={icon.id === "aprender"}
+        hoverRef={hoverRef}
       />
     );
   }
-  return <SvgExtrude url={icon.svg} color={color} />;
+  return <SvgExtrude url={icon.svg} color={color} hoverRef={hoverRef} />;
 }
 
 type ProcessStepIconProps = {
   icon: LabIcon;
   color: string;
   running: boolean;
+  hoverRef: RefObject<boolean>;
   dpr?: [number, number];
 };
 
@@ -45,6 +56,7 @@ export function ProcessStepIcon({
   icon,
   color,
   running,
+  hoverRef,
   dpr = [1, 1.5],
 }: ProcessStepIconProps) {
   return (
@@ -61,14 +73,14 @@ export function ProcessStepIcon({
             attachBrandEnvironment(gl, scene);
           }}
         >
-          <PerspectiveCamera makeDefault position={[0, 0, 3.15]} fov={36} />
+          <PerspectiveCamera makeDefault position={[0, 0, 2.5]} fov={36} />
           <hemisphereLight args={["#9ae8ff", "#1a1040", 0.38]} />
           <ambientLight intensity={0.1} />
           <directionalLight position={[2.2, 3.6, 3.8]} intensity={1.55} color="#f4fbff" />
           <directionalLight position={[-2.6, 1.4, 2.2]} intensity={0.7} color="#7ad0f5" />
           <directionalLight position={[0.6, -1.8, 2.4]} intensity={0.28} color="#8a6cff" />
           <Suspense fallback={<FallbackShape color={color} />}>
-            <IconModel icon={icon} color={color} />
+            <IconModel icon={icon} color={color} hoverRef={hoverRef} />
           </Suspense>
         </Canvas>
       </div>

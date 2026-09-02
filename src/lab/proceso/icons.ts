@@ -15,6 +15,11 @@ export type LabIcon = {
   raster: string;
   /** Pose de reposo en radianes [x, y, z], antes del spin. */
   restRotation?: [number, number, number];
+  /**
+   * Compensación óptica sobre el fit (caballo = 1). Las siluetas
+   * flacas se leen más chicas que un hexágono del mismo AABB.
+   */
+  visualScale?: number;
 };
 
 export const PROCESS_LAB_ICONS: LabIcon[] = [
@@ -26,6 +31,7 @@ export const PROCESS_LAB_ICONS: LabIcon[] = [
     source: "glb",
     raster: "/images/process-investigacion.webp",
     restRotation: [0, 0, 0.7],
+    visualScale: 1.12,
   },
   {
     id: "pensar",
@@ -43,6 +49,7 @@ export const PROCESS_LAB_ICONS: LabIcon[] = [
     source: "glb",
     raster: "/images/process-diseno.webp",
     restRotation: [0, 0, 2.44],
+    visualScale: 1.08,
   },
   {
     id: "hacer",
@@ -51,6 +58,7 @@ export const PROCESS_LAB_ICONS: LabIcon[] = [
     glb: "/lab/proceso/hacer.glb",
     source: "glb",
     raster: "/images/process-desarrollo.webp",
+    visualScale: 0.88,
   },
   {
     id: "aprender",
