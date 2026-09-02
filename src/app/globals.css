@@ -38,6 +38,12 @@
 @import "@misitio/ui/theme-bridge.css"; /* 3: @theme inline → Tailwind */
 @import "./brand.css"; /* 4: identidad de ESTE sitio */
 
+@property --brand-ring-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -181,6 +187,53 @@
     padding-bottom: 0;
   }
 
+  /* Trazo hover: mismo recorrido que el titular, en conic para que
+     dé la vuelta al radio. La animación SOLO corre en :hover de un
+     card (un repaint chico). prefers-reduced-motion lo deja quieto. */
+  .hover-brand-ring {
+    position: relative;
+  }
+
+  .hover-brand-ring::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    padding: 1px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 500ms;
+    background: conic-gradient(
+      from var(--brand-ring-angle),
+      var(--brand-sky),
+      var(--color-accent-600),
+      var(--brand-action),
+      var(--brand-sky)
+    );
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+  }
+
+  .hover-brand-ring:hover::after,
+  .group:hover .hover-brand-ring::after {
+    opacity: 1;
+    animation: brand-ring-spin 5s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hover-brand-ring:hover::after,
+    .group:hover .hover-brand-ring::after {
+      animation: none;
+    }
+  }
+
   @media (min-width: 768px) {
     .display-title,
     .display-title-sm,
@@ -196,6 +249,12 @@
    (vper-media-original-cliente/client/src/index.css) — se había perdido en
    una refactorización posterior de vper-media-repo y el componente quedó
    sin animación real. */
+@keyframes brand-ring-spin {
+  to {
+    --brand-ring-angle: 360deg;
+  }
+}
+
 @keyframes ticker {
   0% {
     transform: translate3d(0, 0, 0);

@@ -44,7 +44,7 @@ export default function ServicesGrid() {
             <motion.article
               variants={fadeInUp}
               key={service.name}
-              className="group flex min-w-0 flex-col rounded-3xl bg-[var(--surface-subtle)] p-6 md:p-8 border border-transparent hover:border-foreground/25 transition-colors duration-500 dark:bg-card"
+              className="hover-brand-ring group flex min-w-0 flex-col rounded-[var(--card-radius)] border border-[var(--card-border)] bg-[var(--card-bg)] p-6 md:p-8 shadow-[var(--card-shadow)] transition-[border-color,box-shadow,background-color] duration-500 hover:border-transparent hover:bg-[var(--card-bg-hover)] hover:shadow-[0_0_40px_color-mix(in_srgb,var(--brand-main)_22%,transparent)]"
             >
               <div className="flex min-w-0 items-center gap-4 mb-5">
                 <div
@@ -58,7 +58,7 @@ export default function ServicesGrid() {
                   />
                 </div>
                 <div className="@container min-w-0 flex-1">
-                  <h3 className="font-display font-black uppercase tracking-tight text-foreground max-w-full [font-size:min(1rem,calc(100cqi/14))] leading-none">
+                  <h3 className="font-display font-black uppercase tracking-tight text-foreground max-w-full [font-size:min(1rem,calc(100cqi/14))] leading-[1.1] transition-colors duration-500 group-hover:text-primary">
                     {service.name}
                   </h3>
                 </div>
