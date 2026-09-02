@@ -19,7 +19,7 @@ export default function ProcessLab() {
     >
       {PROCESS_LAB_ICONS.map((icon) => (
         <div key={icon.id} className="flex min-w-0 flex-col items-center md:text-center">
-          <div className="size-28 overflow-hidden rounded-full border border-border bg-black shadow-[0_0_22px_color-mix(in_srgb,var(--brand-sky)_26%,transparent)] transition-[box-shadow,border-color] duration-500 hover:border-primary hover:shadow-[0_0_36px_color-mix(in_srgb,var(--brand-sky)_40%,transparent)] md:size-36 lg:size-48">
+          <div className="size-28 overflow-hidden rounded-full border border-border bg-background shadow-[0_0_22px_color-mix(in_srgb,var(--brand-sky)_26%,transparent)] transition-[box-shadow,border-color] duration-500 hover:border-primary hover:shadow-[0_0_36px_color-mix(in_srgb,var(--brand-sky)_40%,transparent)] md:size-36 lg:size-48">
             {reduceMotion ? (
               <ProcessRaster icon={icon} />
             ) : (

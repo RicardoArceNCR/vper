@@ -44,7 +44,7 @@ export default function ServicesGrid() {
             <motion.article
               variants={fadeInUp}
               key={service.name}
-              className="group flex min-w-0 flex-col rounded-3xl bg-card p-6 md:p-8 border border-transparent hover:border-foreground/25 transition-colors duration-500"
+              className="group flex min-w-0 flex-col rounded-3xl bg-[var(--surface-subtle)] p-6 md:p-8 border border-transparent hover:border-foreground/25 transition-colors duration-500 dark:bg-card"
             >
               <div className="flex min-w-0 items-center gap-4 mb-5">
                 <div

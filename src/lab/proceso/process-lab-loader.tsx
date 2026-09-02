@@ -10,7 +10,7 @@ const ProcessLab = dynamic(() => import("./process-lab"), {
       {PROCESS_LAB_ICONS.map((icon) => (
         <div
           key={icon.id}
-          className="mx-auto size-28 rounded-full border border-border bg-black md:size-36 lg:size-48"
+          className="mx-auto size-28 rounded-full border border-border bg-background md:size-36 lg:size-48"
         />
       ))}
     </div>

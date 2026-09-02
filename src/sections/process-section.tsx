@@ -15,7 +15,7 @@ import {
 
 const ProcessStepIcon = dynamic(
   () => import("@/lab/proceso/process-step-icon").then((m) => m.ProcessStepIcon),
-  { ssr: false, loading: () => <div className="size-full bg-black" /> },
+  { ssr: false, loading: () => <div className="size-full bg-background" /> },
 );
 
 const processSteps = [
@@ -99,7 +99,7 @@ export default function ProcessSection() {
                   <div className="hidden lg:block absolute top-24 left-[65%] w-full h-[1px] bg-border z-0 group-hover:bg-primary/20 transition-colors duration-500" />
                 )}
 
-                <div className="relative z-10 size-28 md:size-36 lg:size-48 shrink-0 overflow-hidden rounded-full border border-border bg-black md:mb-8 group-hover:border-primary group-hover:shadow-[0_0_40px_color-mix(in_srgb,var(--brand-main)_25%,transparent)] transition-all duration-500">
+                <div className="relative z-10 size-28 md:size-36 lg:size-48 shrink-0 overflow-hidden rounded-full border border-border bg-background md:mb-8 group-hover:border-primary group-hover:shadow-[0_0_40px_color-mix(in_srgb,var(--brand-main)_25%,transparent)] transition-all duration-500">
                   {useGlb ? (
                     <ProcessStepIcon icon={icon} color={color} running={inView} />
                   ) : (
