@@ -375,8 +375,8 @@
 }
 
 /* Hero intro: el copy espera a `.hero-ready` (fondo decodificado).
-   Sin eso, opacity 0 — no animar encima de un placeholder. 8px de y
-   es compositing. Stagger corto: título → copy → CTAs. */
+   Sin eso, opacity 0 — no animar encima de un placeholder.
+   Coreografía: Wide → Crear. (firma) → copy → CTAs. */
 @keyframes hero-enter {
   from {
     opacity: 0;
@@ -388,6 +388,20 @@
   }
 }
 
+/* Golpe Yellowtail: un hair de scale + blur, no typewriter. */
+@keyframes hero-script-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
 .hero-enter {
   opacity: 0;
 }
@@ -396,12 +410,17 @@
   animation: hero-enter 0.5s cubic-bezier(0.25, 1, 0.5, 1) 0.04s both;
 }
 
+.hero-ready .hero-script-enter {
+  transform-origin: center bottom;
+  animation: hero-script-enter 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both;
+}
+
 .hero-ready .hero-copy-enter {
-  animation: hero-enter 0.45s cubic-bezier(0.25, 1, 0.5, 1) 0.12s both;
+  animation: hero-enter 0.45s cubic-bezier(0.25, 1, 0.5, 1) 0.4s both;
 }
 
 .hero-ready .hero-cta-enter {
-  animation: hero-enter 0.45s cubic-bezier(0.25, 1, 0.5, 1) 0.2s both;
+  animation: hero-enter 0.45s cubic-bezier(0.25, 1, 0.5, 1) 0.5s both;
 }
 
 /* Ken Burns en el WRAPPER, no en el <img>, y recién DESPUÉS de LCP.
@@ -429,6 +448,15 @@
   .hero-enter {
     opacity: 1;
     animation: none;
+  }
+
+  .hero-ready .hero-title-enter,
+  .hero-ready .hero-script-enter,
+  .hero-ready .hero-copy-enter,
+  .hero-ready .hero-cta-enter {
+    animation: none;
+    filter: none;
+    transform: none;
   }
 
   .hero-kenburns-armed .hero-kenburns {

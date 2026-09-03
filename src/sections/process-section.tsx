@@ -100,8 +100,9 @@ function ProcessStepCard({
       io = new IntersectionObserver(
         ([entry]) => {
           const on =
-            Boolean(entry?.isIntersecting) &&
-            (entry.intersectionRatio ?? 0) >= 0.35;
+            entry != null &&
+            entry.isIntersecting &&
+            entry.intersectionRatio >= 0.35;
           hoverRef.current = on;
           setLit(on);
         },

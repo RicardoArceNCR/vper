@@ -196,11 +196,14 @@ export default function Hero() {
         className={`absolute inset-x-0 bottom-0 z-30 wrap min-w-0 text-center px-4 flex flex-col items-center pb-[30px] md:pb-16 ${bgReady || prefersReducedMotion ? "hero-ready" : ""}`}
       >
         <div className="@container min-w-0 w-full">
-          <h1 className="hero-enter hero-title-enter font-display display-title-hero font-extrabold tracking-tight max-w-5xl mx-auto mb-4 md:mb-8 flex min-w-0 flex-col items-center text-white [text-shadow:0_2px_28px_rgba(0,0,0,0.55)]">
-            <span className="min-w-0 w-full">
+          <h1 className="font-display display-title-hero mx-auto mb-4 flex min-w-0 max-w-5xl flex-col items-center font-extrabold tracking-tight text-white [text-shadow:0_2px_28px_rgba(0,0,0,0.55)] md:mb-8">
+            <span className="hero-enter hero-title-enter min-w-0 w-full">
               SIEMPRE HAY ALGO MÁS GRANDE POR
             </span>
-            <span className="hero-script-word">Crear.</span>
+            {/* Beat de marca: llega después de la Wide — no typewriter. */}
+            <span className="hero-script-word hero-enter hero-script-enter">
+              Crear.
+            </span>
           </h1>
         </div>
 
