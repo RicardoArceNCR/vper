@@ -312,10 +312,10 @@
 }
 
 @keyframes ticker {
-  0% {
+  from {
     transform: translate3d(0, 0, 0);
   }
-  100% {
+  to {
     transform: translate3d(-50%, 0, 0);
   }
 }
@@ -324,8 +324,52 @@
   animation: ticker 25s linear infinite;
 }
 
-.animate-ticker:hover {
+.logo-ticker:hover .animate-ticker {
   animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ticker {
+    animation: none;
+  }
+}
+
+/* Fundido a negro en los bordes: el overflow cortaba wordmarks a
+   mitad de glifo. Un mask sobre la sección hacía transparentes los
+   bordes del `bg-black` — en light se veía el blanco de la página.
+   Velos ::before/::after: los logos se disuelven en negro, no en el
+   modo. 2.5rem / 6rem: bastante para disolver, poco para que el
+   centro siga sólido. */
+.logo-ticker {
+  position: relative;
+}
+
+.logo-ticker::before,
+.logo-ticker::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 2.5rem;
+  pointer-events: none;
+}
+
+.logo-ticker::before {
+  left: 0;
+  background: linear-gradient(to right, #000 0%, transparent 100%);
+}
+
+.logo-ticker::after {
+  right: 0;
+  background: linear-gradient(to left, #000 0%, transparent 100%);
+}
+
+@media (min-width: 768px) {
+  .logo-ticker::before,
+  .logo-ticker::after {
+    width: 6rem;
+  }
 }
 
 /* Hero intro: el copy espera a `.hero-ready` (fondo decodificado).

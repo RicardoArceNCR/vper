@@ -14,33 +14,35 @@ const LOGOS = [
   "/images/logo-flordecana.webp",
 ];
 
-// Sin hooks/motion: puede quedarse como server component.
+function LogoStrip({ hidden = false }: { hidden?: boolean }) {
+  return (
+    <div
+      className="flex shrink-0 items-center gap-12 pr-12 md:gap-16 md:pr-16"
+      aria-hidden={hidden || undefined}
+    >
+      {LOGOS.map((logo, idx) => (
+        <img
+          key={hidden ? `dup-${idx}` : idx}
+          src={logo}
+          alt={hidden ? "" : "Logo de cliente"}
+          loading="lazy"
+          decoding="async"
+          className="h-8 px-2 object-contain opacity-70 transition-all duration-300 hover:scale-110 hover:opacity-100 md:h-12"
+        />
+      ))}
+    </div>
+  );
+}
+
+// Dos tiras idénticas + `pr` = el gap. `-50%` cae exactamente en un
+// ciclo: 7 logos + 7 huecos. El `w-[320%]` / `justify-around` anterior
+// hacía que el 50% no coincidiera con un set — de ahí el salto.
 export default function LogoTicker() {
   return (
-    <section className="bg-black py-12 md:mb-16 overflow-hidden">
-      <div className="flex w-[320%] md:w-[200%] lg:w-[170%]">
-        <div className="flex items-center justify-around w-full animate-ticker py-2 gap-12 md:gap-16">
-          {LOGOS.map((logo, idx) => (
-            <img
-              key={idx}
-              src={logo}
-              alt="Logo de cliente"
-              loading="lazy"
-              decoding="async"
-              className="h-8 md:h-12 object-contain opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-300 px-2"
-            />
-          ))}
-          {LOGOS.map((logo, idx) => (
-            <img
-              key={`dup-${idx}`}
-              src={logo}
-              alt=""
-              loading="lazy"
-              decoding="async"
-              className="h-8 md:h-12 object-contain opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-300 px-2"
-            />
-          ))}
-        </div>
+    <section className="logo-ticker overflow-hidden bg-black py-12 md:mb-16">
+      <div className="animate-ticker flex w-max">
+        <LogoStrip />
+        <LogoStrip hidden />
       </div>
     </section>
   );
