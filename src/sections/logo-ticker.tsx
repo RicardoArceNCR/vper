@@ -21,13 +21,16 @@ function LogoStrip({ hidden = false }: { hidden?: boolean }) {
       aria-hidden={hidden || undefined}
     >
       {LOGOS.map((logo, idx) => (
+        // Eager: lazy + translateX hace que Safari (y WebKit viejo)
+        // descargue / evicte el decode al salir del viewport “lógico”
+        // y los logos parpadean o desaparecen. Son 7 archivos chicos.
         <img
           key={hidden ? `dup-${idx}` : idx}
           src={logo}
           alt={hidden ? "" : "Logo de cliente"}
-          loading="lazy"
+          loading="eager"
           decoding="async"
-          className="h-8 px-2 object-contain opacity-70 transition-all duration-300 hover:scale-110 hover:opacity-100 md:h-12"
+          className="h-8 px-2 object-contain opacity-70 transition-[opacity,transform] duration-300 hover:scale-110 hover:opacity-100 md:h-12"
         />
       ))}
     </div>
