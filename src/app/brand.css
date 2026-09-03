@@ -432,9 +432,28 @@
 
 .dark {
   /* Misma tipografía en oscuro. Solo se recalibra color.
-     El relleno de marca es IDÉNTICO en ambos modos según la propuesta
-     (amber/300 sobre neutral/950 da 12.8:1 en oscuro también) — no se
-     redefine acá, ya vale desde :root. */
+     tokens-dark.css pisa marca, radio y hover del CTA en `.dark`
+     (main-500, cápsula 9999px, hover del paquete). En `html.dark` el
+     :root de este archivo gana por orden. Un `.dark` ANIDADO (form
+     escenario en claro) re-aplica el paquete sobre el nodo y tapa la
+     herencia — por eso estos valores se repetían “idénticos” y no
+     alcanzaba con dejarlos solo en :root. */
+  --brand-action: #fdbf66;
+  --brand-main: #fdbf66;
+  --brand-action-hover: #fed7a4;
+  --brand-action-press: #f4a508;
+  --button-radius: var(--radius-xl);
+  --button-font-weight: 700;
+  --button-letter-spacing: 0.06em;
+  --button-primary-bg: var(--brand-action);
+  --button-primary-text: #0e0e0e;
+  --button-primary-border: color-mix(in srgb, white 22%, #fdbf66);
+  --button-primary-bg-hover: #0e0e0e;
+  --button-primary-text-hover: #ffffff;
+  --button-primary-border-hover: color-mix(in srgb, white 18%, transparent);
+  --button-primary-bg-press: #1a1a1a;
+  --text-on-brand: #0e0e0e;
+
   --brand-strong: #fed7a4; /* amber/200 — más claro en oscuro */
 
   /* Un stop más claro que el paquete (neutral-600 → 500). Es el

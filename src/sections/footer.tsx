@@ -39,14 +39,14 @@ export default function Footer() {
                 Siempre hay algo más grande por crear.
               </p>
               <div className="flex gap-4">
-                <a href="https://www.facebook.com/profile.php?id=61587696818975" target="_blank" rel="noreferrer" aria-label="Facebook" className="w-8 h-8 border border-[var(--border-strong)] rounded-full flex items-center justify-center text-[var(--text-primary)] hover:text-primary hover:border-primary/20 hover:scale-110 transition-all duration-300">
-                  <Facebook size={14} />
+                <a href="https://www.facebook.com/profile.php?id=61587696818975" target="_blank" rel="noreferrer" aria-label="Facebook" className="flex size-11 items-center justify-center rounded-full border border-[var(--border-strong)] text-[var(--text-primary)] transition-all duration-300 hover:scale-110 hover:border-primary/20 hover:text-primary">
+                  <Facebook size={20} />
                 </a>
-                <a href="https://www.instagram.com/vpermedia/" target="_blank" rel="noreferrer" aria-label="Instagram" className="w-8 h-8 border border-[var(--border-strong)] rounded-full flex items-center justify-center text-[var(--text-primary)] hover:text-primary hover:border-primary/20 hover:scale-110 transition-all duration-300">
-                  <Instagram size={14} />
+                <a href="https://www.instagram.com/vpermedia/" target="_blank" rel="noreferrer" aria-label="Instagram" className="flex size-11 items-center justify-center rounded-full border border-[var(--border-strong)] text-[var(--text-primary)] transition-all duration-300 hover:scale-110 hover:border-primary/20 hover:text-primary">
+                  <Instagram size={20} />
                 </a>
-                <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="w-8 h-8 border border-[var(--border-strong)] rounded-full flex items-center justify-center text-[var(--text-primary)] hover:text-primary hover:border-primary/20 hover:scale-110 transition-all duration-300">
-                  <Linkedin size={14} />
+                <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="flex size-11 items-center justify-center rounded-full border border-[var(--border-strong)] text-[var(--text-primary)] transition-all duration-300 hover:scale-110 hover:border-primary/20 hover:text-primary">
+                  <Linkedin size={20} />
                 </a>
               </div>
             </div>

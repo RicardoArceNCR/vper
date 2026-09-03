@@ -1,10 +1,17 @@
 "use client";
 
 import { Button } from "@ui/components/button";
+import { Input } from "@ui/components/input";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { fadeInUp } from "@/lib/motion";
 import SectionHeader from "@/components/section-header";
+
+const fieldLabel =
+  "text-overline-sm font-bold text-[var(--input-label)]";
+
+const textareaClass =
+  "w-full min-w-0 resize-none rounded-[var(--input-radius)] border border-[var(--input-border)] bg-[var(--input-bg)] px-[var(--input-padding-x)] py-[var(--input-padding-y)] text-body-sm text-[var(--input-text)] placeholder:text-[var(--input-placeholder)] transition-colors hover:border-[var(--input-border-hover)] focus-visible:border-[var(--input-border-focus)] focus-visible:bg-[var(--input-bg-focus)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--focus-ring-offset)]";
 
 const CONTACT_ITEMS = [
   { icon: Mail, label: "CORREO", val: "info@vpermedia.com", href: "mailto:info@vpermedia.com" },
@@ -37,12 +44,15 @@ export default function ContactSection() {
             stack cabe. En lg (1024) solo quedan ~192px; absolute recortaría
             correo/teléfono, así que ahí el stack sigue en flujo debajo. */}
         <div className="relative mx-auto w-full min-w-0 max-w-xl">
+          {/* Escenario oscuro: `dark` local pinta con la rampa de
+              brand.css. El degradé BTL se queda en el título. En modo
+              oscuro de página es no-op — mismos tokens. */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
-            className="bg-card border border-border p-6 md:p-8 rounded-[var(--button-radius)]"
+            className="dark [color-scheme:dark] rounded-[var(--card-radius)] border border-border bg-card p-[var(--card-padding)] text-foreground md:p-8"
           >
             {/* Igual que en vper-media-repo: submit de mentira (alert), no hay
                 integración real de envío todavía — puerto fiel del demo. */}
@@ -55,49 +65,49 @@ export default function ContactSection() {
             >
               <div className="grid min-w-0 grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="flex min-w-0 flex-col gap-2">
-                  <label htmlFor="contact-nombre" className="text-[10px] font-bold tracking-widest text-input-label">
+                  <label htmlFor="contact-nombre" className={fieldLabel}>
                     NOMBRE
                   </label>
-                  <input
+                  <Input
                     id="contact-nombre"
                     type="text"
                     name="nombre"
                     placeholder="Tu nombre"
                     required
-                    className="h-12 w-full min-w-0 bg-background border border-input px-4 text-xs font-medium focus:border-primary focus:outline-none transition-colors rounded-[var(--button-radius)]"
+                    className="w-full min-w-0"
                   />
                 </div>
                 <div className="flex min-w-0 flex-col gap-2">
-                  <label htmlFor="contact-apellido" className="text-[10px] font-bold tracking-widest text-input-label">
+                  <label htmlFor="contact-apellido" className={fieldLabel}>
                     APELLIDO
                   </label>
-                  <input
+                  <Input
                     id="contact-apellido"
                     type="text"
                     name="apellido"
                     placeholder="Tu apellido"
                     required
-                    className="h-12 w-full min-w-0 bg-background border border-input px-4 text-xs font-medium focus:border-primary focus:outline-none transition-colors rounded-[var(--button-radius)]"
+                    className="w-full min-w-0"
                   />
                 </div>
               </div>
 
               <div className="flex min-w-0 flex-col gap-2">
-                <label htmlFor="contact-correo" className="text-[10px] font-bold tracking-widest text-input-label">
+                <label htmlFor="contact-correo" className={fieldLabel}>
                   CORREO
                 </label>
-                <input
+                <Input
                   id="contact-correo"
                   type="email"
                   name="correo"
                   placeholder="tu@email.com"
                   required
-                  className="h-12 w-full min-w-0 bg-background border border-input px-4 text-xs font-medium focus:border-primary focus:outline-none transition-colors rounded-[var(--button-radius)]"
+                  className="w-full min-w-0"
                 />
               </div>
 
               <div className="flex min-w-0 flex-col gap-2">
-                <label htmlFor="contact-mensaje" className="text-[10px] font-bold tracking-widest text-input-label">
+                <label htmlFor="contact-mensaje" className={fieldLabel}>
                   MENSAJE
                 </label>
                 <textarea
@@ -106,14 +116,11 @@ export default function ContactSection() {
                   rows={4}
                   placeholder="Cuéntanos sobre tu proyecto..."
                   required
-                  className="w-full min-w-0 bg-background border border-input p-4 text-xs font-medium focus:border-primary focus:outline-none transition-colors resize-none rounded-[var(--button-radius)]"
+                  className={textareaClass}
                 />
               </div>
 
-              <Button
-                type="submit"
-                className="h-12 w-full transition-all duration-300 hover:translate-y-[-2px] shadow-[0_4px_20px_color-mix(in_srgb,var(--color-neutral-500)_20%,transparent)] hover:shadow-[0_8px_30px_color-mix(in_srgb,var(--color-neutral-400)_40%,transparent)]"
-              >
+              <Button type="submit" size="lg" className="w-full">
                 EMPECEMOS
               </Button>
             </form>
@@ -124,25 +131,25 @@ export default function ContactSection() {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeInUp}
-            className="mx-auto mt-10 flex w-fit min-w-0 flex-col gap-8 xl:absolute xl:left-full xl:top-1/2 xl:mx-0 xl:mt-0 xl:-translate-y-1/2 xl:pl-10"
+            className="mx-auto mt-10 flex w-full min-w-0 flex-col gap-6 rounded-[var(--card-radius)] border border-border bg-card p-[var(--card-padding)] xl:absolute xl:left-full xl:top-1/2 xl:mx-0 xl:mt-0 xl:w-auto xl:-translate-y-1/2 xl:gap-8 xl:border-0 xl:bg-transparent xl:p-0 xl:pl-10"
           >
             {CONTACT_ITEMS.map((item) => {
               const Icon = item.icon;
               return (
                 <div key={item.label} className="flex min-w-0 items-center gap-4 group">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-primary transition-all duration-300 group-hover:border-primary/20 group-hover:bg-primary/5">
-                    <Icon size={18} aria-hidden />
+                  <div className="flex size-12 shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-border bg-card text-primary transition-colors duration-300 group-hover:border-primary/20 group-hover:bg-primary/5">
+                    <Icon size={22} aria-hidden />
                   </div>
                   <div className="min-w-0">
-                    <span className="block text-[10px] font-bold tracking-widest text-muted-foreground">
+                    <span className="mb-1 block text-overline-sm font-bold text-muted-foreground">
                       {item.label}
                     </span>
                     {"href" in item ? (
-                      <a href={item.href} className="break-words text-sm font-bold hover:text-primary transition-colors">
+                      <a href={item.href} className="break-words text-body-sm font-bold hover:text-primary transition-colors">
                         {item.val}
                       </a>
                     ) : (
-                      <span className="break-words text-sm font-bold">{item.val}</span>
+                      <span className="break-words text-body-sm font-bold">{item.val}</span>
                     )}
                   </div>
                 </div>

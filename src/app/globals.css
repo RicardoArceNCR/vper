@@ -98,18 +98,27 @@
 
   /* Textura de sección (contacto, servicios, ficha de work).
      --brand-section-texture: mobile/desktop × claro/oscuro en brand.css.
-     fixed en desktop; en mobile iOS trata fixed como scroll y el
-     recorte grande se siente pegajoso. */
+     Mobile: 100% auto + repeat-y — el recorte (1696×2528) se pinta al
+     ancho del bloque, conserva su alto y se tira hacia abajo. Sin
+     repeat, en una ficha larga el patrón se cortaba contra el liso.
+     `cover` acá escala a la ALTURA del elemento: en work/[slug] eso
+     es toda la página y los radios se vuelven un mural.
+     `background-attachment: fixed` no: iOS lo trata como scroll y el
+     recorte grande se siente pegajoso. Desktop sí fixed + cover —
+     el área de pintura es el viewport, no la sección. */
   .bg-brand-texture {
     background-image: var(--brand-section-texture);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-size: 100% auto;
+    background-position: top center;
+    background-repeat: repeat-y;
     background-attachment: scroll;
   }
 
   @media (min-width: 768px) {
     .bg-brand-texture {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       background-attachment: fixed;
     }
   }
@@ -166,10 +175,20 @@
      action. Fallback --brand-action. title-solid apaga el clip en el
      h2 cuando el golpe va en un span hijo (PORTAFOLIO).
      pb: background-clip:text recorta el overshoot de O/U/C/punto
-     contra el line-box (lh 0.95). Misma trampa que .hero-script-word. */
+     contra el line-box (lh 0.95). Misma trampa que .hero-script-word.
+     Mobile: 1.08 en vez de 0.95 — Obviously Wide envuelve (SERVICIOS,
+     MÉTODO, HABLEMOS) y el acento de MÉTODO se comía la línea de
+     arriba. Una pisca en el token, no un leading-[…] por sección.
+     Desktop (≥768) vuelve a 1, ver el bloque de abajo. */
   .title-brand-gradient {
     color: var(--brand-action);
     padding-bottom: 0.14em;
+  }
+
+  @media (max-width: 767px) {
+    .display-title.title-brand-gradient {
+      line-height: 1.08;
+    }
   }
 
   @supports (background-clip: text) or (-webkit-background-clip: text) {
