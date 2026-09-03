@@ -58,7 +58,7 @@ export default function WorkIndexPage() {
         </div>
 
         {/* Dos columnas es el techo a propósito: a tres, la card baja de
-            ~300px y el recorte 16/10 deja las láminas de marca
+            ~300px y el recorte 16/9 deja las láminas de marca
             ilegibles. El archivo lista, pero sigue siendo un portafolio
             visual. */}
         <div className="wrap grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">

@@ -16,9 +16,9 @@
 // IMÁGENES: cada proyecto real trae su propio set en public/images
 // (toma-tola-*, netforemost-*, vida-nica-*, monumental-humidors-*,
 // oh-la-lashes-*, wok-*), sin reutilizar fotos de otras secciones.
-// Héroes de vitrina/detalle: tope 1024×576. Un 1920 en la card de
-// home (~355px) era el recorte de PageSpeed; el detalle a 1024 es
-// el mismo techo que ya tenían cuatro de los seis.
+// Héroes de vitrina/detalle: tope 1024×576, más un -sm 640×360 para
+// el srcset de la card. Un 1920 en la card de home (~355px) era el
+// recorte de PageSpeed; el detalle a 1024 es el mismo techo.
 //
 // VIDEO: el tipo "video" está soportado end-to-end (ver ProjectHero), pero
 // ningún proyecto lo usa todavía porque no hay ningún .mp4 real en
@@ -310,7 +310,7 @@ export const workItems: WorkItem[] = [
     hero: { type: "image", src: "/images/wok-hero.webp" },
     // Galería en el orden original (01, 03–13). El hero de la card es el
     // mockup de interior (lámina 12), no la -01: la portada de mármol
-    // queda pálida al recorte 16/10 de la home; el letrero con faroles
+    // queda pálida al recorte 16/9 de la home; el letrero con faroles
     // lee mejor como miniatura, mismo criterio que Monumental (pin) y
     // Oh! La Lashes (redes).
     gallery: [

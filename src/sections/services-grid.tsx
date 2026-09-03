@@ -55,6 +55,10 @@ export default function ServicesGrid() {
                     <img
                       src={service.icon}
                       alt=""
+                      width={80}
+                      height={80}
+                      loading="lazy"
+                      decoding="async"
                       className="size-full object-contain"
                     />
                   </div>

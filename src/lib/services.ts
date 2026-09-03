@@ -21,13 +21,13 @@ export const SERVICES = [
   {
     name: "Creatividad",
     desc: "Las ideas pueden cambiar una conversación, una percepción o una marca entera. Creamos con esa ambición.",
-    icon: "/images/service-creatividad.png",
+    icon: "/images/service-creatividad.webp",
     iconBg: "var(--color-main-200)",
   },
   {
     name: "Branding",
     desc: "Construimos marcas con personalidad propia. De esas que reconocés antes de terminar de verlas.",
-    icon: "/images/service-branding.png",
+    icon: "/images/service-branding.webp",
     iconBg: "var(--color-info-300)",
   },
   {
@@ -35,25 +35,25 @@ export const SERVICES = [
     // al slide Digital (2026-08-29). El & sigue el patrón de ATL & BTL.
     name: "Digital & Web",
     desc: "Desarrollo web, contenido, medios y datos moviéndose a la velocidad de la gente. Porque el mundo digital cambia todos los días. Nosotros también.",
-    icon: "/images/service-digital.png",
+    icon: "/images/service-digital.webp",
     iconBg: "var(--color-leaf-200)",
   },
   {
     name: "Planeación Estratégica",
     desc: "Encontramos el problema detrás del problema. Después ponemos estrategia, criterio y una buena cantidad de preguntas sobre la mesa.",
-    icon: "/images/service-planeacion.png",
+    icon: "/images/service-planeacion.webp",
     iconBg: "var(--color-leaf-200)",
   },
   {
     name: "Audiovisual",
     desc: "Convertimos ideas en historias que se ven, se escuchan y se sienten. Porque algunas cosas simplemente necesitan cobrar vida.",
-    icon: "/images/service-audiovisual.png",
+    icon: "/images/service-audiovisual.webp",
     iconBg: "var(--color-main-200)",
   },
   {
     name: "ATL & BTL",
     desc: "Ponemos las ideas donde realmente pueden pasar cosas: medios, calles, eventos, experiencias y cualquier lugar donde esté la gente.",
-    icon: "/images/service-atl.png",
+    icon: "/images/service-atl.webp",
     iconBg: "var(--color-info-300)",
   },
 ] as const;

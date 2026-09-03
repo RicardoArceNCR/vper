@@ -15,9 +15,10 @@ import type { WorkItem } from "@/lib/work-items";
 //   index    → el grid del archivo. Ancho 100%: acá manda la columna del
 //              grid, no la card.
 //
-// Lo que NO cambia entre variantes: el recorte 16/10, el zoom al hover,
-// el badge de flecha y la jerarquía subtítulo → título. Que el archivo
-// se sienta el mismo sitio que la home es justamente el punto.
+// Lo que NO cambia entre variantes: el recorte 16/9 (las láminas ya
+// son 1024×576), el zoom al hover, el badge de flecha y la jerarquía
+// subtítulo → título. Que el archivo se sienta el mismo sitio que la
+// home es justamente el punto.
 //
 // Sin `sector` en la card a propósito: `subtitle` ya dice lo mismo en
 // prosa ("Cocina cantonesa", "Bienes raíces"). `sector` existe como
@@ -25,6 +26,10 @@ import type { WorkItem } from "@/lib/work-items";
 // lo que la línea de arriba ya dice.
 
 type WorkCardVariant = "featured" | "index";
+
+function heroSrcSet(src: string) {
+  return `${src.replace(/\.webp$/, "-sm.webp")} 640w, ${src} 1024w`;
+}
 
 export default function WorkCard({
   item,
@@ -49,11 +54,17 @@ export default function WorkCard({
           : "w-full",
       )}
     >
-      <div className="aspect-[16/10] overflow-hidden bg-muted relative">
-        {/* 1024×576 es el tope de las láminas (2× un thumb de ~500).
-            Un 1920 en un hueco de ~355px era el recorte de PageSpeed. */}
+      <div className="aspect-video overflow-hidden bg-muted relative">
+        {/* 1024×576 es el tope de las láminas (detalle / desktop).
+            En la card mobile (~355px) el srcset pide el -sm de 640. */}
         <img
           src={item.hero.src}
+          srcSet={item.hero.type === "image" ? heroSrcSet(item.hero.src) : undefined}
+          sizes={
+            isFeatured
+              ? "(min-width: 1024px) min(42vw, 620px), (min-width: 640px) 52vw, 78vw"
+              : "(min-width: 768px) 45vw, 100vw"
+          }
           alt={item.title}
           width={1024}
           height={576}

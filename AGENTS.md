@@ -41,7 +41,7 @@ leen este archivo de forma nativa; Claude Code no, por eso existe
   se borra la regla en el mismo cambio.
 - **Payload de la home (PageSpeed mobile).** El hero monta **un** slide
   hasta que la foto LCP carga; Ken Burns va en el wrapper, no en el
-  `<img>`. Los GLB del proceso **no** se `useGLTF.preload` al importar
+  `<img>`, y arranca después de LCP. Los GLB del proceso **no** se `useGLTF.preload` al importar
   el módulo — la home espera `useNearView`. Fotos del equipo:
   `loading="lazy"` y ~966px de lado corto (no 1930). Héroes de
   vitrina: tope 1024×576. Detalle en `docs/guia-desarrollador.md`

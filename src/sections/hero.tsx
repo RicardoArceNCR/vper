@@ -2,19 +2,19 @@
 
 import { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import { Button } from "@ui/components/button";
-import { useReducedMotion } from "framer-motion";
 
 // Cada slide tiene recorte propio (desktop landscape / mobile portrait).
-// WebP a q90, desktop tope 3840px de ancho (2× un 1920): más que eso
+// WebP a q78, desktop tope 3840px de ancho (2× un 1920): más que eso
 // no se ve y el PNG original pesaba hasta 39MB. <picture> hace que el
 // teléfono no baje el archivo de desktop.
 //
 // LCP (PageSpeed mobile): el <img> es el elemento grande. Tres trampas
 // que dejaban NO_LCP + ~600 KB de más en el primer paint:
-//   1. Montar actual+prev+next — el browser pide tres retratos de
-//      1301×2046 aunque dos estén en opacity 0.
+//   1. Montar actual+prev+next — el browser pide tres retratos
+//      aunque dos estén en opacity 0.
 //   2. Ken Burns en el mismo nodo que Lighthouse toma como LCP
-//      (`motion.img` + scale). El lab a veces no registra el paint.
+//      (`motion.img` + scale), o en el padre antes de que el lab
+//      registre el paint. El zoom espera a `.hero-kenburns-armed`.
 //   3. El carrusel arrancaba a los 6s aunque la foto LCP no hubiera
 //      cargado. El intervalo espera a que el fondo esté listo.
 const slides = [
@@ -36,23 +36,32 @@ const slides = [
   },
 ] as const;
 
-/** Intrínseco del recorte mobile (el `src` del <img>). El desktop
+/** Intrínseco del recorte mobile (el `src` del <img>). 960 cubre un
+ *  viewport de ~480 CSS px a 2×, más el 8% del Ken Burns. El desktop
  *  entra por <source>; el box del hero es `h-dvh`, no estos píxeles. */
-const HERO_MOBILE_W = 1301;
-const HERO_MOBILE_H = 2046;
+const HERO_MOBILE_W = 960;
+const HERO_MOBILE_H = 1510;
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [bgReady, setBgReady] = useState(false);
   const [cycled, setCycled] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const firstImgRef = useRef<HTMLImageElement>(null);
   const n = slides.length;
-  const prefersReducedMotion = useReducedMotion();
   const markBgReady = useCallback(() => setBgReady(true), []);
 
   useLayoutEffect(() => {
     const img = firstImgRef.current;
     if (img?.complete && img.naturalWidth > 0) setBgReady(true);
+  }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
   }, []);
 
   useEffect(() => {
@@ -87,7 +96,7 @@ export default function Hero() {
         return (
           <div
             key={slide.desktop}
-            className={`absolute inset-0 w-full h-full overflow-hidden transition-all duration-1000 ease-in-out ${isCurrent ? "hero-slide-current opacity-100 z-10" : "opacity-0 z-0"}`}
+            className={`absolute inset-0 w-full h-full overflow-hidden transition-[opacity] duration-1000 ease-in-out ${isCurrent ? "opacity-100 z-10" : "opacity-0 z-0"} ${isCurrent && bgReady ? "hero-kenburns-armed" : ""}`}
           >
             <div className="hero-kenburns">
               <picture className="block h-full w-full">

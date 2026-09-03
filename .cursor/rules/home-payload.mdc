@@ -13,16 +13,19 @@ Al tocar estas superficies:
 
 1. **Hero.** Montá un slide hasta que la foto LCP cargue. Vecinos
    después. Ken Burns en `.hero-kenburns` (wrapper), nunca `scale` /
-   `motion.img` en el `<img>`. `decoding="sync"` y `fetchPriority="high"`
-   solo en esa primera foto. `<picture>` mobile/desktop se queda.
+   `motion.img` en el `<img>`, y recién con `.hero-kenburns-armed`
+   (después de LCP). Preload del primer retrato en `page.tsx`.
+   `decoding="sync"` y `fetchPriority="high"` solo en esa primera foto.
+   Mobile tope 960×1510. `<picture>` mobile/desktop se queda.
 2. **Proceso.** No `useGLTF.preload` a nivel de módulo en `glb-icon.tsx`.
    Eso pide ~1.5 MB cuando webpack evalúa el archivo. La home espera
    `useNearView` y monta el canvas ahí. El preload queda para el lab
    (`preloadProcessGlbs` en `process-lab.tsx`).
 3. **Equipo.** `loading="lazy"` + `width`/`height`. Retratos ~966×1293,
    no 1930. NOSOTROS está bajo el fold.
-4. **Vitrina.** Héroes tope 1024×576. Un 1920 en un thumb de ~355px es
-   el recorte “mejorar imágenes”.
+4. **Vitrina.** Héroes tope 1024×576, más un `-sm` 640×360 en `srcset`
+   para la card. Un 1920 (o el 1024 en un hueco de ~355px) es el
+   recorte “mejorar imágenes”.
 
 `next/image` no entra: el puerto es Vite. Lo que esa regla busca está
 en el markup (`FadeInImage`, `loading`, dimensiones).

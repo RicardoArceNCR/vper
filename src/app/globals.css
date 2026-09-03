@@ -306,8 +306,9 @@
   animation: hero-enter 0.45s cubic-bezier(0.25, 1, 0.5, 1) 0.2s both;
 }
 
-/* Ken Burns en el WRAPPER, no en el <img>. Lighthouse toma el img
-   como LCP; animar scale en ese mismo nodo a veces lo deja en NO_LCP. */
+/* Ken Burns en el WRAPPER, no en el <img>, y recién DESPUÉS de LCP.
+   Lighthouse toma el img como LCP; animar scale en ese nodo — o en el
+   padre, antes de que el lab registre el paint — deja NO_LCP. */
 @keyframes hero-kenburns {
   from {
     transform: scale(1);
@@ -322,7 +323,7 @@
   width: 100%;
 }
 
-.hero-slide-current .hero-kenburns {
+.hero-kenburns-armed .hero-kenburns {
   animation: hero-kenburns 6s linear forwards;
 }
 
@@ -332,7 +333,7 @@
     animation: none;
   }
 
-  .hero-slide-current .hero-kenburns {
+  .hero-kenburns-armed .hero-kenburns {
     animation: none;
   }
 }

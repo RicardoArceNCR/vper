@@ -600,10 +600,10 @@ el lab vuelve a `NO_LCP` y a ~2.7 MB aunque se vea igual en desktop.
 
 | Superficie | Contrato | Por qué |
 |---|---|---|
-| Hero (`src/sections/hero.tsx`) | Un `<img>` en el primer paint. Vecinos después de que el fondo cargó. Ken Burns en un wrapper (`.hero-kenburns`), no en el `img`. `<picture>` mobile/desktop. | Lighthouse toma el `img` como LCP. Tres retratos de 1301×2046 en opacity 0 se piden igual. Animar scale en el nodo LCP a veces lo deja en `NO_LCP`. |
+| Hero (`src/sections/hero.tsx`) | Un `<img>` en el primer paint. Vecinos después de que el fondo cargó. Ken Burns en un wrapper (`.hero-kenburns`), armado con `.hero-kenburns-armed` **después** de LCP, no en el `img`. Preload del primer retrato en `page.tsx`. `<picture>` mobile/desktop. Mobile tope 960×1510. | Lighthouse toma el `img` como LCP. Tres retratos en opacity 0 se piden igual. Animar scale en el nodo LCP — o en el padre, antes del paint — deja `NO_LCP`. |
 | Proceso (`src/sections/process-section.tsx`) | Raster hasta `useNearView`. El `dynamic()` del canvas 3D no se renderiza antes. **No** `useGLTF.preload` a nivel de módulo. | Cinco GLB ≈ 1.5 MB. El preload al importar los bajaba en el primer paint. |
 | Equipo (`src/sections/about-us.tsx`) | `loading="lazy"` + `width`/`height`. Fotos ~966×1293, no 1930. | NOSOTROS está bajo el fold. Un retrato a resolución de print (Victor) era 260 KB en un hueco de ~176px. |
-| Vitrina (`src/components/work-card.tsx`) | Héroes tope **1024×576**. `loading="lazy"` en la home; `priority` solo en las primeras del archivo `/work`. | Un 1920 en un thumb de ~355px era el recorte “mejorar imágenes”. `eager` en la vitrina competía con el LCP del hero. |
+| Vitrina (`src/components/work-card.tsx`) | Héroes tope **1024×576**, más un `-sm` 640×360 en `srcset` para la card. `loading="lazy"` en la home; `priority` solo en las primeras del archivo `/work`. | Un 1920 (o el 1024 en un thumb de ~355px) era el recorte “mejorar imágenes”. `eager` en la vitrina competía con el LCP del hero. |
 
 `next/image` no se usa en este repo: el sitio final es Vite y cada
 `<Image />` sería un des-port. Lo que esa regla busca (lazy, dimensiones,
