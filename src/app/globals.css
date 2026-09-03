@@ -264,6 +264,39 @@
       line-height: 1;
     }
   }
+
+  /* Archivo /work: la fila que asoma no pelea con la que ya se lee.
+     Timeline de view: borrosa al entrar, nítida al cubrir ~el centro.
+     Sin JS. Mobile no: en 390 la card que entra ES la de lectura.
+     Reduce motion: se apaga. Sin @supports, la card queda nítida. */
+  @keyframes work-card-focus {
+    from {
+      opacity: 0.4;
+      filter: blur(12px);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0);
+    }
+  }
+
+  @media (min-width: 768px) {
+    @supports (animation-timeline: view()) {
+      .work-card-index {
+        animation: work-card-focus linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 38%;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .work-card-index {
+      animation: none;
+      opacity: 1;
+      filter: none;
+    }
+  }
 }
 
 /* ── Utilidades propias de ESTE proyecto (no viven en el bridge compartido) ── */

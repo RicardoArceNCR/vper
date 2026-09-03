@@ -24,6 +24,9 @@ import { getArchiveWorkItems } from "@/lib/work-items";
 //     único que parte el set. "Varios" no cuenta como sector de
 //     prospecto: es el reel DIGITAL hasta que se parta por marca.
 //   · Un segundo carrusel sticky. La firma de la home es la home.
+//     El muro se suaviza en la card que entra (view timeline), no con
+//     un velo al viewport: esa niebla se comía los títulos de la fila
+//     en lectura y sobre negro no se leía.
 //   · Rutas /work/creatividad. SSG de combinaciones para ocho items.
 //
 // FONDO: liso, sin la textura de marca que sí lleva work/[slug]

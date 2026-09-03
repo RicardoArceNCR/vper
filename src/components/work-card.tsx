@@ -49,11 +49,11 @@ export default function WorkCard({
     <Link
       href={`/work/${item.slug}`}
       className={cn(
-        "group relative bg-card border border-border overflow-hidden rounded-[var(--card-radius)] transition-all duration-500 hover:border-foreground/15",
+        "group relative bg-card border border-border overflow-hidden rounded-[var(--card-radius)] transition-[border-color] duration-500 hover:border-foreground/15",
         "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)]",
         isFeatured
           ? "shrink-0 w-[78vw] sm:w-[52vw] lg:w-[clamp(360px,42vw,620px)]"
-          : "w-full",
+          : "work-card-index w-full",
       )}
     >
       <div className="aspect-[11/6] overflow-hidden bg-muted relative">
