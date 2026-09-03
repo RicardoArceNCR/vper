@@ -135,8 +135,8 @@ export default function WorkGallery() {
           horizontal: overflow-hidden también afeitaba PORTAFOLIO (el
           fadeInUp lo deja en y:0 contra el borde). overflow-x-clip no
           fuerza overflow-y a hidden. pt extra = aire tras la animación. */}
-      <div className="sticky top-16 h-screen flex flex-col justify-start pt-6 pb-6 md:justify-center md:pt-10 md:pb-8 overflow-x-clip overflow-y-visible">
-        <div className="wrap min-w-0 mb-4 md:mb-14">
+      <div className="sticky top-16 h-screen flex flex-col justify-start pt-4 pb-4 md:justify-center md:pt-10 md:pb-8 overflow-x-clip overflow-y-visible">
+        <div className="wrap min-w-0 mb-3 md:mb-14">
           <SectionHeader
             eyebrow="PORTAFOLIO"
             title={SECTION_TITLE}
@@ -156,7 +156,7 @@ export default function WorkGallery() {
           <div className="shrink-0 w-[12vw]" aria-hidden="true" />
         </motion.div>
 
-        <div className="wrap mt-10 md:mt-14 flex flex-col items-center gap-4 md:flex-row md:justify-between">
+        <div className="wrap mt-6 md:mt-14 flex flex-col items-center gap-3 md:flex-row md:justify-between md:gap-4">
           <div className="h-[2px] w-full max-w-xs bg-border rounded-full overflow-hidden">
             <motion.div
               className="h-full w-full bg-primary rounded-full"

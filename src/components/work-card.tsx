@@ -79,7 +79,7 @@ export default function WorkCard({
           <ArrowUpRight size={18} className="text-foreground" />
         </div>
       </div>
-      <div className={cn("relative z-20", isFeatured ? "p-5" : "p-4 md:p-5")}>
+      <div className="relative z-20 p-4 md:p-5">
         <span className="text-[10px] font-bold tracking-widest text-[var(--text-eyebrow)] mb-2 block uppercase">
           {item.subtitle}
         </span>
