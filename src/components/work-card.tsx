@@ -15,10 +15,13 @@ import type { WorkItem } from "@/lib/work-items";
 //   index    → el grid del archivo. Ancho 100%: acá manda la columna del
 //              grid, no la card.
 //
-// Lo que NO cambia entre variantes: el recorte 11/6 (~13px más alto
-// que 19/10, ~12px más bajo que 16/9 en el ancho de archivo; las
-// láminas siguen siendo 1024×576 y object-cover recorta un pelo), el
-// zoom al hover, el badge de flecha y la jerarquía subtítulo → título.
+// Lo que NO cambia entre variantes en desktop: el recorte 11/6
+// (~13px más alto que 19/10, ~12px más bajo que 16/9 en el ancho de
+// archivo; las láminas siguen siendo 1024×576 y object-cover recorta
+// un pelo), el zoom al hover, el badge de flecha y la jerarquía
+// subtítulo → título. En mobile la vitrina (featured) es más ancha
+// (88vw) y un pelo más alta (3/2): el sticky pide foto presente; el
+// archivo se queda en 11/6 a todo el ancho de columna.
 // Que el archivo se sienta el mismo sitio que la home es justamente
 // el punto.
 //
@@ -52,19 +55,26 @@ export default function WorkCard({
         "group relative bg-card border border-border overflow-hidden rounded-[var(--card-radius)] transition-[border-color] duration-500 hover:border-foreground/15",
         "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--focus-ring-color)]",
         isFeatured
-          ? "shrink-0 w-[78vw] sm:w-[52vw] lg:w-[clamp(360px,42vw,620px)]"
+          ? "shrink-0 w-[88vw] sm:w-[52vw] lg:w-[clamp(360px,42vw,620px)]"
           : "work-card-index w-full",
       )}
     >
-      <div className="aspect-[11/6] overflow-hidden bg-muted relative">
+      <div
+        className={cn(
+          "relative overflow-hidden bg-muted",
+          // Vitrina mobile: 3/2 gana ~40px de foto vs 11/6 a 88vw/390.
+          // Desde sm vuelve al 11/6 del archivo.
+          isFeatured ? "aspect-[3/2] sm:aspect-[11/6]" : "aspect-[11/6]",
+        )}
+      >
         {/* 1024×576 es el tope de las láminas (detalle / desktop).
-            En la card mobile (~355px) el srcset pide el -sm de 640. */}
+            En la card mobile (~343px) el srcset pide el -sm de 640. */}
         <img
           src={item.hero.src}
           srcSet={item.hero.type === "image" ? heroSrcSet(item.hero.src) : undefined}
           sizes={
             isFeatured
-              ? "(min-width: 1024px) min(42vw, 620px), (min-width: 640px) 52vw, 78vw"
+              ? "(min-width: 1024px) min(42vw, 620px), (min-width: 640px) 52vw, 88vw"
               : "(min-width: 768px) 45vw, 100vw"
           }
           alt={item.title}
