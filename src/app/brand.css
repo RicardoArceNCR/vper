@@ -399,12 +399,10 @@
   --button-primary-border-hover: color-mix(in srgb, white 18%, transparent);
   --button-primary-bg-press: #1a1a1a;
 
-  /* Textura de sección (radios VPER). El raster es carbón sobre negro,
-     pensado para desaparecer en oscuro. En claro se deja none: un
-     invert() del webp sube el contraste y mancha el fondo; si hace
-     falta textura en claro, es otro asset (misma composición, lumi-
-     nancia invertida en Figma), no un filtro. */
-  --brand-section-texture: none;
+  /* Textura de sección (radios VPER). Cuatro recortes: mobile/desktop
+     × claro/oscuro. En claro ya no es none — hay asset propio, no un
+     invert() del oscuro. */
+  --brand-section-texture: url("/images/bg-mobile-l.webp");
 
   /* Light: el paquete deja tertiary en 400 (#bebebe) y la página en
      50 (#fafafa). Los <p> muted se leían pálidos: 500 seguía lavado
@@ -426,6 +424,12 @@
   --nav-item-active: var(--text-primary);
 }
 
+@media (min-width: 768px) {
+  :root {
+    --brand-section-texture: url("/images/bg-horizontal-l.webp");
+  }
+}
+
 .dark {
   /* Misma tipografía en oscuro. Solo se recalibra color.
      El relleno de marca es IDÉNTICO en ambos modos según la propuesta
@@ -438,7 +442,7 @@
      detalle de work): #808080 se leía apagado sobre fondo de página. */
   --text-tertiary: var(--color-neutral-500);
 
-  --brand-section-texture: url("/images/bg-vper-pattern.webp");
+  --brand-section-texture: url("/images/bg-mobile.webp");
 
   /* Mismo criterio que el claro (#ffffff, no fafafa): la página es
      negro puro, no neutral-950 (#0a0a0a). Es el negro del ticker de
@@ -555,4 +559,10 @@
   --button-secondary-border-hover: #ffffff;
   --button-secondary-fill: linear-gradient(180deg, #2e2e2e 0%, #161616 100%);
   --button-secondary-fill-hover: none;
+}
+
+@media (min-width: 768px) {
+  .dark {
+    --brand-section-texture: url("/images/bg-horizontal.webp");
+  }
 }

@@ -55,8 +55,8 @@ export default async function WorkDetailPage({ params }: Props) {
   );
 
   return (
-    // Textura de fondo fija (pedido 2026-08-12). El webp solo pinta en
-    // oscuro; en claro queda bg-background. Ver --brand-section-texture.
+    // Textura de fondo (pedido 2026-08-12; recortes claro/oscuro y
+    // mobile/desktop desde 2026-09-02). Ver --brand-section-texture.
     <div className="min-h-screen bg-background bg-brand-texture text-foreground selection:bg-primary selection:text-primary-foreground flex flex-col overflow-x-clip">
       <Header />
 

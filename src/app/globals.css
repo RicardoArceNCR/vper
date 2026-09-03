@@ -97,12 +97,21 @@
   }
 
   /* Textura de sección (contacto, servicios, ficha de work).
-     --brand-section-texture es none en claro y el webp en oscuro. */
+     --brand-section-texture: mobile/desktop × claro/oscuro en brand.css.
+     fixed en desktop; en mobile iOS trata fixed como scroll y el
+     recorte grande se siente pegajoso. */
   .bg-brand-texture {
     background-image: var(--brand-section-texture);
-    background-attachment: fixed;
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+  }
+
+  @media (min-width: 768px) {
+    .bg-brand-texture {
+      background-attachment: fixed;
+    }
   }
 
   /* Obviously Wide: "SELECCIONADOS." mide 13.2em (medido en el .woff2).
