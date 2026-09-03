@@ -8,15 +8,17 @@ import { Button } from "@ui/components/button";
 // no se ve y el PNG original pesaba hasta 39MB. <picture> hace que el
 // teléfono no baje el archivo de desktop.
 //
-// LCP (PageSpeed mobile): el <img> es el elemento grande. Tres trampas
-// que dejaban NO_LCP + ~600 KB de más en el primer paint:
-//   1. Montar actual+prev+next — el browser pide tres retratos
-//      aunque dos estén en opacity 0.
-//   2. Ken Burns en el mismo nodo que Lighthouse toma como LCP
-//      (`motion.img` + scale), o en el padre antes de que el lab
-//      registre el paint. El zoom espera a `.hero-kenburns-armed`.
-//   3. El carrusel arrancaba a los 6s aunque la foto LCP no hubiera
-//      cargado. El intervalo espera a que el fondo esté listo.
+// LCP (PageSpeed mobile): el <img> del primer retrato es el elemento
+// grande. El lab corre ~7–10s en 4G lento. Tres trampas que dejaban
+// NO_LCP aunque el filmstrip sí mostraba la cara:
+//   1. Montar vecinos en el primer paint — el browser pide retratos
+//      en opacity 0 y el lab a veces toma el que zoom-ea.
+//   2. Ken Burns (scale en el wrapper) encima del nodo LCP. El zoom
+//      del primer retrato espera a que PerformanceObserver registre
+//      LCP; los demás slides sí zoom-ean al ser current.
+//   3. El carrusel a los 6s sacaba el candidato (opacity 0 o unmount)
+//      mientras el lab todavía medía. El primer retrato no se desmonta
+//      nunca; el primer cambio espera HERO_FIRST_HOLD_MS.
 const slides = [
   {
     desktop: "/images/hero-face-desktop.webp",
@@ -41,10 +43,25 @@ const slides = [
  *  entra por <source>; el box del hero es `h-dvh`, no estos píxeles. */
 const HERO_MOBILE_W = 960;
 const HERO_MOBILE_H = 1510;
+const HERO_LCP_FALLBACK_MS = 1200;
+const HERO_FIRST_HOLD_MS = 8000;
+const HERO_CYCLE_MS = 6000;
+
+type LcpEntry = PerformanceEntry & {
+  element?: Element | null;
+  url?: string;
+};
+
+function isHeroLcp(entry: PerformanceEntry, img: HTMLImageElement | null) {
+  const e = entry as LcpEntry;
+  if (img && e.element === img) return true;
+  return typeof e.url === "string" && /hero-face-(mobile|desktop)\.webp/.test(e.url);
+}
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [bgReady, setBgReady] = useState(false);
+  const [lcpReady, setLcpReady] = useState(false);
   const [cycled, setCycled] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const firstImgRef = useRef<HTMLImageElement>(null);
@@ -71,12 +88,55 @@ export default function Hero() {
 
   useEffect(() => {
     if (!bgReady) return;
-    const timer = setInterval(() => {
+    if (prefersReducedMotion) {
+      setLcpReady(true);
+      return;
+    }
+
+    let settled = false;
+    const settle = () => {
+      if (settled) return;
+      settled = true;
+      setLcpReady(true);
+    };
+
+    const fallback = window.setTimeout(settle, HERO_LCP_FALLBACK_MS);
+    let po: PerformanceObserver | undefined;
+    try {
+      po = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (isHeroLcp(entry, firstImgRef.current)) {
+            settle();
+            break;
+          }
+        }
+      });
+      po.observe({ type: "largest-contentful-paint", buffered: true });
+    } catch {
+      // Safari viejo: el timeout arma el resto igual.
+    }
+
+    return () => {
+      window.clearTimeout(fallback);
+      po?.disconnect();
+    };
+  }, [bgReady, prefersReducedMotion]);
+
+  useEffect(() => {
+    if (!lcpReady) return;
+    let interval: number | undefined;
+    const start = window.setTimeout(() => {
       setCycled(true);
       setCurrentSlide((prev) => (prev + 1) % n);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, [n, bgReady]);
+      interval = window.setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % n);
+      }, HERO_CYCLE_MS);
+    }, HERO_FIRST_HOLD_MS);
+    return () => {
+      window.clearTimeout(start);
+      if (interval !== undefined) window.clearInterval(interval);
+    };
+  }, [n, lcpReady]);
 
   return (
     <section className="relative h-dvh w-full overflow-hidden">
@@ -84,19 +144,22 @@ export default function Hero() {
         const isCurrent = index === currentSlide;
         const isPrev = index === (currentSlide - 1 + n) % n;
         const isNext = index === (currentSlide + 1) % n;
-        const isLcp = index === 0 && !cycled;
+        const isLcp = index === 0;
 
-        // Primer paint: solo el slide actual. Después de LCP, el
-        // siguiente (preload). El anterior entra recién cuando ya
-        // cicló — hace falta para el crossfade, no para el primer
-        // request.
-        if (!isCurrent && !bgReady) return null;
-        if (!isCurrent && !isNext && !(isPrev && cycled)) return null;
+        // Slide 0 no se desmonta: si el lab todavía mide a los 8s,
+        // sacar el nodo LCP deja NO_LCP. Vecinos recién después de LCP.
+        if (index !== 0) {
+          if (!lcpReady) return null;
+          if (!isCurrent && !isNext && !(isPrev && cycled)) return null;
+        }
+
+        const kenBurns =
+          isCurrent && lcpReady && (index !== 0 || cycled);
 
         return (
           <div
             key={slide.desktop}
-            className={`absolute inset-0 w-full h-full overflow-hidden transition-[opacity] duration-1000 ease-in-out ${isCurrent ? "opacity-100 z-10" : "opacity-0 z-0"} ${isCurrent && bgReady ? "hero-kenburns-armed" : ""}`}
+            className={`absolute inset-0 w-full h-full overflow-hidden transition-[opacity] duration-1000 ease-in-out ${isCurrent ? "opacity-100 z-10" : "opacity-0 z-0"} ${kenBurns ? "hero-kenburns-armed" : ""}`}
           >
             <div className="hero-kenburns">
               <picture className="block h-full w-full">

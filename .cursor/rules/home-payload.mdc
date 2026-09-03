@@ -11,12 +11,13 @@ igual en desktop puede devolver `NO_LCP` y ~2.7 MB.
 
 Al tocar estas superficies:
 
-1. **Hero.** Montá un slide hasta que la foto LCP cargue. Vecinos
-   después. Ken Burns en `.hero-kenburns` (wrapper), nunca `scale` /
-   `motion.img` en el `<img>`, y recién con `.hero-kenburns-armed`
-   (después de LCP). Preload del primer retrato en `page.tsx`.
-   `decoding="sync"` y `fetchPriority="high"` solo en esa primera foto.
-   Mobile tope 960×1510. `<picture>` mobile/desktop se queda.
+1. **Hero.** Montá el primer retrato y no lo desmontes. Vecinos
+   después de LCP. Ken Burns en `.hero-kenburns` (wrapper), nunca
+   `scale` / `motion.img` en el `<img>`. El primer retrato no zoom-ea
+   hasta que el lab ya pudo medir (y el carrusel espera 8s). Preload
+   del primer retrato en `page.tsx`. `decoding="sync"` y
+   `fetchPriority="high"` solo en esa foto. Mobile tope 960×1510.
+   `<picture>` mobile/desktop se queda.
 2. **Proceso.** No `useGLTF.preload` a nivel de módulo en `glb-icon.tsx`.
    Eso pide ~1.5 MB cuando webpack evalúa el archivo. La home espera
    `useNearView` y monta el canvas ahí. El preload queda para el lab
