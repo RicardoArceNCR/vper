@@ -16,18 +16,19 @@ import { getArchiveWorkItems } from "@/lib/work-items";
 // el pager, nunca por un padre. Esta página es ese padre.
 //
 // LO QUE ESTA PÁGINA NO TIENE, A PROPÓSITO:
-//   · Filtros. Con seis piezas y la taxonomía actual serían teatro:
-//     "Creatividad" está en los seis casos, y Branding, Planeación y
-//     ATL & BTL no tienen ninguno — un chip "Planeación (0)" se ve peor
-//     que no tener filtros. Un grid de seis se barre con la vista. El
-//     día que paguen, el eje es `sector` (ya está en el modelo), no el
-//     servicio: es el único que parte el set.
+//   · Filtros. Con ocho piezas y la taxonomía actual serían teatro:
+//     "Creatividad" está en los ocho casos; Branding y Planeación
+//     siguen en cero — un chip "Planeación (0)" se ve peor que no tener
+//     filtros. Un grid de ocho se barre con la vista. El día que paguen,
+//     el eje es `sector` (ya está en el modelo), no el servicio: es el
+//     único que parte el set. "Varios" no cuenta como sector de
+//     prospecto: es el reel DIGITAL hasta que se parta por marca.
 //   · Un segundo carrusel sticky. La firma de la home es la home.
-//   · Rutas /work/creatividad. SSG de combinaciones para seis items.
+//   · Rutas /work/creatividad. SSG de combinaciones para ocho items.
 //
 // FONDO: liso, sin la textura de marca que sí lleva work/[slug]
 // (revisado en pantalla 2026-08-27). La idea era que archivo y detalle
-// se leyeran como una zona, pero acá la textura compite: son seis
+// se leyeran como una zona, pero acá la textura compite: son ocho
 // miniaturas a todo color contra un patrón que también tiene forma, y el
 // grid pierde el aire que necesita para leerse como una lista. En el
 // detalle funciona porque la columna de texto ocupa el ancho y la
@@ -37,12 +38,19 @@ import { getArchiveWorkItems } from "@/lib/work-items";
 export const metadata: Metadata = {
   title: "Proyectos — VPER Media",
   description:
-    "El portafolio completo de VPER Media: identidad, empaque, campaña y producción para marcas de bebidas, tecnología, bienes raíces, estética y restaurantes.",
+    "El portafolio de VPER Media: identidad, empaque, campaña y contenido para marcas de bebidas, tecnología, bienes raíces, estética y restaurantes.",
 };
 
 export default function WorkIndexPage() {
   const items = getArchiveWorkItems();
-  const sectors = new Set(items.map((item) => item.sector)).size;
+  // "Varios" no es un sector que un prospecto busque: es el cajón del
+  // reel DIGITAL. Contarlo inflaba "7 sectores distintos" con una
+  // etiqueta interna.
+  const sectors = new Set(
+    items
+      .filter((item) => item.sector !== "Varios")
+      .map((item) => item.sector),
+  ).size;
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground flex flex-col overflow-x-clip">
@@ -53,12 +61,12 @@ export default function WorkIndexPage() {
           <SectionHeader
             eyebrow="PORTAFOLIO"
             title="TODOS LOS PROYECTOS."
-            description={`${items.length} casos completos en ${sectors} sectores distintos: identidad, empaque, campaña y producción de principio a fin.`}
+            description={`${items.length} casos en ${sectors} sectores: identidad, empaque, campaña y contenido.`}
           />
         </div>
 
         {/* Dos columnas es el techo a propósito: a tres, la card baja de
-            ~300px y el recorte 16/9 deja las láminas de marca
+            ~300px y el recorte 11/6 deja las láminas de marca
             ilegibles. El archivo lista, pero sigue siendo un portafolio
             visual. */}
         <div className="wrap grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">

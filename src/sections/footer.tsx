@@ -77,13 +77,13 @@ export default function Footer() {
             <div className="flex min-w-0 flex-col items-center md:items-start">
               <h4 className="font-display text-xs font-bold tracking-widest text-[var(--footer-heading)] mb-6 uppercase">CONTACTO</h4>
               <div className="flex flex-col items-center md:flex-row md:items-center gap-3 md:gap-4 group text-center md:text-left">
-                <div className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden border border-[var(--border-strong)] group-hover:border-primary/30 transition-all duration-300 shrink-0">
+                <div className="w-20 h-20 md:w-16 md:h-16 rounded-full overflow-hidden border border-[var(--border-strong)] group-hover:border-primary/30 transition-all duration-300 shrink-0">
                   <img src={IMAGES.carlos} alt="Carlos Escobar" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                 </div>
                 <div className="flex flex-col items-center md:items-start">
-                  <span className="text-xs md:text-base font-bold text-[var(--footer-heading)] block tracking-wide">CARLOS ESCOBAR</span>
-                  <a href="mailto:carlos@vpermedia.com" className="text-[10px] md:text-sm text-[var(--footer-text)] hover:text-primary transition-colors block font-medium">carlos@vpermedia.com</a>
-                  <a href="tel:+50577824749" className="text-[10px] md:text-sm text-[var(--footer-text)] block font-medium">+505 7782-4749</a>
+                  <span className="text-body-sm md:text-base font-bold text-[var(--footer-heading)] block tracking-wide">CARLOS ESCOBAR</span>
+                  <a href="mailto:carlos@vpermedia.com" className="text-body-sm text-[var(--footer-text)] hover:text-primary transition-colors block font-medium">carlos@vpermedia.com</a>
+                  <a href="tel:+50577824749" className="text-body-sm text-[var(--footer-text)] block font-medium">+505 7782-4749</a>
                 </div>
               </div>
             </div>

@@ -6,12 +6,13 @@
 // imágenes sincronizados a mano en dos lugares. Con esto, un solo lugar
 // de verdad — y el índice nuevo no agregó una cuarta lista.
 //
-// CONTENIDO (actualizado 2026-08-26): los 6 proyectos son reales —
-// láminas del cliente, copy en español. Fecha y país quedan pendientes
-// donde el material no lo confirma; desde 2026-08-26 eso significa
-// campo ausente, no la cadena "pendiente de confirmar" en pantalla. Los
-// 3 placeholders (Experiencia digital, Dirección creativa, Contenido
-// social) se sacaron el 2026-08-18.
+// CONTENIDO (actualizado 2026-09-02): 8 proyectos reales — láminas del
+// cliente, copy en español. Fecha y país quedan pendientes donde el
+// material no lo confirma; desde 2026-08-26 eso significa campo ausente,
+// no la cadena "pendiente de confirmar" en pantalla. Los 3 placeholders
+// (Experiencia digital, Dirección creativa, Contenido social) se
+// sacaron el 2026-08-18. Flor de Caña y el reel Social Media (2026-09-02)
+// llevan copy de estudio, pendiente de aprobación.
 //
 // IMÁGENES: cada proyecto real trae su propio set en public/images
 // (toma-tola-*, netforemost-*, vida-nica-*, monumental-humidors-*,
@@ -38,12 +39,11 @@ import type { ServiceName } from "@/lib/services";
 // grid multi-columna con object-cover (recortaba fotos reales) a una sola
 // columna con cada imagen a su alto natural — ya no hay nada que "span"
 // pudiera controlar. Ver comentario en project-gallery.tsx.
-// SECTOR (2026-08-26): el eje que de verdad parte este portafolio. Los
-// seis casos son seis sectores distintos, sin solapamiento — a
-// diferencia de `categories`, donde "Creatividad" está en los seis y por
-// lo tanto no separa nada. Es también el eje que un prospecto usa de
-// verdad ("¿han hecho algo de comida?"). Se agrega ahora, con seis
-// casos, porque con veinte es arqueología.
+// SECTOR (2026-08-26): el eje que de verdad parte este portafolio.
+// A diferencia de `categories`, donde "Creatividad" está en casi todos
+// y por lo tanto no separa nada. Es también el eje que un prospecto
+// usa de verdad ("¿han hecho algo de comida?"). "Varios" es excepción
+// temporal: el reel DIGITAL mezcla marcas; no inventar un sector falso.
 export const SECTORS = [
   "Bebidas",
   "Tecnología",
@@ -51,6 +51,10 @@ export const SECTORS = [
   "Puros",
   "Estética",
   "Restaurantes",
+  // Solo el reel de social (carpeta DIGITAL): varias marcas en un
+  // mismo entregable. El día que Dra. Escobar / Casa 7 / Pasolion /
+  // Qonexia tengan ficha propia, este caso se parte y el sector se va.
+  "Varios",
 ] as const;
 
 export type Sector = (typeof SECTORS)[number];
@@ -144,7 +148,7 @@ export const workItems: WorkItem[] = [
       { src: "/images/toma-tola-12.webp", alt: "Toma-Tola — collage de marca en uso: consumo, cooler, gorra, sitio web (12)" },
       { src: "/images/toma-tola-13.webp", alt: "Toma-Tola — lámina de cierre de presentación (13)" },
     ],
-    homeOrder: 2,
+    homeOrder: 3,
   },
   {
     // Segundo proyecto real (2026-08-18). Copy original en inglés,
@@ -177,7 +181,7 @@ export const workItems: WorkItem[] = [
       { src: "/images/netforemost-12.webp", alt: "NetForemost — retrato desarrollo nativo en IA (12)" },
       { src: "/images/netforemost-13.webp", alt: "NetForemost — cierre de presentación, Gracias (13)" },
     ],
-    homeOrder: 4,
+    homeOrder: 2,
   },
   {
     // Tercer proyecto real (2026-08-18). Láminas VIDA_NICA_BRANDING-01 y
@@ -214,7 +218,7 @@ export const workItems: WorkItem[] = [
       { src: "/images/vida-nica-12.webp", alt: "Vida Nica — papelería corporativa (12)" },
       { src: "/images/vida-nica-13.webp", alt: "Vida Nica — cierre de presentación, Gracias (13)" },
     ],
-    homeOrder: 3,
+    homeOrder: 4,
   },
   {
     // Cuarto proyecto real (2026-08-18). Láminas
@@ -310,9 +314,10 @@ export const workItems: WorkItem[] = [
     hero: { type: "image", src: "/images/wok-hero.webp" },
     // Galería en el orden original (01, 03–13). El hero de la card es el
     // mockup de interior (lámina 12), no la -01: la portada de mármol
-    // queda pálida al recorte 16/9 de la home; el letrero con faroles
-    // lee mejor como miniatura, mismo criterio que Monumental (pin) y
-    // Oh! La Lashes (redes).
+    // queda pálida al recorte de la card; el letrero con faroles lee
+    // mejor como miniatura, mismo criterio que Monumental (pin) y
+    // Oh! La Lashes (redes). Fuera de la vitrina desde 2026-09-02
+    // (homeOrder 1 pasó a Flor de Caña).
     gallery: [
       { src: "/images/wok-01.webp", alt: "WOK — logo vertical sobre mármol con bambú (01)" },
       { src: "/images/wok-03.webp", alt: "WOK — paleta de color y tipografía Gang of Three (03)" },
@@ -327,7 +332,68 @@ export const workItems: WorkItem[] = [
       { src: "/images/wok-12.webp", alt: "WOK — mockup de interior con letrero y faroles (12)" },
       { src: "/images/wok-13.webp", alt: "WOK — cierre de presentación, Gracias (13)" },
     ],
+  },
+  {
+    // Séptimo (2026-09-02). Carpeta FLOR DE CAÑA: 4 láminas de campaña
+    // Bicentenario (key visual, bodega, boceto, valla). Copy de estudio,
+    // pendiente de aprobación del cliente — no llegó texto. Categorías:
+    // Creatividad (boceto + dirección de arte) + ATL & BTL (valla).
+    // Audiovisual no: no hay confirmación de que el fotomontaje final
+    // sea producción propia. País: Nicaragua está en las piezas
+    // ("Destilado, añejado y embotellado en Nicaragua"). homeOrder 1
+    // desde 2026-09-02: entra a la vitrina en el lugar de WOK.
+    slug: "flor-de-cana",
+    title: "FLOR DE CAÑA",
+    subtitle: "Campaña Bicentenario",
+    categories: ["Creatividad", "ATL & BTL"],
+    sector: "Bebidas",
+    client: "Flor de Caña",
+    country: "Nicaragua",
+    description:
+      "Campaña Bicentenario: un key visual que junta botella, copa y paisaje nicaragüense — volcán, barrica, guardabarranco — en una sola escena.\n\nDel boceto a la valla. La marca ya tenía el origen; el trabajo fue armar el cuadro a la altura de un 12 años seriado.",
+    hero: { type: "image", src: "/images/flor-de-cana-hero.webp" },
+    gallery: [
+      { src: "/images/flor-de-cana-01.webp", alt: "Flor de Caña — key visual Bicentenario 12, volcán y guardabarranco (01)" },
+      { src: "/images/flor-de-cana-02.webp", alt: "Flor de Caña — key visual en bodega de barricas (02)" },
+      { src: "/images/flor-de-cana-03.webp", alt: "Flor de Caña — boceto del key visual, volcán y caña (03)" },
+      { src: "/images/flor-de-cana-04.webp", alt: "Flor de Caña — valla Bicentenario (04)" },
+    ],
     homeOrder: 1,
+  },
+  {
+    // Octavo (2026-09-02). Carpeta DIGITAL: un reel de social, no un
+    // cliente. Láminas SOCIAL MEDIA-01 a 15 + portada. Marcas en el
+    // material: Dra. Elizabeth Escobar, Casa 7 Co, Pasolion Pubgarden y
+    // Qonexia. Copy de estudio, pendiente de aprobación. Categorías:
+    // Digital & Web + Creatividad. Sector Varios a propósito — partir
+    // el reel el día que paguen ficha por marca. Sin homeOrder.
+    slug: "social-media",
+    title: "SOCIAL MEDIA",
+    subtitle: "Contenido para marcas",
+    categories: ["Digital & Web", "Creatividad"],
+    sector: "Varios",
+    client: "Varias marcas",
+    country: "Nicaragua",
+    description:
+      "El feed también es un territorio. Piezas para Dra. Elizabeth Escobar, Casa 7 Co, Pasolion Pubgarden y Qonexia: el mismo criterio de siempre, adaptado al formato, al tono y a la marca que tiene que hablar hoy.",
+    hero: { type: "image", src: "/images/social-media-hero.webp" },
+    gallery: [
+      { src: "/images/social-media-01.webp", alt: "Social media — portada Dra. Elizabeth Escobar, Odontología Integral (01)" },
+      { src: "/images/social-media-02.webp", alt: "Social media — piezas Confianza que se nota, Dra. Escobar (02)" },
+      { src: "/images/social-media-03.webp", alt: "Social media — educación, atención y sonrisa, Dra. Escobar (03)" },
+      { src: "/images/social-media-04.webp", alt: "Social media — antes/ahora, hábitos y testimonio, Dra. Escobar (04)" },
+      { src: "/images/social-media-05.webp", alt: "Social media — portada Casa 7 Co (05)" },
+      { src: "/images/social-media-06.webp", alt: "Social media — We’re here, lineales de copa Casa 7 (06)" },
+      { src: "/images/social-media-07.webp", alt: "Social media — tumbler y copas Casa 7 (07)" },
+      { src: "/images/social-media-08.webp", alt: "Social media — features del tumbler y lifestyle Casa 7 (08)" },
+      { src: "/images/social-media-09.webp", alt: "Social media — portada Pasolion Pubgarden (09)" },
+      { src: "/images/social-media-10.webp", alt: "Social media — una jarra, una mesa, Pasolion (10)" },
+      { src: "/images/social-media-11.webp", alt: "Social media — meet and greet, rock y cerveza, Pasolion (11)" },
+      { src: "/images/social-media-12.webp", alt: "Social media — portada Qonexia (12)" },
+      { src: "/images/social-media-13.webp", alt: "Social media — Galaxy A57 y Nintendo Switch, Qonexia (13)" },
+      { src: "/images/social-media-14.webp", alt: "Social media — RAM vs almacenamiento, Redmi Buds y realme, Qonexia (14)" },
+      { src: "/images/social-media-15.webp", alt: "Social media — MacBook Neo, Galaxy Buds y DJI Mic, Qonexia (15)" },
+    ],
   },
 ];
 

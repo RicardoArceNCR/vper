@@ -15,10 +15,12 @@ import type { WorkItem } from "@/lib/work-items";
 //   index    → el grid del archivo. Ancho 100%: acá manda la columna del
 //              grid, no la card.
 //
-// Lo que NO cambia entre variantes: el recorte 16/9 (las láminas ya
-// son 1024×576), el zoom al hover, el badge de flecha y la jerarquía
-// subtítulo → título. Que el archivo se sienta el mismo sitio que la
-// home es justamente el punto.
+// Lo que NO cambia entre variantes: el recorte 11/6 (~13px más alto
+// que 19/10, ~12px más bajo que 16/9 en el ancho de archivo; las
+// láminas siguen siendo 1024×576 y object-cover recorta un pelo), el
+// zoom al hover, el badge de flecha y la jerarquía subtítulo → título.
+// Que el archivo se sienta el mismo sitio que la home es justamente
+// el punto.
 //
 // Sin `sector` en la card a propósito: `subtitle` ya dice lo mismo en
 // prosa ("Cocina cantonesa", "Bienes raíces"). `sector` existe como
@@ -54,7 +56,7 @@ export default function WorkCard({
           : "w-full",
       )}
     >
-      <div className="aspect-video overflow-hidden bg-muted relative">
+      <div className="aspect-[11/6] overflow-hidden bg-muted relative">
         {/* 1024×576 es el tope de las láminas (detalle / desktop).
             En la card mobile (~355px) el srcset pide el -sm de 640. */}
         <img
