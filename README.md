@@ -226,10 +226,12 @@ de ser un `alert()`), ese es el momento de revisar si aplica.
 
 ## Pendiente conocido (no bloqueante)
 
-- Las imágenes usan `<img>` planas (puerto fiel del original), no
-  `next/image`. Next avisa esto como warning de build, no error — migrar a
-  `next/image` es una optimización real de LCP/bandwidth para más adelante,
-  no urgente para un demo.
+- Las imágenes usan `<img>` planas a propósito, no `next/image`: el
+  sitio final se porta a Vite (`docs/guia-desarrollador.md`) y
+  `next/image` no existe allá. El LCP y el peso se cuidan a mano —
+  un slide en el primer paint, `loading="lazy"` fuera del viewport,
+  GLB del proceso recién cuando la sección está cerca, fotos al
+  tamaño del hueco. Ver § payload en la guía.
 - `public/fonts/ObviouslyWide-Black.woff2` ya trae acentos; la licencia
   sigue sin ser la de Ohno Type (ver `public/fonts/README.md`). Bloqueante
   solo para el deploy final al cliente, no para seguir iterando en

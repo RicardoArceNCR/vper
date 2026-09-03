@@ -21,6 +21,10 @@ import { getFeaturedWorkItems } from "@/lib/work-items";
 //
 // La card vive en components/work-card.tsx desde que /work necesitó la
 // misma pieza a otro tamaño.
+//
+// Sin `priority` en la home: PORTAFOLIO está bajo el hero. `eager` en
+// la primera card competía con el LCP. El archivo `/work` sí marca las
+// primeras del grid.
 
 // Se calcula una vez, en módulo: la curaduría no cambia entre renders.
 const featured = getFeaturedWorkItems();
@@ -107,9 +111,9 @@ export default function WorkGallery() {
           />
         </div>
         <div className="wrap flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4">
-          {featured.map((item, i) => (
+          {featured.map((item) => (
             <div key={item.slug} className="snap-start">
-              <WorkCard item={item} variant="featured" priority={i === 0} />
+              <WorkCard item={item} variant="featured" />
             </div>
           ))}
         </div>
@@ -142,12 +146,11 @@ export default function WorkGallery() {
         </div>
 
         <motion.div ref={trackRef} style={{ x }} className="wrap flex gap-6 md:gap-8">
-          {featured.map((item, i) => (
+          {featured.map((item) => (
             <WorkCard
               key={item.slug}
               item={item}
               variant="featured"
-              priority={i === 0}
             />
           ))}
           <div className="shrink-0 w-[12vw]" aria-hidden="true" />

@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useReducedMotion } from "framer-motion";
 import { PROCESS_LAB_ICONS, type LabIcon } from "./icons";
 import { ProcessRaster, useBrandSky, useInView } from "./process-icon-shared";
+import { preloadProcessGlbs } from "./glb-icon";
 import { ProcessStepIcon } from "./process-step-icon";
 
 function LabIconCell({
@@ -59,6 +60,10 @@ export default function ProcessLab() {
   const inView = useInView(root, true);
   const reduceMotion = useReducedMotion();
   const color = useBrandSky();
+
+  useEffect(() => {
+    preloadProcessGlbs();
+  }, []);
 
   return (
     <div

@@ -2,12 +2,21 @@
 
 import { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import { Button } from "@ui/components/button";
-import { motion, useReducedMotion } from "framer-motion";
+import { useReducedMotion } from "framer-motion";
 
 // Cada slide tiene recorte propio (desktop landscape / mobile portrait).
 // WebP a q90, desktop tope 3840px de ancho (2× un 1920): más que eso
 // no se ve y el PNG original pesaba hasta 39MB. <picture> hace que el
 // teléfono no baje el archivo de desktop.
+//
+// LCP (PageSpeed mobile): el <img> es el elemento grande. Tres trampas
+// que dejaban NO_LCP + ~600 KB de más en el primer paint:
+//   1. Montar actual+prev+next — el browser pide tres retratos de
+//      1301×2046 aunque dos estén en opacity 0.
+//   2. Ken Burns en el mismo nodo que Lighthouse toma como LCP
+//      (`motion.img` + scale). El lab a veces no registra el paint.
+//   3. El carrusel arrancaba a los 6s aunque la foto LCP no hubiera
+//      cargado. El intervalo espera a que el fondo esté listo.
 const slides = [
   {
     desktop: "/images/hero-face-desktop.webp",
@@ -27,9 +36,15 @@ const slides = [
   },
 ] as const;
 
+/** Intrínseco del recorte mobile (el `src` del <img>). El desktop
+ *  entra por <source>; el box del hero es `h-dvh`, no estos píxeles. */
+const HERO_MOBILE_W = 1301;
+const HERO_MOBILE_H = 2046;
+
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [bgReady, setBgReady] = useState(false);
+  const [cycled, setCycled] = useState(false);
   const firstImgRef = useRef<HTMLImageElement>(null);
   const n = slides.length;
   const prefersReducedMotion = useReducedMotion();
@@ -46,11 +61,13 @@ export default function Hero() {
   }, []);
 
   useEffect(() => {
+    if (!bgReady) return;
     const timer = setInterval(() => {
+      setCycled(true);
       setCurrentSlide((prev) => (prev + 1) % n);
     }, 6000);
     return () => clearInterval(timer);
-  }, [n]);
+  }, [n, bgReady]);
 
   return (
     <section className="relative h-dvh w-full overflow-hidden">
@@ -58,39 +75,41 @@ export default function Hero() {
         const isCurrent = index === currentSlide;
         const isPrev = index === (currentSlide - 1 + n) % n;
         const isNext = index === (currentSlide + 1) % n;
-        // Actual + anterior (crossfade) + siguiente (preload). Los
-        // otros ni se montan: si los 4 <img> viven en el DOM, el
-        // browser los pide todos aunque estén en opacity-0.
-        if (!isCurrent && !isPrev && !isNext) return null;
+        const isLcp = index === 0 && !cycled;
+
+        // Primer paint: solo el slide actual. Después de LCP, el
+        // siguiente (preload). El anterior entra recién cuando ya
+        // cicló — hace falta para el crossfade, no para el primer
+        // request.
+        if (!isCurrent && !bgReady) return null;
+        if (!isCurrent && !isNext && !(isPrev && cycled)) return null;
 
         return (
           <div
             key={slide.desktop}
-            className={`absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out ${isCurrent ? "opacity-100 z-10" : "opacity-0 z-0"}`}
+            className={`absolute inset-0 w-full h-full overflow-hidden transition-all duration-1000 ease-in-out ${isCurrent ? "hero-slide-current opacity-100 z-10" : "opacity-0 z-0"}`}
           >
-            <picture>
-              <source
-                media="(min-width: 768px)"
-                srcSet={slide.desktop}
-                type="image/webp"
-              />
-              <motion.img
-                ref={index === 0 ? firstImgRef : undefined}
-                src={slide.mobile}
-                alt=""
-                sizes="100vw"
-                fetchPriority={index === 0 ? "high" : "auto"}
-                decoding="async"
-                className="w-full h-full object-cover object-center"
-                onLoad={index === 0 ? markBgReady : undefined}
-                animate={{ scale: prefersReducedMotion || !isCurrent ? 1 : 1.08 }}
-                transition={
-                  prefersReducedMotion
-                    ? { duration: 0 }
-                    : { duration: 6, ease: "linear" }
-                }
-              />
-            </picture>
+            <div className="hero-kenburns">
+              <picture className="block h-full w-full">
+                <source
+                  media="(min-width: 768px)"
+                  srcSet={slide.desktop}
+                  type="image/webp"
+                />
+                <img
+                  ref={isLcp ? firstImgRef : undefined}
+                  src={slide.mobile}
+                  alt=""
+                  width={HERO_MOBILE_W}
+                  height={HERO_MOBILE_H}
+                  sizes="100vw"
+                  fetchPriority={isLcp ? "high" : "auto"}
+                  decoding={isLcp ? "sync" : "async"}
+                  className="h-full w-full object-cover object-center"
+                  onLoad={isLcp ? markBgReady : undefined}
+                />
+              </picture>
+            </div>
           </div>
         );
       })}

@@ -61,7 +61,15 @@ export function useBrandSky() {
 }
 
 export function ProcessRaster({ icon }: { icon: LabIcon }) {
-  return <img src={icon.raster} alt="" className="size-full object-contain" />;
+  return (
+    <img
+      src={icon.raster}
+      alt=""
+      loading="lazy"
+      decoding="async"
+      className="size-full object-contain"
+    />
+  );
 }
 
 export function iconBloomClass(id: string) {

@@ -590,6 +590,45 @@ llevarse el `className`. El Header de este repo usa `h-16` en reposo
 (antes era más alto); si el tuyo todavía tiene otro valor, alinealo a
 este archivo.
 
+### Payload de la home (se porta igual que el markup)
+
+PageSpeed mobile mide el **primer paint**, no el sitio entero. El
+diseño no cambia; lo que hay que copiar es *cuándo* viaja cada byte.
+Si el puerto Vite monta los 4 slides del hero, pide los 5 GLB al
+cargar el módulo o deja las fotos del equipo sin `loading="lazy"`,
+el lab vuelve a `NO_LCP` y a ~2.7 MB aunque se vea igual en desktop.
+
+| Superficie | Contrato | Por qué |
+|---|---|---|
+| Hero (`src/sections/hero.tsx`) | Un `<img>` en el primer paint. Vecinos después de que el fondo cargó. Ken Burns en un wrapper (`.hero-kenburns`), no en el `img`. `<picture>` mobile/desktop. | Lighthouse toma el `img` como LCP. Tres retratos de 1301×2046 en opacity 0 se piden igual. Animar scale en el nodo LCP a veces lo deja en `NO_LCP`. |
+| Proceso (`src/sections/process-section.tsx`) | Raster hasta `useNearView`. El `dynamic()` del canvas 3D no se renderiza antes. **No** `useGLTF.preload` a nivel de módulo. | Cinco GLB ≈ 1.5 MB. El preload al importar los bajaba en el primer paint. |
+| Equipo (`src/sections/about-us.tsx`) | `loading="lazy"` + `width`/`height`. Fotos ~966×1293, no 1930. | NOSOTROS está bajo el fold. Un retrato a resolución de print (Victor) era 260 KB en un hueco de ~176px. |
+| Vitrina (`src/components/work-card.tsx`) | Héroes tope **1024×576**. `loading="lazy"` en la home; `priority` solo en las primeras del archivo `/work`. | Un 1920 en un thumb de ~355px era el recorte “mejorar imágenes”. `eager` en la vitrina competía con el LCP del hero. |
+
+`next/image` no se usa en este repo: el sitio final es Vite y cada
+`<Image />` sería un des-port. Lo que esa regla busca (lazy, dimensiones,
+no pedir de más) está en el markup.
+
+Cómo auditar después de un cambio en esas superficies:
+
+```bash
+# Pesos (mobile primero). Un team-* > ~160K o un *-hero > ~100K
+# huele a export de print, no a card.
+ls -lh public/images/hero-*-mobile.webp public/images/team-*.webp \
+  public/images/*-hero.webp public/lab/proceso/*.glb
+
+# El preload de GLB no puede vivir en el import de glb-icon.
+rg "useGLTF.preload" src/lab/proceso
+
+# Las fotos del equipo tienen que ser lazy.
+rg "loading=" src/sections/about-us.tsx
+```
+
+En DevTools → Network, recarga la home **sin scrollear**: un solo
+`hero-*-mobile.webp` (o el desktop si estás en ≥768), **cero** `.glb`,
+cero `team-*.webp`. Al acercarte a METODOLOGÍA aparecen los GLB; al
+llegar a NOSOTROS, las fotos.
+
 ### Página de detalle de trabajo
 
 `src/app/work/[slug]/page.tsx` usa `Pill`, `ProjectHero` y
@@ -632,6 +671,9 @@ tokens de `tokens-dark.css` se aplican solos.
   Obviously Wide desborda el viewport y ensancha el flex (ver §6).
 - No copies `"use client"` ni `next/link` a Vite.
 - No mantengas un Button shadcn y el Button de este repo a la vez.
+- No precargues los 5 GLB del proceso al importar el módulo, ni
+  montes los 4 slides del hero en el primer paint. El lab de
+  PageSpeed mide eso, no el look. Ver § payload más arriba.
 
 ---
 
@@ -652,6 +694,9 @@ tokens de `tokens-dark.css` se aplican solos.
 10. Light y dark: la clase `.dark` en `<html>` tiene que existir.
 11. Formulario de contacto: acá es un `alert()`. El backend es tuyo.
 12. Reemplazar el `.woff2` demo de Obviously Wide antes de producción.
+13. Home: un slide de hero en el primer paint, GLB del proceso recién
+    al acercarte a la sección, fotos de equipo lazy. Network sin
+    scrollear no debe pedir `.glb` ni `team-*.webp`.
 
 ---
 

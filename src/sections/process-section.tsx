@@ -13,8 +13,16 @@ import {
   useNearView,
 } from "@/lab/proceso/process-icon-shared";
 
+// No montar hasta `useNearView`: si el chunk de Three entra en el
+// primer paint (prefetch del dynamic), los GLB viajan con él. El
+// webpackPrefetch: false es el cinturón; no renderizar el icono
+// hasta `near` es el suspensario.
 const ProcessStepIcon = dynamic(
-  () => import("@/lab/proceso/process-step-icon").then((m) => m.ProcessStepIcon),
+  () =>
+    import(
+      /* webpackPrefetch: false, webpackPreload: false */
+      "@/lab/proceso/process-step-icon"
+    ).then((m) => m.ProcessStepIcon),
   { ssr: false, loading: () => <div className="size-full bg-background" /> },
 );
 

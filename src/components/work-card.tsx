@@ -50,9 +50,13 @@ export default function WorkCard({
       )}
     >
       <div className="aspect-[16/10] overflow-hidden bg-muted relative">
+        {/* 1024×576 es el tope de las láminas (2× un thumb de ~500).
+            Un 1920 en un hueco de ~355px era el recorte de PageSpeed. */}
         <img
           src={item.hero.src}
           alt={item.title}
+          width={1024}
+          height={576}
           loading={priority ? "eager" : "lazy"}
           fetchPriority={priority ? "high" : "auto"}
           decoding="async"

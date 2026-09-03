@@ -16,6 +16,9 @@
 // IMÁGENES: cada proyecto real trae su propio set en public/images
 // (toma-tola-*, netforemost-*, vida-nica-*, monumental-humidors-*,
 // oh-la-lashes-*, wok-*), sin reutilizar fotos de otras secciones.
+// Héroes de vitrina/detalle: tope 1024×576. Un 1920 en la card de
+// home (~355px) era el recorte de PageSpeed; el detalle a 1024 es
+// el mismo techo que ya tenían cuatro de los seis.
 //
 // VIDEO: el tipo "video" está soportado end-to-end (ver ProjectHero), pero
 // ningún proyecto lo usa todavía porque no hay ningún .mp4 real en

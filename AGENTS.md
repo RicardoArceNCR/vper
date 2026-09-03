@@ -39,6 +39,13 @@ leen este archivo de forma nativa; Claude Code no, por eso existe
   ya está resuelto a mano — `FadeInImage` fija `loading`, `fetchPriority` y
   `decoding`, y los assets ya son WebP. Si alguna vez se usa `next/image`,
   se borra la regla en el mismo cambio.
+- **Payload de la home (PageSpeed mobile).** El hero monta **un** slide
+  hasta que la foto LCP carga; Ken Burns va en el wrapper, no en el
+  `<img>`. Los GLB del proceso **no** se `useGLTF.preload` al importar
+  el módulo — la home espera `useNearView`. Fotos del equipo:
+  `loading="lazy"` y ~966px de lado corto (no 1930). Héroes de
+  vitrina: tope 1024×576. Detalle en `docs/guia-desarrollador.md`
+  (payload de la home) y `.cursor/rules/home-payload.mdc`.
 - Una fuente de display ancha (Obviously Wide) ensancha cualquier flex o
   grid que no tenga `min-w-0`. El síntoma casi nunca aparece en el titular,
   sino en el texto de al lado. El wordmark SVG (238×19) es el mismo caso:

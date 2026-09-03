@@ -1,0 +1,30 @@
+---
+description: Payload de la home — LCP, lazy, GLB y tamaño de fotos
+globs: src/sections/hero.tsx,src/sections/about-us.tsx,src/sections/process-section.tsx,src/lab/proceso/glb-icon.tsx,src/components/work-card.tsx
+alwaysApply: false
+---
+
+# Payload de la home (PageSpeed mobile)
+
+El lab mide el **primer paint**, no el sitio entero. Un cambio que se ve
+igual en desktop puede devolver `NO_LCP` y ~2.7 MB.
+
+Al tocar estas superficies:
+
+1. **Hero.** Montá un slide hasta que la foto LCP cargue. Vecinos
+   después. Ken Burns en `.hero-kenburns` (wrapper), nunca `scale` /
+   `motion.img` en el `<img>`. `decoding="sync"` y `fetchPriority="high"`
+   solo en esa primera foto. `<picture>` mobile/desktop se queda.
+2. **Proceso.** No `useGLTF.preload` a nivel de módulo en `glb-icon.tsx`.
+   Eso pide ~1.5 MB cuando webpack evalúa el archivo. La home espera
+   `useNearView` y monta el canvas ahí. El preload queda para el lab
+   (`preloadProcessGlbs` en `process-lab.tsx`).
+3. **Equipo.** `loading="lazy"` + `width`/`height`. Retratos ~966×1293,
+   no 1930. NOSOTROS está bajo el fold.
+4. **Vitrina.** Héroes tope 1024×576. Un 1920 en un thumb de ~355px es
+   el recorte “mejorar imágenes”.
+
+`next/image` no entra: el puerto es Vite. Lo que esa regla busca está
+en el markup (`FadeInImage`, `loading`, dimensiones).
+
+Fuente más larga: `docs/guia-desarrollador.md` (payload de la home).

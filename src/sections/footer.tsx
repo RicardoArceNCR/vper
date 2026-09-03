@@ -8,7 +8,6 @@ import {
 
 const IMAGES = {
   carlos: "/images/footer-carlos.jpg",
-  jader: "/images/footer-jader.jpg",
 };
 
 // Sin hooks/motion: puede quedarse como server component.
@@ -77,33 +76,14 @@ export default function Footer() {
 
             <div className="flex min-w-0 flex-col items-center md:items-start">
               <h4 className="font-display text-xs font-bold tracking-widest text-[var(--footer-heading)] mb-6 uppercase">CONTACTO</h4>
-              {/* Mobile: 2 columnas (pedido explícito) — desktop vuelve a
-                  1 columna apilada (md:flex-col), que es donde hay más
-                  ancho disponible para la fila avatar+texto horizontal.
-                  Tamaños subidos en desktop (avatar 40px→64px, nombre
-                  11px→16px, email/tel 10px→14px): a ese ancho el bloque
-                  se veía chico comparado con el resto del footer. */}
-              <div className="grid grid-cols-2 gap-6 md:flex md:flex-col md:gap-8 items-center md:items-start">
-                <div className="flex flex-col items-center md:flex-row md:items-center gap-3 md:gap-4 group text-center md:text-left">
-                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden border border-[var(--border-strong)] group-hover:border-primary/30 transition-all duration-300 shrink-0">
-                    <img src={IMAGES.carlos} alt="Carlos Escobar" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                  </div>
-                  <div className="flex flex-col items-center md:items-start">
-                    <span className="text-xs md:text-base font-bold text-[var(--footer-heading)] block tracking-wide">CARLOS ESCOBAR</span>
-                    <a href="mailto:carlos@vpermedia.com" className="text-[10px] md:text-sm text-[var(--footer-text)] hover:text-primary transition-colors block font-medium">carlos@vpermedia.com</a>
-                    <a href="tel:+50577824749" className="text-[10px] md:text-sm text-[var(--footer-text)] block font-medium">+505 7782-4749</a>
-                  </div>
+              <div className="flex flex-col items-center md:flex-row md:items-center gap-3 md:gap-4 group text-center md:text-left">
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden border border-[var(--border-strong)] group-hover:border-primary/30 transition-all duration-300 shrink-0">
+                  <img src={IMAGES.carlos} alt="Carlos Escobar" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                 </div>
-
-                <div className="flex flex-col items-center md:flex-row md:items-center gap-3 md:gap-4 group text-center md:text-left">
-                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden border border-[var(--border-strong)] group-hover:border-primary/30 transition-all duration-300 shrink-0">
-                    <img src={IMAGES.jader} alt="Jader Vanegas" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                  </div>
-                  <div className="flex flex-col items-center md:items-start">
-                    <span className="text-xs md:text-base font-bold text-[var(--footer-heading)] block tracking-wide">JADER VANEGAS</span>
-                    <a href="mailto:jader@vpermedia.com" className="text-[10px] md:text-sm text-[var(--footer-text)] hover:text-primary transition-colors block font-medium">jader@vpermedia.com</a>
-                    <a href="tel:+50768967401" className="text-[10px] md:text-sm text-[var(--footer-text)] block font-medium">+507 6896-7401</a>
-                  </div>
+                <div className="flex flex-col items-center md:items-start">
+                  <span className="text-xs md:text-base font-bold text-[var(--footer-heading)] block tracking-wide">CARLOS ESCOBAR</span>
+                  <a href="mailto:carlos@vpermedia.com" className="text-[10px] md:text-sm text-[var(--footer-text)] hover:text-primary transition-colors block font-medium">carlos@vpermedia.com</a>
+                  <a href="tel:+50577824749" className="text-[10px] md:text-sm text-[var(--footer-text)] block font-medium">+505 7782-4749</a>
                 </div>
               </div>
             </div>

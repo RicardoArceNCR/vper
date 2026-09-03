@@ -14,8 +14,15 @@ import {
   ICON_TILT_IDLE,
 } from "./process-icon-shared";
 
-for (const icon of PROCESS_LAB_ICONS) {
-  if (icon.source === "glb") useGLTF.preload(icon.glb);
+/** Solo el lab (`/lab/proceso`). En la home un `useGLTF.preload` a
+ *  nivel de módulo pedía los 5 GLB (~1.5 MB) en cuanto se evaluaba
+ *  este archivo — a veces en el primer paint, por el prefetch del
+ *  `dynamic()`. La home carga cada GLB cuando el canvas monta
+ *  (`useNearView` en `process-section`). */
+export function preloadProcessGlbs() {
+  for (const icon of PROCESS_LAB_ICONS) {
+    if (icon.source === "glb") useGLTF.preload(icon.glb);
+  }
 }
 
 const DEFAULT_REST: [number, number, number] = [0, 0, 0];

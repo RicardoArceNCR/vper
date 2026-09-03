@@ -306,9 +306,33 @@
   animation: hero-enter 0.45s cubic-bezier(0.25, 1, 0.5, 1) 0.2s both;
 }
 
+/* Ken Burns en el WRAPPER, no en el <img>. Lighthouse toma el img
+   como LCP; animar scale en ese mismo nodo a veces lo deja en NO_LCP. */
+@keyframes hero-kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+.hero-kenburns {
+  height: 100%;
+  width: 100%;
+}
+
+.hero-slide-current .hero-kenburns {
+  animation: hero-kenburns 6s linear forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-enter {
     opacity: 1;
+    animation: none;
+  }
+
+  .hero-slide-current .hero-kenburns {
     animation: none;
   }
 }

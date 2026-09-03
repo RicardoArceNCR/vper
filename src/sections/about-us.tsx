@@ -8,12 +8,6 @@ import { cn } from "@ui/lib/utils";
 
 const team = [
   {
-    name: "Jader Vanegas",
-    role: "Director general",
-    photo: "/images/team-jader.webp",
-    bio: "Ejecutivo con experiencia regional en Centroamérica y Panamá, especializado en dirección empresarial, finanzas, desarrollo de negocios y optimización operativa. Ha liderado equipos, expansión de mercados y resultados financieros. Como fundador de una firma contable, asesora en finanzas, tributación y procesos administrativos. Su experiencia ejecutiva en logística panameña integra visión estratégica, control financiero, eficiencia operativa y enfoque comercial para impulsar rentabilidad y crecimiento sostenible.",
-  },
-  {
     name: "Carlos Escobar",
     role: "Director digital",
     photo: "/images/team-carlos.webp",
@@ -63,6 +57,13 @@ const team = [
   },
 ];
 
+/** Intrínseco de las fotos del equipo (~3:4). El hueco de la card es
+ *  mucho más chico; width/height acá son para CLS, no para pedir más
+ *  píxeles. NOSOTROS vive debajo de hero + vitrina + servicios +
+ *  proceso: las fotos van lazy. */
+const TEAM_PHOTO_W = 966;
+const TEAM_PHOTO_H = 1293;
+
 function TeamMemberCard({
   name,
   role,
@@ -81,6 +82,10 @@ function TeamMemberCard({
           <img
             src={photo}
             alt={name}
+            width={TEAM_PHOTO_W}
+            height={TEAM_PHOTO_H}
+            loading="lazy"
+            decoding="async"
             className="size-full object-cover object-top transition-transform duration-[1.2s] ease-out group-hover:scale-[1.06]"
           />
         </div>
