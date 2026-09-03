@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useId } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@ui/components/button";
 import ThemeToggle from "@/components/theme-toggle";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { cn } from "@ui/lib/utils";
 import { useActiveSection } from "@/hooks/use-active-section";
 import { NAV_ITEMS, NAV_SECTION_IDS, isNavItemActive } from "@/lib/navigation";
@@ -19,6 +19,10 @@ import {
 // comportamiento de encoger al scrollear queda igual (mismo mecanismo,
 // mismo ratio aproximado), solo se bajó el punto de partida.
 const SCROLL_THRESHOLD = 64;
+
+// Ambiente del overlay mobile: mismo idioma que GlowMark (miel + sky +
+// grain). Sin backdrop-blur a 100dvh — ver .nav-glass en globals.css.
+const MENU_GRAIN_OPACITY = 0.06;
 
 // Misma pila tipográfica que Button (text-body-sm + Montserrat +
 // --button-font-weight/--button-letter-spacing). text-label-* no: esa
@@ -53,6 +57,8 @@ function HamburgerIcon({ open }: { open: boolean }) {
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const grainId = useId().replace(/:/g, "");
+  const reduceMotion = useReducedMotion();
   // La sonda de scroll solo encuentra secciones en la home; fuera de
   // ella el item activo lo decide el pathname (PROYECTOS en /work y en
   // /work/[slug]). La regla vive en lib/navigation.ts para que footer y
@@ -194,9 +200,68 @@ export default function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="md:hidden fixed inset-0 z-0 flex h-dvh flex-col items-center justify-center bg-[var(--nav-bg)] px-6 pt-16"
+            className="md:hidden fixed inset-0 z-0 flex h-dvh flex-col items-center justify-center overflow-hidden bg-[var(--nav-bg)] px-6 pt-16"
           >
-            <nav className="flex flex-col items-center gap-7">
+            {/* Ambiente: blobs miel/sky + grain. Solo mientras el menú
+                está montado — no hay rAF ni canvas. */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 overflow-hidden"
+            >
+              <motion.div
+                className="absolute left-[8%] top-[28%] h-[55vmax] w-[55vmax] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--brand-action)] opacity-[0.16] blur-3xl"
+                animate={
+                  reduceMotion
+                    ? undefined
+                    : { x: [0, 28, 0], y: [0, -18, 0] }
+                }
+                transition={{
+                  duration: 11,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+              <motion.div
+                className="absolute right-[-5%] bottom-[18%] h-[48vmax] w-[48vmax] translate-x-1/4 translate-y-1/4 rounded-full bg-[var(--brand-sky)] opacity-[0.12] blur-3xl"
+                animate={
+                  reduceMotion
+                    ? undefined
+                    : { x: [0, -22, 0], y: [0, 14, 0] }
+                }
+                transition={{
+                  duration: 13,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 0.6,
+                }}
+              />
+              <svg
+                className="absolute inset-0 h-full w-full mix-blend-overlay"
+                style={{ opacity: MENU_GRAIN_OPACITY }}
+              >
+                <filter
+                  id={`${grainId}-grain`}
+                  x="0%"
+                  y="0%"
+                  width="100%"
+                  height="100%"
+                >
+                  <feTurbulence
+                    type="fractalNoise"
+                    baseFrequency="0.85"
+                    numOctaves="4"
+                    stitchTiles="stitch"
+                  />
+                </filter>
+                <rect
+                  width="100%"
+                  height="100%"
+                  filter={`url(#${grainId}-grain)`}
+                />
+              </svg>
+            </div>
+
+            <nav className="relative z-10 flex flex-col items-center gap-7">
               {NAV_ITEMS.map((item, i) => {
                 const active = isNavItemActive(item, pathname, activeSection);
                 return (
@@ -236,7 +301,7 @@ export default function Header() {
                 duration: 0.35,
                 ease: [0.25, 1, 0.5, 1],
               }}
-              className="mt-10 flex flex-col items-center gap-6"
+              className="relative z-10 mt-10 flex flex-col items-center gap-6"
             >
               <Button variant="default" size="lg" asChild>
                 <Link href="/#contact" onClick={() => setMobileMenuOpen(false)}>

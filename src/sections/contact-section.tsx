@@ -19,6 +19,36 @@ const CONTACT_ITEMS = [
   { icon: MapPin, label: "UBICACIÓN", val: "Managua, Nicaragua" },
 ] as const;
 
+type ContactItemData = (typeof CONTACT_ITEMS)[number];
+
+function ContactItem({ item }: { item: ContactItemData }) {
+  const Icon = item.icon;
+  return (
+    <div className="group flex min-w-0 items-center gap-4">
+      {/* Escenario `dark` local: en light (desktop al lado del form) el
+          icono no queda en caja blanca. Bajo xl el padre ya es `dark`. */}
+      <div className="dark flex size-12 shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-border bg-card text-primary transition-colors duration-300 group-hover:border-primary/20 group-hover:bg-primary/5">
+        <Icon size={22} aria-hidden />
+      </div>
+      <div className="min-w-0">
+        <span className="mb-1 block text-overline-sm font-bold text-muted-foreground">
+          {item.label}
+        </span>
+        {"href" in item ? (
+          <a
+            href={item.href}
+            className="break-words text-body-sm font-bold transition-colors hover:text-primary"
+          >
+            {item.val}
+          </a>
+        ) : (
+          <span className="break-words text-body-sm font-bold">{item.val}</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function ContactSection() {
   return (
     // Mismo fondo fijo que servicios y las fichas de proyecto: color de
@@ -126,35 +156,32 @@ export default function ContactSection() {
             </form>
           </motion.div>
 
+          {/* Bajo xl: misma isla `dark` que el form (en light la card
+              blanca pelea). En xl se disuelve al lado — sin `dark`, para
+              que el copy herede tokens de página, no texto claro sobre
+              fondo claro. */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeInUp}
-            className="mx-auto mt-10 flex w-full min-w-0 flex-col gap-6 rounded-[var(--card-radius)] border border-border bg-card p-[var(--card-padding)] xl:absolute xl:left-full xl:top-1/2 xl:mx-0 xl:mt-0 xl:w-auto xl:-translate-y-1/2 xl:gap-8 xl:border-0 xl:bg-transparent xl:p-0 xl:pl-10"
+            className="dark [color-scheme:dark] mx-auto mt-10 flex w-full min-w-0 flex-col gap-6 rounded-[var(--card-radius)] border border-border bg-card p-[var(--card-padding)] text-foreground xl:hidden"
           >
-            {CONTACT_ITEMS.map((item) => {
-              const Icon = item.icon;
-              return (
-                <div key={item.label} className="flex min-w-0 items-center gap-4 group">
-                  <div className="flex size-12 shrink-0 items-center justify-center rounded-[var(--radius-md)] border border-border bg-card text-primary transition-colors duration-300 group-hover:border-primary/20 group-hover:bg-primary/5">
-                    <Icon size={22} aria-hidden />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="mb-1 block text-overline-sm font-bold text-muted-foreground">
-                      {item.label}
-                    </span>
-                    {"href" in item ? (
-                      <a href={item.href} className="break-words text-body-sm font-bold hover:text-primary transition-colors">
-                        {item.val}
-                      </a>
-                    ) : (
-                      <span className="break-words text-body-sm font-bold">{item.val}</span>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+            {CONTACT_ITEMS.map((item) => (
+              <ContactItem key={item.label} item={item} />
+            ))}
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeInUp}
+            className="absolute left-full top-1/2 hidden w-auto -translate-y-1/2 flex-col gap-8 pl-10 xl:flex"
+          >
+            {CONTACT_ITEMS.map((item) => (
+              <ContactItem key={item.label} item={item} />
+            ))}
           </motion.div>
         </div>
       </div>

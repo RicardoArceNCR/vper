@@ -238,8 +238,14 @@
     --hover-ring-rest: var(--card-border);
   }
 
+  /* Proceso: el anillo detrás de la figura — 5px (cards siguen en 1px). */
+  .hover-brand-ring-thick {
+    padding: 5px;
+  }
+
   .hover-brand-ring:hover,
-  .group:hover .hover-brand-ring {
+  .group:hover .hover-brand-ring,
+  .group[data-lit] .hover-brand-ring {
     background: conic-gradient(
       from var(--brand-ring-angle),
       var(--brand-sky),
@@ -252,7 +258,8 @@
 
   @media (prefers-reduced-motion: reduce) {
     .hover-brand-ring:hover,
-    .group:hover .hover-brand-ring {
+    .group:hover .hover-brand-ring,
+    .group[data-lit] .hover-brand-ring {
       animation: none;
     }
   }

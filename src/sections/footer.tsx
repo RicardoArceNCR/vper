@@ -15,17 +15,18 @@ export default function Footer() {
   // Sin border-t: la línea de horizonte ahora la dibuja <GlowMark />, que tapa
   // el 27% inferior del wordmark con este mismo --footer-bg. Dejar el borde acá
   // daba dos líneas paralelas separadas por esa franja.
+  // En mobile el GlowMark ya cierra el contacto; pt-20 (= spacing-5)
+  // dejaba un hueco vacío encima del eslogan. Desktop lo mantiene.
   return (
-    <footer className="bg-[var(--footer-bg)] pt-20 pb-10">
+    <footer className="bg-[var(--footer-bg)] pt-0 pb-10 md:pt-20">
       <div className="wrap min-w-0">
         <div className="flex min-w-0 flex-col md:flex-row md:justify-between gap-12 md:gap-16 mb-16 text-center md:text-left">
             <div className="flex min-w-0 w-full flex-col items-center md:max-w-xs md:items-start">
-              {/* viewBox 238×19: h-8 w-auto pide ~400px y con shrink-0
-                  se come NAVEGACIÓN. Es Obviously Wide, no un bug de
-                  SVG en general — mismo min-w-0 que display-title. */}
+              {/* En mobile el GlowMark de arriba ya es la marca (completo,
+                  con barrido). Este wordmark sólido queda para desktop. */}
               <svg
                 viewBox={`0 0 ${VB.w} ${VB.h}`}
-                className="mb-6 h-auto w-full max-w-full text-[var(--footer-heading)]"
+                className="mb-6 hidden h-auto w-full max-w-full text-[var(--footer-heading)] md:block"
                 role="img"
                 aria-label="VPER Media"
               >

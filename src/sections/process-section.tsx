@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { motion, useReducedMotion } from "framer-motion";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
@@ -71,25 +71,81 @@ function ProcessStepCard({
   color: string;
   inView: boolean;
 }) {
+  const cardRef = useRef<HTMLDivElement>(null);
   const hoverRef = useRef(false);
+  const [lit, setLit] = useState(false);
+  const reduceMotion = useReducedMotion();
+
+  // Mobile: al pasar cada paso por la banda central del viewport, mismo
+  // “hover” que desktop (anillo + spin 3D). Desktop sigue con pointer.
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el || reduceMotion) return;
+
+    const mq = window.matchMedia("(max-width: 767px)");
+    let io: IntersectionObserver | null = null;
+
+    const clearLit = () => {
+      hoverRef.current = false;
+      setLit(false);
+    };
+
+    const bind = () => {
+      io?.disconnect();
+      io = null;
+      if (!mq.matches) {
+        clearLit();
+        return;
+      }
+      io = new IntersectionObserver(
+        ([entry]) => {
+          const on =
+            Boolean(entry?.isIntersecting) &&
+            (entry.intersectionRatio ?? 0) >= 0.35;
+          hoverRef.current = on;
+          setLit(on);
+        },
+        {
+          threshold: [0.2, 0.35, 0.5, 0.7],
+          rootMargin: "-26% 0px -46% 0px",
+        },
+      );
+      io.observe(el);
+    };
+
+    bind();
+    mq.addEventListener("change", bind);
+    return () => {
+      mq.removeEventListener("change", bind);
+      io?.disconnect();
+    };
+  }, [reduceMotion]);
 
   return (
     <motion.div
+      ref={cardRef}
       variants={fadeInUp}
-      className="relative group flex flex-row md:flex-col items-center md:text-center gap-4 md:gap-0 min-w-0"
+      data-lit={lit ? "" : undefined}
+      className="group relative flex min-w-0 flex-row items-center gap-4 md:flex-col md:gap-0 md:text-center"
       onPointerEnter={() => {
+        if (!window.matchMedia("(hover: hover)").matches) return;
         hoverRef.current = true;
       }}
       onPointerLeave={() => {
+        if (!window.matchMedia("(hover: hover)").matches) return;
         hoverRef.current = false;
       }}
     >
       {index < processSteps.length - 1 && (
-        <div className="hidden lg:block absolute top-28 left-[65%] w-full h-[1px] bg-border z-0 group-hover:bg-primary/20 transition-colors duration-500" />
+        <div className="absolute top-28 left-[65%] z-0 hidden h-px w-full bg-border transition-colors duration-500 group-hover:bg-primary/20 lg:block" />
       )}
 
       <div className="relative z-10 size-32 shrink-0 overflow-visible md:mb-8 md:size-44 lg:size-56">
-        <div className="pointer-events-none absolute inset-[16%] rounded-full border border-border bg-background transition-all duration-500 group-hover:border-primary group-hover:shadow-[0_0_52px_color-mix(in_srgb,var(--brand-main)_38%,transparent)] lg:inset-[18%]" />
+        {/* Mismo anillo conic que servicios/equipo: en reposo --card-border,
+            en hover / data-lit gira sky→clay→action. */}
+        <div className="hover-brand-ring hover-brand-ring-rest hover-brand-ring-thick pointer-events-none absolute inset-[16%] rounded-full transition-shadow duration-500 group-hover:shadow-[0_0_52px_color-mix(in_srgb,var(--brand-main)_38%,transparent)] group-data-[lit]:shadow-[0_0_52px_color-mix(in_srgb,var(--brand-main)_38%,transparent)] lg:inset-[18%]">
+          <div className="bg-background" />
+        </div>
         {useGlb ? (
           <div className="absolute inset-0">
             <ProcessStepIcon
@@ -106,14 +162,14 @@ function ProcessStepCard({
         )}
       </div>
 
-      <div className="relative z-10 min-w-0 flex-1 md:flex-none md:flex md:flex-col md:items-center">
-        <span className="font-display font-black tracking-tight text-primary mb-1 md:mb-3 block text-xl md:text-2xl">
+      <div className="relative z-10 min-w-0 flex-1 md:flex md:flex-none md:flex-col md:items-center">
+        <span className="mb-1 block font-display text-xl font-black tracking-tight text-[var(--brand-sky)] md:mb-3 md:text-2xl">
           0{step.number}
         </span>
-        <h3 className="text-base md:text-lg font-bold tracking-wider text-foreground mb-1 md:mb-3 uppercase group-hover:text-primary transition-colors break-words">
+        <h3 className="mb-1 break-words text-base font-bold tracking-wider text-foreground uppercase transition-colors group-hover:text-primary group-data-[lit]:text-primary md:mb-3 md:text-lg">
           {icon.title}
         </h3>
-        <p className="text-sm text-muted-foreground leading-relaxed font-medium">
+        <p className="text-sm font-medium leading-relaxed text-muted-foreground">
           {step.desc}
         </p>
       </div>
