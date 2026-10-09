@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, LogOut } from "lucide-react";
 import ThemeToggle from "@/components/theme-toggle";
 import { cn } from "@ui/lib/utils";
 import { Logo } from "./logo/marks";
 import { MARCA_GROUPS, MARCA_HOME, MARCA_OUT, isActive, type NavItem } from "./lib/nav";
+import { salir } from "./lib/auth-actions";
 import { useToc, type Toc } from "./lib/use-toc";
 
 /**
@@ -14,7 +15,7 @@ import { useToc, type Toc } from "./lib/use-toc";
  * 1. Dónde estoy: las tres capas del portal, con la página activa marcada.
  * 2. Qué hay en esta página: el índice de la página activa, armado desde sus
  *    <section id> de primer nivel, con la sección visible resaltada al scrollear.
- * 3. Salidas: tema, laboratorio y sitio.
+ * 3. Salidas: tema, laboratorio, sitio y cerrar sesión.
  *
  * El índice no se mantiene a mano: lee el DOM. Una sección nueva con id y h2
  * aparece sola; `data-toc` pisa el texto cuando el h2 es largo o no existe.
@@ -97,7 +98,7 @@ function Item({
   );
 }
 
-export default function MarcaSidebar() {
+export default function MarcaSidebar({ protegido }: { protegido: boolean }) {
   const pathname = usePathname();
   const { toc, current } = useToc(pathname);
 
@@ -177,6 +178,20 @@ export default function MarcaSidebar() {
           </span>
           <ThemeToggle />
         </div>
+        {protegido ? (
+          <form action={salir}>
+            <button
+              type="submit"
+              className={cn(
+                "flex w-full items-center justify-between rounded-[var(--radius-md)] px-3 py-1.5 font-sans text-body-sm font-bold text-[var(--text-secondary)] transition-colors hover:bg-[var(--background-subtle)] hover:text-[var(--text-primary)]",
+                focus,
+              )}
+            >
+              Salir
+              <LogOut aria-hidden className="size-4" />
+            </button>
+          </form>
+        ) : null}
       </div>
     </aside>
   );

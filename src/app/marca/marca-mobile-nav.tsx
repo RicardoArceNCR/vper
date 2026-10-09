@@ -3,11 +3,12 @@
 import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowUpRight, ChevronDown, Menu, X } from "lucide-react";
+import { ArrowUpRight, ChevronDown, LogOut, Menu, X } from "lucide-react";
 import ThemeToggle from "@/components/theme-toggle";
 import { cn } from "@ui/lib/utils";
 import { Logo } from "./logo/marks";
 import { MARCA_GROUPS, MARCA_HOME, MARCA_OUT, isActive, type NavItem } from "./lib/nav";
+import { salir } from "./lib/auth-actions";
 import { useToc } from "./lib/use-toc";
 
 /**
@@ -56,7 +57,7 @@ function MenuLink({ item, active }: { item: NavItem; active: boolean }) {
   );
 }
 
-export default function MarcaMobileNav() {
+export default function MarcaMobileNav({ protegido }: { protegido: boolean }) {
   const pathname = usePathname();
   const { toc, current } = useToc(pathname);
   const [panel, setPanel] = useState<Panel>(null);
@@ -175,6 +176,20 @@ export default function MarcaMobileNav() {
                 <ArrowUpRight aria-hidden className="size-4" />
               </Link>
             ))}
+            {protegido ? (
+              <form action={salir}>
+                <button
+                  type="submit"
+                  className={cn(
+                    "flex w-full items-center justify-between rounded-[var(--radius-md)] px-3 py-2 font-sans text-body-sm font-bold text-[var(--text-secondary)] hover:bg-[var(--background-subtle)] hover:text-[var(--text-primary)]",
+                    focus,
+                  )}
+                >
+                  Salir
+                  <LogOut aria-hidden className="size-4" />
+                </button>
+              </form>
+            ) : null}
           </div>
         </nav>
       </div>

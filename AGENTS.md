@@ -61,6 +61,12 @@ lineamientos (`/marca/logo`, `/marca/voz`, `/marca/imagen`) y recursos
 redirige acá (`next.config.ts`).
 
 - Vive en `src/app/marca/`, fuera de `src/sections/`: **no se porta a Vite**.
+- **Pide contraseña.** `src/middleware.ts` cuida `/marca` y todo lo de abajo;
+  el ingreso es `/ingresar` (fuera de `/marca` para no heredar su layout). La
+  contraseña es la variable `MARCA_PASSWORD` de Vercel: cambiarla cierra todas
+  las sesiones. Sin ella, en local el portal queda abierto y en producción,
+  cerrado. Las imágenes de las firmas (`public/images/firma/`) siguen públicas:
+  los correos las cargan desde ahí.
 - La página de sistema no escribe hex ni px: pinta con `var(--token)` y lee lo
   que computa el navegador (`marca/live.tsx`). No copiar valores a mano ahí.
 - Las firmas son HTML de correo (`marca/firmas/email-html.ts`): tablas, estilos
