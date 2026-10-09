@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { FIRMA_DEFAULT, FIRMA_IMAGES, PROPOSALS } from "./proposals";
-import { makeZip } from "./zip";
+import { saveBlob } from "../lib/save";
+import { makeZip } from "../lib/zip";
 
 /**
  * Estado compartido del kit de imágenes: lo usan el módulo de descarga (arriba)
@@ -100,14 +101,7 @@ export function useFirmaAssets(copyBase: string) {
         ...entries,
         { name: "LEEME.txt", data: new TextEncoder().encode(readme) },
       ]);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "vper-firmas-imagenes.zip";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      saveBlob(blob, "vper-firmas-imagenes.zip");
       setZipping("done");
     } catch {
       setZipping("error");

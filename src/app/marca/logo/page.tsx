@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Pair } from "../live";
+import LogoDownload from "./logo-download";
 import { Logo, ratio } from "./marks";
 import { MARKS, type MarkKey } from "./marks-data";
 import s from "./logo.module.css";
@@ -117,7 +118,7 @@ const APPS: { title: string; k: MarkKey[]; tests: string; mock: ReactNode }[] = 
     title: "Favicon",
     k: ["iso"],
     tests:
-      "Pestaña del navegador a 16 px, en claro y en oscuro. Es el tamaño más chico al que va a vivir la marca. Hoy el sitio no tiene favicon conectado.",
+      "Pestaña del navegador a 16 px, en claro y en oscuro. Es el tamaño más chico al que va a vivir la marca. El sitio ya lo usa, sobre una placa amber.",
     mock: (
       <div className="grid gap-3">
         {[s.chromeLight, s.chromeDark].map((tone) => (
@@ -437,8 +438,12 @@ export default function LogoPage() {
       </section>
 
       <div className="wrap mx-auto max-w-[1217px]">
+        <div className="pt-12 md:pt-16">
+          <LogoDownload />
+        </div>
+
         {/* ── versiones ── */}
-        <section id="versiones" className={s.section}>
+        <section id="versiones" data-toc="Versiones" className={s.section}>
           <Head over="Las versiones" title="Cuatro formas del mismo dibujo">
             Cada versión sobre los tres soportes de la marca: negro, blanco y amber. Sobre
             negro el logo va blanco; sobre blanco y amber, negro.
@@ -505,7 +510,7 @@ export default function LogoPage() {
         </section>
 
         {/* ── color ── */}
-        <section id="color" className={s.section}>
+        <section id="color" data-toc="Color" className={s.section}>
           <Head over="Color" title="Tres tintas, cuatro pares">
             El logo no tiene que cumplir el contraste de un texto, pero sí leerse. La
             medida es la misma que en el sistema: el par en rojo no llega a 3:1 y no se
@@ -558,7 +563,7 @@ export default function LogoPage() {
         </section>
 
         {/* ── reducción ── */}
-        <section id="reduccion" className={s.section}>
+        <section id="reduccion" data-toc="Reducción" className={s.section}>
           <Head over="Prueba de reducción" title="Qué queda cuando se achica">
             A tamaño real en pantalla, sin escalar la imagen. La última columna de la
             línea es la misma sin ®, para ver cuánto ayuda quitarlo en tamaños chicos — es
@@ -622,7 +627,7 @@ export default function LogoPage() {
         </section>
 
         {/* ── área de respeto ── */}
-        <section id="respeto" className={s.section}>
+        <section id="respeto" data-toc="Área de respeto" className={s.section}>
           <Head over="Área de respeto" title="El aire que viene con el logo">
             Nada entra en la línea punteada. La unidad x está dibujada en la esquina: en
             el bloque y la columna es el alto de MEDIA; en la línea, su propio alto; en el
@@ -648,7 +653,7 @@ export default function LogoPage() {
         </section>
 
         {/* ── aplicaciones ── */}
-        <section id="aplicaciones" className={s.section}>
+        <section id="aplicaciones" data-toc="Aplicaciones" className={s.section}>
           <Head over="Aplicaciones" title="Nueve lugares donde se decide">
             Cada contexto con la versión que le corresponde. Los textos, nombres y correos
             son de ejemplo.
@@ -679,7 +684,7 @@ export default function LogoPage() {
         </section>
 
         {/* ── usos incorrectos ── */}
-        <section id="no" className={s.section}>
+        <section id="no" data-toc="Usos incorrectos" className={s.section}>
           <Head over="Usos incorrectos" title="Lo que no se hace">
             Seis errores comunes cuando el logo pasa por otras manos: imprentas,
             proveedores, plantillas de redes.
@@ -703,7 +708,7 @@ export default function LogoPage() {
         </section>
 
         {/* ── cierre ── */}
-        <section id="siguiente" className={s.section}>
+        <section id="siguiente" data-toc="Qué va dónde" className={s.section}>
           <div className={`${s.verdict} ${s.onBlack}`}>
             <div className="grid content-start gap-6">
               <p className="font-sans text-overline-sm font-bold uppercase text-[var(--color-accent-500)]">
@@ -747,8 +752,9 @@ export default function LogoPage() {
                 </h3>
                 <ul className={s.list}>
                   <li>
-                    Conectar el monograma como favicon (<code>app/icon.svg</code> y un{" "}
-                    <code>apple-icon.png</code>). Hoy el sitio no tiene ninguno.
+                    Favicon conectado (octubre 2026): el monograma sobre una placa amber
+                    en <code>app/icon.svg</code> y <code>app/apple-icon.png</code>. La
+                    placa hace que se lea igual en pestañas claras y oscuras.
                   </li>
                   <li>
                     El header ya usa la línea (<code>logo-vper-media.svg</code>). Si

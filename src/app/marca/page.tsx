@@ -90,7 +90,12 @@ export default function MarcaHome() {
         </p>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-3">
+      <section
+        id="areas"
+        data-toc="Las tres capas"
+        aria-label="Áreas de la marca"
+        className="grid scroll-mt-20 gap-5 md:grid-cols-3"
+      >
         <Area
           href="/marca/sistema"
           over="Design system"
@@ -141,9 +146,10 @@ export default function MarcaHome() {
             </div>
           }
         />
-      </div>
+      </section>
 
       <section
+        id="como"
         aria-labelledby="como-title"
         className="mt-16 grid gap-6 border-t border-border pt-12 md:mt-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-12"
       >

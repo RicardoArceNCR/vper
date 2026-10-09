@@ -92,7 +92,12 @@ export default function FirmasLab({
       <DownloadKit kit={kit} />
 
       {/* ── taller: datos fijos a la izquierda, propuestas a la derecha ── */}
-      <section id="taller" aria-labelledby="taller-title" className="scroll-mt-20">
+      <section
+        id="taller"
+        data-toc="Taller"
+        aria-labelledby="taller-title"
+        className="scroll-mt-20"
+      >
         <SectionHead
           over="Taller"
           id="taller-title"
@@ -102,7 +107,7 @@ export default function FirmasLab({
         <div className="grid gap-10 xl:grid-cols-[19rem_minmax(0,1fr)] xl:gap-12">
           <aside
             aria-label="Datos de la firma"
-            className="grid content-start gap-6 rounded-[var(--radius-xl)] border border-border bg-[var(--background-subtle)] p-5 md:p-6 xl:sticky xl:top-20 xl:max-h-[calc(100dvh-6rem)] xl:overflow-y-auto"
+            className="grid content-start gap-6 rounded-[var(--radius-xl)] border border-border bg-[var(--background-subtle)] p-5 md:p-6 xl:sticky xl:top-6 xl:max-h-[calc(100dvh-3rem)] xl:overflow-y-auto"
           >
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
               {FIELDS.map((f) => (
@@ -236,6 +241,7 @@ export default function FirmasLab({
       {/* ── control técnico: para quien mantiene el sistema, no para quien elige ── */}
       <section
         id="control"
+        data-toc="Control técnico"
         aria-labelledby="control-title"
         className="grid scroll-mt-20 gap-10 border-t border-border pt-14"
       >

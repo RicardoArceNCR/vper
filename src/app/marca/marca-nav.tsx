@@ -6,32 +6,17 @@ import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import ThemeToggle from "@/components/theme-toggle";
 import { cn } from "@ui/lib/utils";
+import { MARCA_GROUPS, MARCA_HOME, MARCA_OUT } from "./lib/nav";
 
 /**
- * Navegación de Marca VPER, en las tres capas de un portal de marca: Sistema
- * (design system), Logo (lineamientos) y Recursos (lo que se baja o se instala:
- * firmas hoy; plantillas, fondos o kits después). Recursos es un menú para que la
- * barra no crezca con cada pieza nueva.
+ * Barra de Marca VPER para mobile y tablet (en escritorio manda el sidebar,
+ * ./marca-sidebar.tsx). Mismo mapa: ./lib/nav.ts. Recursos es un menú para que
+ * la barra no crezca con cada pieza nueva.
  */
 
-const MAIN = [
-  { href: "/marca/sistema", label: "Sistema" },
-  { href: "/marca/logo", label: "Logo" },
-] as const;
-
-const RESOURCES = [
-  {
-    href: "/marca/firmas",
-    label: "Firmas de correo",
-    hint: "Ocho propuestas, listas para Gmail y Outlook",
-  },
-] as const;
-
-const OUT = [
-  { href: "/marca", label: "Inicio de Marca" },
-  { href: "/lab/proceso", label: "Lab 3D" },
-  { href: "/", label: "Sitio" },
-] as const;
+const MAIN = MARCA_GROUPS.filter((g) => g.label !== "Recursos").flatMap((g) => g.items);
+const RESOURCES = MARCA_GROUPS.find((g) => g.label === "Recursos")?.items ?? [];
+const OUT = [{ href: MARCA_HOME.href, label: "Inicio de Marca" }, ...MARCA_OUT];
 
 const item =
   "relative font-sans text-body-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--focus-ring-offset)] rounded-[var(--radius-xs)]";

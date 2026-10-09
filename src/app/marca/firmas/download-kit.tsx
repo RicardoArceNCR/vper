@@ -46,6 +46,7 @@ export default function DownloadKit({ kit }: { kit: FirmaAssets }) {
   return (
     <section
       id="kit"
+      data-toc="Kit de imágenes"
       aria-labelledby="kit-title"
       className="dark relative scroll-mt-20 overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--color-neutral-950)] text-[var(--color-neutral-50)]"
     >
