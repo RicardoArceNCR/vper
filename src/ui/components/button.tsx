@@ -16,8 +16,12 @@ const buttonVariants = cva(
           "border bg-[var(--button-primary-bg)] text-[var(--button-primary-text)] border-[var(--button-primary-border)] hover:bg-[var(--button-primary-bg-hover)] hover:text-[var(--button-primary-text-hover,#fff)] hover:border-[var(--button-primary-border-hover,var(--button-primary-bg-hover))] active:bg-[var(--button-primary-bg-press)] active:text-[var(--button-primary-text-hover,#fff)]",
         destructive:
           "bg-[var(--button-danger-bg)] text-[var(--button-danger-text)] border-[var(--button-danger-border)] hover:bg-[var(--button-danger-bg-hover)] active:bg-[var(--button-danger-bg-press)]",
+        // Hover con el mismo par fondo/texto que secondary. Antes solo cambiaba el
+        // fondo: en oscuro brand.css lo pone blanco y el texto seguía blanco
+        // (invisible). Los fallbacks cubren el claro, donde el paquete no define
+        // -text-hover ni -border-hover: queda gris claro con texto primario.
         outline:
-          "border border-[var(--button-secondary-border)] bg-transparent hover:bg-[var(--button-secondary-bg-hover)] text-[var(--button-secondary-text)]",
+          "border border-[var(--button-secondary-border)] bg-transparent text-[var(--button-secondary-text)] hover:bg-[var(--button-secondary-bg-hover)] hover:text-[var(--button-secondary-text-hover,var(--button-secondary-text))] hover:border-[var(--button-secondary-border-hover,var(--button-secondary-border))] active:bg-[var(--button-secondary-bg-press)] active:text-[var(--button-secondary-text-hover,var(--button-secondary-text))]",
         secondary:
           "border bg-[var(--button-secondary-bg)] [background-image:var(--button-secondary-fill,none)] text-[var(--button-secondary-text)] border-[var(--button-secondary-border)] hover:bg-[var(--button-secondary-bg-hover)] hover:[background-image:none] hover:text-[var(--button-secondary-text-hover,#0e0e0e)] hover:border-[var(--button-secondary-border-hover,#fff)] active:bg-[var(--button-secondary-bg-press)] active:[background-image:none] active:text-[var(--button-secondary-text-hover,#0e0e0e)]",
         ghost:
