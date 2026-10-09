@@ -15,6 +15,8 @@ import {
   type PaletteKey,
 } from "./email-html";
 import AssetsPanel from "./assets-panel";
+import DownloadKit from "./download-kit";
+import { useFirmaAssets } from "./use-firma-assets";
 import { FIRMA_DEFAULT, PROPOSALS, type Firma, type Proposal } from "./proposals";
 
 /**
@@ -54,6 +56,7 @@ export default function FirmasLab() {
   // "vpermedia.com" a secas también vale: se normaliza a https:// antes de usarla.
   const copyBase = publicBase.trim() ? webHref(publicBase) : "";
   const baseOk = isPublicHttpsUrl(copyBase);
+  const kit = useFirmaAssets(baseOk ? copyBase : "");
 
   // Patrón ARIA de radiogroup: una sola parada de tab y flechas para moverse.
   const onRadioKey = (e: KeyboardEvent<HTMLButtonElement>) => {
@@ -71,6 +74,8 @@ export default function FirmasLab() {
 
   return (
     <div className="grid gap-12">
+      <DownloadKit kit={kit} />
+
       {/* ── editor ── */}
       <section
         aria-label="Datos de la firma"
@@ -141,10 +146,10 @@ export default function FirmasLab() {
               . Tienen que estar publicadas ahí antes de instalarla, o el destinatario las
               verá rotas:{" "}
               <a
-                href="#imagenes"
+                href="#kit"
                 className="font-bold text-[var(--interaction-link-default)] underline underline-offset-4 hover:text-[var(--interaction-link-hover)]"
               >
-                descargá el ZIP para el desarrollador
+                descargá el kit para el desarrollador
               </a>
               .
             </>
@@ -176,7 +181,7 @@ export default function FirmasLab() {
         ))}
       </div>
 
-      <AssetsPanel copyBase={baseOk ? copyBase : ""} />
+      <AssetsPanel kit={kit} />
     </div>
   );
 }
