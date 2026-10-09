@@ -11,7 +11,7 @@ import {
 import { Button } from "@ui/components/button";
 import { Input } from "@ui/components/input";
 import { cn } from "@ui/lib/utils";
-import { parseColor, toHex, useThemeVersion } from "../live";
+import { copyText, parseColor, toHex, useThemeVersion } from "../live";
 import {
   EMAIL_PALETTE,
   PALETTE_TOKENS,
@@ -675,8 +675,12 @@ function PaletteCheck() {
       <ul className="grid grid-cols-4 gap-2 sm:grid-cols-7">
         {rows.map((r) => (
           <li key={r.key} className="grid min-w-0 gap-1">
-            <span
-              className="h-8 rounded-[var(--radius-sm)] border border-border"
+            <button
+              type="button"
+              onClick={() => copyText(r.hex)}
+              title={`Copiar ${r.hex}`}
+              aria-label={`${r.key}: copiar ${r.hex}`}
+              className="h-8 cursor-copy rounded-[var(--radius-sm)] border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)]"
               style={{ backgroundColor: r.hex }}
             />
             <span className="truncate font-sans text-label-xs font-bold">{r.key}</span>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import MarcaMobileNav from "./marca-mobile-nav";
 import MarcaSidebar from "./marca-sidebar";
+import { CopyToast } from "./live";
 
 /**
  * Marca VPER: el portal de marca del sitio. Tres capas, como en los portales
@@ -32,6 +33,7 @@ export default function MarcaLayout({ children }: { children: React.ReactNode })
         </header>
         {children}
       </div>
+      <CopyToast />
     </div>
   );
 }

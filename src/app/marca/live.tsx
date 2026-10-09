@@ -105,11 +105,112 @@ function measure(el: HTMLElement, prop: "color" | "backgroundColor" | "borderTop
 
 /* ─────────────────────────── piezas ─────────────────────────── */
 
-export function TokenName({ children }: { children: ReactNode }) {
+/* ─────────────────────────── copiar ─────────────────────────── */
+
+const COPY_EVENT = "marca:copied";
+
+/**
+ * Copia texto al portapapeles y avisa al <CopyToast /> del layout. Un solo
+ * aviso para toda la página: no hay un "copiado" por cada muestra.
+ */
+export async function copyText(text: string): Promise<void> {
+  let ok = false;
+  try {
+    await navigator.clipboard.writeText(text);
+    ok = true;
+  } catch {
+    // Safari viejo o permisos: textarea oculto + execCommand.
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    Object.assign(ta.style, { position: "fixed", left: "-9999px" });
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      ok = document.execCommand("copy");
+    } catch {
+      ok = false;
+    }
+    ta.remove();
+  }
+  window.dispatchEvent(new CustomEvent(COPY_EVENT, { detail: ok ? text : "" }));
+}
+
+/** Aviso único de "copiado", abajo al centro. Va en el layout de Marca. */
+export function CopyToast() {
+  const [msg, setMsg] = useState<{ text: string; ok: boolean } | null>(null);
+  useEffect(() => {
+    let t = 0;
+    const on = (e: Event) => {
+      const text = (e as CustomEvent<string>).detail;
+      setMsg({ text, ok: Boolean(text) });
+      window.clearTimeout(t);
+      t = window.setTimeout(() => setMsg(null), 1800);
+    };
+    window.addEventListener(COPY_EVENT, on);
+    return () => {
+      window.removeEventListener(COPY_EVENT, on);
+      window.clearTimeout(t);
+    };
+  }, []);
   return (
-    <code className="font-mono text-body-xs break-all text-[var(--text-secondary)]">
-      {children}
-    </code>
+    <div
+      role="status"
+      aria-live="polite"
+      className="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex justify-center px-4"
+    >
+      {msg ? (
+        <span className="flex max-w-full items-center gap-2 rounded-[var(--pill-radius)] bg-[var(--color-neutral-950)] px-4 py-2 font-sans text-body-sm font-bold text-[var(--color-neutral-50)] shadow-[var(--shadow-lg)] ring-1 ring-[var(--color-neutral-800)]">
+          <span
+            aria-hidden
+            className={cn(
+              "size-2 shrink-0 rounded-full",
+              msg.ok ? "bg-[var(--brand-action)]" : "bg-[var(--color-accent-500)]",
+            )}
+          />
+          {msg.ok ? (
+            <>
+              Copiado <code className="truncate font-mono font-normal">{msg.text}</code>
+            </>
+          ) : (
+            "No se pudo copiar"
+          )}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+/** Qué se copia de un nombre: `--x` como `var(--x)`; clases y valores, tal cual. */
+function copyValue(name: string): string {
+  return name.startsWith("--") ? `var(${name})` : name;
+}
+
+/**
+ * Nombre de token o clase. Si es un nombre solo (`--spacing-4`,
+ * `text-display-lg`, `.title-solid`) se copia al hacer clic; si es una frase
+ * o un par (`--a / --b`) queda como texto.
+ */
+export function TokenName({ children }: { children: ReactNode }) {
+  const text = typeof children === "string" ? children : null;
+  const copyable = text !== null && /^[.\w-]+$/.test(text);
+  if (!copyable || text === null) {
+    return (
+      <code className="font-mono text-body-xs break-all text-[var(--text-secondary)]">
+        {children}
+      </code>
+    );
+  }
+  const value = copyValue(text);
+  return (
+    <button
+      type="button"
+      onClick={() => copyText(value)}
+      title={`Copiar ${value}`}
+      className="w-fit cursor-copy rounded-[var(--radius-xs)] text-left font-mono text-body-xs break-all text-[var(--text-secondary)] decoration-dotted underline-offset-4 transition-colors hover:text-[var(--text-primary)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)]"
+    >
+      {text}
+    </button>
   );
 }
 
@@ -137,19 +238,32 @@ export function Swatch({
   }, [v]);
   return (
     <figure className={cn("m-0 flex min-w-0 flex-col gap-1.5", className)}>
-      <div
-        ref={ref}
-        className={cn(
-          "aspect-square w-full rounded-[var(--radius-md)] border border-[var(--border-subtle)]",
-          anchor &&
-            "outline-2 outline-offset-2 outline-[var(--text-primary)] outline-solid",
-        )}
-        style={{ backgroundColor: `var(${token})` }}
-      />
-      <figcaption className="flex flex-col">
-        <span className="font-sans text-label-xs font-bold text-[var(--text-primary)]">
+      <button
+        type="button"
+        onClick={() => hex && copyText(hex)}
+        title={hex ? `Copiar ${hex}` : undefined}
+        aria-label={`${label ?? token}: copiar ${hex || "color"}`}
+        className="group relative block w-full cursor-copy rounded-[var(--radius-md)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--focus-ring-offset)]"
+      >
+        <div
+          ref={ref}
+          className={cn(
+            "aspect-square w-full rounded-[var(--radius-md)] border border-[var(--border-subtle)] transition-transform group-hover:scale-[1.04] group-active:scale-95",
+            anchor &&
+              "outline-2 outline-offset-2 outline-[var(--text-primary)] outline-solid",
+          )}
+          style={{ backgroundColor: `var(${token})` }}
+        />
+      </button>
+      <figcaption className="flex flex-col items-start">
+        <button
+          type="button"
+          onClick={() => copyText(`var(${token})`)}
+          title={`Copiar var(${token})`}
+          className="cursor-copy rounded-[var(--radius-xs)] text-left font-sans text-label-xs font-bold text-[var(--text-primary)] decoration-dotted underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)]"
+        >
           {label ?? token}
-        </span>
+        </button>
         <span className="font-mono text-body-xs text-[var(--text-tertiary)]">
           {hex || "—"}
         </span>
