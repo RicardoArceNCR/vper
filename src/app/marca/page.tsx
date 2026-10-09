@@ -122,9 +122,9 @@ export default function MarcaHome() {
         <Area
           href="/marca/logo"
           over="Lineamientos"
-          title="Logo"
-          body="Las cuatro versiones, en qué fondos van, hasta dónde se achican y nueve aplicaciones reales."
-          items={["Versiones", "Color", "Reducción", "Usos"]}
+          title="Marca"
+          body="Cómo se ve, cómo suena y cómo se usa: el logo con sus descargas, la voz del copy y el estilo de fotos e íconos."
+          items={["Logo", "Voz y tono", "Imagen"]}
           visual={<Logo k="h1" decorative className="h-auto w-3/5" />}
         />
         <Area

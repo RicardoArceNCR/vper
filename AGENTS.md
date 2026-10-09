@@ -56,8 +56,9 @@ leen este archivo de forma nativa; Claude Code no, por eso existe
 
 Portal de marca interno (noindex), armado con el mismo código que el sitio:
 `/marca` (inicio), `/marca/sistema` (design system leído en vivo),
-`/marca/logo` (lineamientos) y `/marca/firmas` (recursos: firmas de correo y
-su kit de imágenes). `/design-preview` redirige acá (`next.config.ts`).
+lineamientos (`/marca/logo`, `/marca/voz`, `/marca/imagen`) y recursos
+(`/marca/firmas`: firmas de correo y su kit de imágenes). `/design-preview`
+redirige acá (`next.config.ts`).
 
 - Vive en `src/app/marca/`, fuera de `src/sections/`: **no se porta a Vite**.
 - La página de sistema no escribe hex ni px: pinta con `var(--token)` y lee lo
@@ -66,7 +67,12 @@ su kit de imágenes). `/design-preview` redirige acá (`next.config.ts`).
   inline, PNG a 2x en `public/images/firma/`. Sus hex viven en `EMAIL_PALETTE`
   y la página verifica que coincidan con los tokens. Reglas en
   `marca/firmas/RESTRICCIONES.md`.
-- Un recurso nuevo (plantillas, fondos) va bajo Recursos en `marca/marca-nav.tsx`.
+- Voz e imagen salen de archivos de contenido (`marca/voz/voz-content.ts`,
+  `marca/imagen/imagen-content.ts`) derivados del copy y el material reales;
+  sus "Para corregir" son la lista de trabajo del sitio, no están aplicados.
+- Una página nueva se suma en `marca/lib/nav.ts` y aparece sola en el sidebar
+  y en el menú de mobile; su índice se arma desde sus `<section id>` (con
+  `data-toc` si el h2 es largo).
 
 ## Antes de cerrar
 

@@ -1,4 +1,12 @@
-import { Home, Mail, Palette, Shapes, type LucideIcon } from "lucide-react";
+import {
+  Home,
+  Image,
+  Mail,
+  MessageSquareQuote,
+  Palette,
+  Shapes,
+  type LucideIcon,
+} from "lucide-react";
 
 /**
  * Mapa de Marca VPER: una sola fuente para el sidebar de escritorio y la barra
@@ -45,6 +53,18 @@ export const MARCA_GROUPS: readonly NavGroup[] = [
         label: "Logo",
         hint: "Versiones, color, reducción y descargas",
         icon: Shapes,
+      },
+      {
+        href: "/marca/voz",
+        label: "Voz y tono",
+        hint: "Cómo escribe VPER, con ejemplos del sitio",
+        icon: MessageSquareQuote,
+      },
+      {
+        href: "/marca/imagen",
+        label: "Imagen",
+        hint: "Fotografía e iconografía",
+        icon: Image,
       },
     ],
   },
