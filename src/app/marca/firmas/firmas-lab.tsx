@@ -102,7 +102,7 @@ export default function FirmasLab({
           over="Taller"
           id="taller-title"
           title="Elegí y copiá"
-          lede="Escribí los datos una vez: las nueve firmas se actualizan juntas. La primera es la que se usa hoy, para comparar."
+          lede="Escribí los datos una vez: las ocho firmas se actualizan juntas."
         />
         <div className="grid gap-10 xl:grid-cols-[19rem_minmax(0,1fr)] xl:gap-12">
           <aside
@@ -206,9 +206,9 @@ export default function FirmasLab({
                       href={`#${p.id}`}
                       className="flex items-baseline gap-2 rounded-[var(--radius-sm)] px-2 py-1 font-sans text-body-sm text-[var(--text-secondary)] transition-colors hover:bg-[var(--background-base)] hover:text-foreground"
                     >
-                      <span className="w-4 font-mono text-body-xs">{i}</span>
+                      <span className="w-4 font-mono text-body-xs">{i + 1}</span>
                       <span className="font-bold">{p.name}</span>
-                      {p.badge && p.badge !== "Actual" ? (
+                      {p.badge ? (
                         <span className="ml-auto font-sans text-label-xs font-bold uppercase text-[var(--text-brand)]">
                           {p.badge}
                         </span>
@@ -355,7 +355,6 @@ function ProposalCard({
 
   const errors = issues.filter((i) => i.level === "error");
   const warns = issues.filter((i) => i.level === "warn");
-  const isCurrent = p.badge === "Actual";
   const canCopy = Boolean(copyHtml) && errors.length === 0;
 
   return (
@@ -366,86 +365,75 @@ function ProposalCard({
       <div className="grid content-start gap-3">
         <div className="flex flex-wrap items-center gap-3">
           <span className="grid size-7 place-items-center rounded-full bg-foreground font-sans text-label-sm font-bold text-background">
-            {n}
+            {n + 1}
           </span>
           <h3 className="font-display text-h2 font-black uppercase">{p.name}</h3>
           {p.badge ? (
-            <span
-              className={cn(
-                "rounded-[var(--pill-radius)] px-2.5 py-0.5 font-sans text-label-xs font-bold uppercase",
-                isCurrent
-                  ? "border border-border text-[var(--text-secondary)]"
-                  : "bg-[var(--pill-brand-bg)] text-[var(--pill-brand-text)]",
-              )}
-            >
+            <span className="rounded-[var(--pill-radius)] bg-[var(--pill-brand-bg)] px-2.5 py-0.5 font-sans text-label-xs font-bold uppercase text-[var(--pill-brand-text)]">
               {p.badge}
             </span>
           ) : null}
         </div>
         <p className="font-sans text-body-md font-bold">{p.idea}</p>
         <dl className="grid gap-2 font-sans text-body-sm">
-          {!isCurrent ? (
-            <div>
-              <dt className="inline font-bold">Para quién: </dt>
-              <dd className="inline text-[var(--text-secondary)]">{p.forWho}</dd>
-            </div>
-          ) : null}
+          <div>
+            <dt className="inline font-bold">Para quién: </dt>
+            <dd className="inline text-[var(--text-secondary)]">{p.forWho}</dd>
+          </div>
           <div>
             <dt className="inline font-bold text-[var(--feedback-error-text)]">
-              {isCurrent ? "Qué falla: " : "Riesgo: "}
+              Riesgo:{" "}
             </dt>
             <dd className="inline text-[var(--text-secondary)]">{p.risk}</dd>
           </div>
         </dl>
-        {!isCurrent ? (
-          <>
-            <div className="mt-2 flex flex-wrap gap-3">
-              <Button size="sm" disabled={!canCopy} onClick={() => copy("firma")}>
-                {copied === "firma" ? "Copiada" : "Copiar firma"}
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                disabled={!canCopy}
-                onClick={() => copy("html")}
-              >
-                {copied === "html" ? "HTML copiado" : "Copiar HTML"}
-              </Button>
-            </div>
-            <p className="font-mono text-body-xs text-[var(--text-secondary)]">
-              {copyHtml
-                ? `${copyHtml.length.toLocaleString("es")} caracteres · ${imgs} ${imgs === 1 ? "imagen" : "imágenes"} · ${
-                    errors.length + warns.length === 0
-                      ? "sin problemas"
-                      : `${errors.length} errores, ${warns.length} avisos`
-                  }`
-                : "Sin URL pública válida no hay firma para copiar."}
-            </p>
-            <p
-              role="status"
-              className="font-sans text-body-xs text-[var(--feedback-error-text)]"
+        <>
+          <div className="mt-2 flex flex-wrap gap-3">
+            <Button size="sm" disabled={!canCopy} onClick={() => copy("firma")}>
+              {copied === "firma" ? "Copiada" : "Copiar firma"}
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={!canCopy}
+              onClick={() => copy("html")}
             >
-              {copied === "error" ? (
-                "No se pudo copiar la firma con formato. Probá en Chrome o Edge."
-              ) : copied === "firma" ? (
-                <span className="text-[var(--feedback-success-text)]">
-                  Firma copiada. Pegala en el editor de firma de tu correo.
-                </span>
-              ) : copied === "html" ? (
-                <span className="text-[var(--feedback-success-text)]">HTML copiado.</span>
-              ) : (
-                ""
-              )}
-            </p>
-            {errors.length + warns.length > 0 ? (
-              <ul className="grid gap-1 font-sans text-body-xs text-[var(--feedback-error-text)]">
-                {[...errors, ...warns].slice(0, 4).map((i) => (
-                  <li key={i.code + i.message}>{i.message}</li>
-                ))}
-              </ul>
-            ) : null}
-          </>
-        ) : null}
+              {copied === "html" ? "HTML copiado" : "Copiar HTML"}
+            </Button>
+          </div>
+          <p className="font-mono text-body-xs text-[var(--text-secondary)]">
+            {copyHtml
+              ? `${copyHtml.length.toLocaleString("es")} caracteres · ${imgs} ${imgs === 1 ? "imagen" : "imágenes"} · ${
+                  errors.length + warns.length === 0
+                    ? "sin problemas"
+                    : `${errors.length} errores, ${warns.length} avisos`
+                }`
+              : "Sin URL pública válida no hay firma para copiar."}
+          </p>
+          <p
+            role="status"
+            className="font-sans text-body-xs text-[var(--feedback-error-text)]"
+          >
+            {copied === "error" ? (
+              "No se pudo copiar la firma con formato. Probá en Chrome o Edge."
+            ) : copied === "firma" ? (
+              <span className="text-[var(--feedback-success-text)]">
+                Firma copiada. Pegala en el editor de firma de tu correo.
+              </span>
+            ) : copied === "html" ? (
+              <span className="text-[var(--feedback-success-text)]">HTML copiado.</span>
+            ) : (
+              ""
+            )}
+          </p>
+          {errors.length + warns.length > 0 ? (
+            <ul className="grid gap-1 font-sans text-body-xs text-[var(--feedback-error-text)]">
+              {[...errors, ...warns].slice(0, 4).map((i) => (
+                <li key={i.code + i.message}>{i.message}</li>
+              ))}
+            </ul>
+          ) : null}
+        </>
       </div>
       <Inbox html={preview} scheme={scheme} />
     </article>

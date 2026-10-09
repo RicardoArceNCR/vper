@@ -4,8 +4,7 @@
  * octubre 2026). Base técnica y reglas: ./email-html.ts y ./RESTRICCIONES.md.
  *
  * Los hex viven en EMAIL_PALETTE (un correo no lee variables CSS); la página
- * verifica en vivo que coincidan con los tokens. La única excepción es "Hoy", que
- * reproduce la firma actual tal como está, con sus colores fuera de sistema.
+ * verifica en vivo que coincidan con los tokens.
  *
  * Los PNG de public/images/firma/ se generaron desde los SVG del logo a 2x, con el
  * fondo horneado: ningún cliente invierte imágenes en modo oscuro.
@@ -59,7 +58,7 @@ export interface Proposal {
   forWho: string;
   risk: string;
   /** Etiqueta destacada en la lámina. */
-  badge?: "Estándar" | "Respuestas" | "Campañas" | "Actual";
+  badge?: "Estándar" | "Respuestas" | "Campañas";
   render: (d: Firma, base: string) => string;
 }
 
@@ -139,59 +138,6 @@ const row = (style: string, html: string, pad = "0") =>
 const f = (o: Parameters<typeof font>[0]) => css(font(o));
 
 /* ─────────────────────────── propuestas ─────────────────────────── */
-
-const hoy: Proposal = {
-  id: "hoy",
-  name: "Hoy",
-  badge: "Actual",
-  idea: "La firma que se usa ahora, reconstruida para comparar.",
-  forWho: "—",
-  risk: "Tres azules y un rojo sin sistema, sin logo, y el sitio subrayado en negrita compite con el nombre.",
-  render: (d) => {
-    // Colores tal cual la firma actual: fuera del sistema a propósito.
-    const red = "#cc5b57";
-    const blue = "#1155cc";
-    const u = { "text-decoration": "underline" };
-    return wrapSignature(
-      table({}, [
-        row(f({ size: 26, lineHeight: 30, color: red, bold: true }), esc(d.nombre)),
-        row(
-          f({ size: 18, lineHeight: 24, color: blue }),
-          link({
-            href: mailtoHref(d.correo),
-            text: d.correo,
-            color: blue,
-            underline: true,
-          }),
-        ),
-        row(
-          f({ size: 18, lineHeight: 24, color: "#000000" }),
-          d.telefono
-            ? `Tel ${link({ href: telHref(d.telefono) || "#", text: d.telefono, color: blue })}`
-            : "",
-        ),
-        row(
-          f({ size: 18, lineHeight: 24, color: blue, bold: true }),
-          link({
-            href: webHref(d.web),
-            text: `www.${displayUrl(d.web)}`,
-            color: blue,
-            style: u,
-            underline: true,
-          }),
-        ),
-        spacer(18),
-        row(
-          css(font({ size: 18, lineHeight: 24, color: P.sky, bold: true }), {
-            "font-style": "italic",
-          }),
-          esc(d.sedes.replace(/\s*·\s*/g, "-")),
-        ),
-      ]),
-      { width: 420 },
-    );
-  },
-};
 
 const esencial: Proposal = {
   id: "esencial",
@@ -563,7 +509,6 @@ const cartelera: Proposal = {
 };
 
 export const PROPOSALS: readonly Proposal[] = [
-  hoy,
   sello,
   respuesta,
   esencial,
