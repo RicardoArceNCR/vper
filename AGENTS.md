@@ -52,6 +52,22 @@ leen este archivo de forma nativa; Claude Code no, por eso existe
   sino en el texto de al lado. El wordmark SVG (238×19) es el mismo caso:
   `h-* w-auto` no es un icono, pide ~12.5 veces el alto.
 
+## Marca VPER (`/marca`)
+
+Portal de marca interno (noindex), armado con el mismo código que el sitio:
+`/marca` (inicio), `/marca/sistema` (design system leído en vivo),
+`/marca/logo` (lineamientos) y `/marca/firmas` (recursos: firmas de correo y
+su kit de imágenes). `/design-preview` redirige acá (`next.config.ts`).
+
+- Vive en `src/app/marca/`, fuera de `src/sections/`: **no se porta a Vite**.
+- La página de sistema no escribe hex ni px: pinta con `var(--token)` y lee lo
+  que computa el navegador (`marca/live.tsx`). No copiar valores a mano ahí.
+- Las firmas son HTML de correo (`marca/firmas/email-html.ts`): tablas, estilos
+  inline, PNG a 2x en `public/images/firma/`. Sus hex viven en `EMAIL_PALETTE`
+  y la página verifica que coincidan con los tokens. Reglas en
+  `marca/firmas/RESTRICCIONES.md`.
+- Un recurso nuevo (plantillas, fondos) va bajo Recursos en `marca/marca-nav.tsx`.
+
 ## Antes de cerrar
 
 ```bash

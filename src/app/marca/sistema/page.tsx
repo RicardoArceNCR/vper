@@ -1,15 +1,15 @@
-import Link from "next/link";
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Button } from "@ui/components/button";
 import { Card } from "@ui/components/card";
 import { Input } from "@ui/components/input";
 import { Pill } from "@ui/components/pill";
 import ServicesGrid from "@/sections/services-grid";
-import { Pair, Ramp, ReplayHero, Swatch, TokenName, TypeRow, WidthProbe } from "./live";
+import { Pair, Ramp, ReplayHero, Swatch, TokenName, TypeRow, WidthProbe } from "../live";
 
 /**
  * Lámina del sistema de VPER. Patrón tomado de contracorriente
- * (/design-preview): cimientos → componentes → composición real, y el
+ * (/marca): cimientos → componentes → composición real, y el
  * nombre del token al lado de cada muestra.
  *
  * Diferencia a propósito: acá NO se copian hex ni px. Cada muestra pinta
@@ -17,6 +17,8 @@ import { Pair, Ramp, ReplayHero, Swatch, TokenName, TypeRow, WidthProbe } from "
  * navegador. VPER pisa el paquete desde brand.css; una lámina con valores
  * escritos a mano mostraría lo que el archivo dice, no lo que gana.
  */
+
+export const metadata: Metadata = { title: "Sistema" };
 
 const SECTIONS = [
   ["escalas", "Escalas"],
@@ -193,7 +195,7 @@ export default function SistemaPage() {
     <main className="wrap mx-auto max-w-[1217px] pb-24">
       <div className="py-12 md:py-20">
         <p className="font-sans text-overline-sm font-bold uppercase text-[var(--text-eyebrow)]">
-          VPER Media
+          Marca · Design system
         </p>
         <div className="@container min-w-0">
           <h1 className="mt-3 font-display display-title font-black uppercase tracking-tight title-brand-gradient">
@@ -215,18 +217,6 @@ export default function SistemaPage() {
               {label}
             </a>
           ))}
-          <Link
-            href="/design-preview/logo"
-            className="rounded-[var(--pill-radius)] bg-[var(--pill-brand-bg)] px-3 py-1 font-sans text-label-sm font-bold uppercase text-[var(--pill-brand-text)]"
-          >
-            Logo →
-          </Link>
-          <Link
-            href="/design-preview/firmas"
-            className="rounded-[var(--pill-radius)] bg-[var(--pill-brand-bg)] px-3 py-1 font-sans text-label-sm font-bold uppercase text-[var(--pill-brand-text)]"
-          >
-            Firmas →
-          </Link>
         </nav>
       </div>
 

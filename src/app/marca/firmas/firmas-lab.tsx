@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type ReactNode,
+} from "react";
 import { Button } from "@ui/components/button";
 import { Input } from "@ui/components/input";
 import { cn } from "@ui/lib/utils";
@@ -44,7 +51,15 @@ type Scheme = (typeof SCHEMES)[number];
 
 const label = "font-sans text-label-xs font-bold uppercase text-[var(--text-secondary)]";
 
-export default function FirmasLab() {
+export default function FirmasLab({
+  install,
+  why,
+}: {
+  /** Instrucciones de instalación (servidor): van después del taller. */
+  install: ReactNode;
+  /** Restricciones del correo (servidor): van en el control técnico. */
+  why: ReactNode;
+}) {
   const [data, setData] = useState<Firma>(FIRMA_DEFAULT);
   const [publicBase, setPublicBase] = useState("https://vpermedia.com");
   const [origin, setOrigin] = useState("");
@@ -73,115 +88,196 @@ export default function FirmasLab() {
   };
 
   return (
-    <div className="grid gap-12">
+    <div className="grid gap-16 md:gap-24">
       <DownloadKit kit={kit} />
 
-      {/* ── editor ── */}
-      <section
-        aria-label="Datos de la firma"
-        className="grid gap-6 rounded-[var(--radius-xl)] border border-border bg-[var(--background-subtle)] p-5 md:p-8"
-      >
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FIELDS.map((f) => (
-            <label key={f.key} className="grid gap-1.5">
-              <span className={label}>{f.label}</span>
-              <Input
-                value={data[f.key]}
-                placeholder={f.placeholder}
-                onChange={(e) => setData((d) => ({ ...d, [f.key]: e.target.value }))}
-              />
-            </label>
-          ))}
-        </div>
-        <div className="grid items-end gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-          <label className="grid gap-1.5">
-            <span className={label}>URL pública de las imágenes (se usa al copiar)</span>
-            <Input
-              value={publicBase}
-              state={baseOk ? "default" : "error"}
-              onChange={(e) => setPublicBase(e.target.value)}
-            />
-          </label>
-          <div className="flex flex-wrap items-center gap-3">
-            <span id="bandeja-label" className={label}>
-              Bandeja
-            </span>
-            <div
-              role="radiogroup"
-              aria-labelledby="bandeja-label"
-              className="inline-flex rounded-[var(--pill-radius)] border border-border p-1"
-            >
-              {SCHEMES.map((s, i) => (
-                <button
-                  key={s}
-                  ref={(el) => {
-                    radios.current[i] = el;
-                  }}
-                  type="button"
-                  role="radio"
-                  aria-checked={scheme === s}
-                  tabIndex={scheme === s ? 0 : -1}
-                  onClick={() => setScheme(s)}
-                  onKeyDown={onRadioKey}
-                  className={cn(
-                    "rounded-[var(--pill-radius)] px-3 py-1 font-sans text-label-sm font-bold uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--focus-ring-offset)]",
-                    scheme === s
-                      ? "bg-[var(--pill-brand-bg)] text-[var(--pill-brand-text)]"
-                      : "text-[var(--text-secondary)] hover:text-foreground",
-                  )}
-                >
-                  {s}
-                </button>
+      {/* ── taller: datos fijos a la izquierda, propuestas a la derecha ── */}
+      <section id="taller" aria-labelledby="taller-title" className="scroll-mt-20">
+        <SectionHead
+          over="Taller"
+          id="taller-title"
+          title="Elegí y copiá"
+          lede="Escribí los datos una vez: las nueve firmas se actualizan juntas. La primera es la que se usa hoy, para comparar."
+        />
+        <div className="grid gap-10 xl:grid-cols-[19rem_minmax(0,1fr)] xl:gap-12">
+          <aside
+            aria-label="Datos de la firma"
+            className="grid content-start gap-6 rounded-[var(--radius-xl)] border border-border bg-[var(--background-subtle)] p-5 md:p-6 xl:sticky xl:top-20 xl:max-h-[calc(100dvh-6rem)] xl:overflow-y-auto"
+          >
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
+              {FIELDS.map((f) => (
+                <label key={f.key} className="grid gap-1.5">
+                  <span className={label}>{f.label}</span>
+                  <Input
+                    value={data[f.key]}
+                    placeholder={f.placeholder}
+                    onChange={(e) => setData((d) => ({ ...d, [f.key]: e.target.value }))}
+                  />
+                </label>
               ))}
             </div>
+
+            <div className="grid gap-4 border-t border-border pt-5 sm:grid-cols-2 xl:grid-cols-1">
+              <label className="grid gap-1.5">
+                <span className={label}>URL pública de las imágenes</span>
+                <Input
+                  value={publicBase}
+                  state={baseOk ? "default" : "error"}
+                  onChange={(e) => setPublicBase(e.target.value)}
+                />
+                <span
+                  className={cn(
+                    "font-sans text-body-xs",
+                    baseOk
+                      ? "text-[var(--text-secondary)]"
+                      : "text-[var(--feedback-error-text)]",
+                  )}
+                >
+                  {baseOk ? (
+                    <>
+                      Se usa al copiar. Las imágenes tienen que estar publicadas ahí:{" "}
+                      <a
+                        href="#kit"
+                        className="font-bold text-[var(--interaction-link-default)] underline underline-offset-4 hover:text-[var(--interaction-link-hover)]"
+                      >
+                        kit
+                      </a>
+                      .
+                    </>
+                  ) : (
+                    "Tiene que ser https y pública (no localhost). Copiar queda desactivado."
+                  )}
+                </span>
+              </label>
+
+              <div className="grid content-start gap-1.5">
+                <span id="bandeja-label" className={label}>
+                  Bandeja
+                </span>
+                <div
+                  role="radiogroup"
+                  aria-labelledby="bandeja-label"
+                  className="inline-flex w-fit rounded-[var(--pill-radius)] border border-border p-1"
+                >
+                  {SCHEMES.map((s, i) => (
+                    <button
+                      key={s}
+                      ref={(el) => {
+                        radios.current[i] = el;
+                      }}
+                      type="button"
+                      role="radio"
+                      aria-checked={scheme === s}
+                      tabIndex={scheme === s ? 0 : -1}
+                      onClick={() => setScheme(s)}
+                      onKeyDown={onRadioKey}
+                      className={cn(
+                        "rounded-[var(--pill-radius)] px-3 py-1 font-sans text-label-sm font-bold uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--focus-ring-offset)]",
+                        scheme === s
+                          ? "bg-[var(--pill-brand-bg)] text-[var(--pill-brand-text)]"
+                          : "text-[var(--text-secondary)] hover:text-foreground",
+                      )}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+                <span className="font-sans text-body-xs text-[var(--text-secondary)]">
+                  Oscuro simula Gmail en iOS, el cliente que más invierte.
+                </span>
+              </div>
+            </div>
+
+            {/* Índice: en escritorio el panel queda fijo, así que también navega. */}
+            <nav
+              aria-label="Propuestas"
+              className="hidden border-t border-border pt-5 xl:block"
+            >
+              <span className={label}>Propuestas</span>
+              <ol className="mt-2 grid gap-0.5">
+                {PROPOSALS.map((p, i) => (
+                  <li key={p.id}>
+                    <a
+                      href={`#${p.id}`}
+                      className="flex items-baseline gap-2 rounded-[var(--radius-sm)] px-2 py-1 font-sans text-body-sm text-[var(--text-secondary)] transition-colors hover:bg-[var(--background-base)] hover:text-foreground"
+                    >
+                      <span className="w-4 font-mono text-body-xs">{i}</span>
+                      <span className="font-bold">{p.name}</span>
+                      {p.badge && p.badge !== "Actual" ? (
+                        <span className="ml-auto font-sans text-label-xs font-bold uppercase text-[var(--text-brand)]">
+                          {p.badge}
+                        </span>
+                      ) : null}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          </aside>
+
+          <div className="grid min-w-0 gap-14">
+            {PROPOSALS.map((p, i) => (
+              <ProposalCard
+                key={p.id}
+                n={i}
+                p={p}
+                data={data}
+                previewBase={origin}
+                copyBase={baseOk ? copyBase : ""}
+                scheme={scheme}
+              />
+            ))}
           </div>
         </div>
-        <p className="font-sans text-body-sm text-[var(--text-secondary)]">
-          {baseOk ? (
-            <>
-              Las imágenes de la firma copiada apuntan a{" "}
-              <code className="font-mono text-body-xs">
-                {copyBase.replace(/\/+$/, "")}/images/firma/
-              </code>
-              . Tienen que estar publicadas ahí antes de instalarla, o el destinatario las
-              verá rotas:{" "}
-              <a
-                href="#kit"
-                className="font-bold text-[var(--interaction-link-default)] underline underline-offset-4 hover:text-[var(--interaction-link-hover)]"
-              >
-                descargá el kit para el desarrollador
-              </a>
-              .
-            </>
-          ) : (
-            <span className="text-[var(--feedback-error-text)]">
-              La URL tiene que ser https y pública (no localhost): es de donde el
-              destinatario descarga el logo. Mientras tanto, copiar está desactivado.
-            </span>
-          )}{" "}
-          El modo oscuro simula Gmail en iOS, el cliente que más invierte: fondos y texto
-          cambian de luminosidad y las imágenes quedan como están.
-        </p>
       </section>
 
-      <PaletteCheck />
+      {install}
 
-      {/* ── propuestas ── */}
-      <div className="grid gap-16">
-        {PROPOSALS.map((p, i) => (
-          <ProposalCard
-            key={p.id}
-            n={i}
-            p={p}
-            data={data}
-            previewBase={origin}
-            copyBase={baseOk ? copyBase : ""}
-            scheme={scheme}
-          />
-        ))}
-      </div>
+      {/* ── control técnico: para quien mantiene el sistema, no para quien elige ── */}
+      <section
+        id="control"
+        aria-labelledby="control-title"
+        className="grid scroll-mt-20 gap-10 border-t border-border pt-14"
+      >
+        <SectionHead
+          over="Control técnico"
+          id="control-title"
+          title="Para quien mantiene"
+          lede="La firma no puede leer los tokens del sitio, así que repite sus colores en hex. Acá se verifica que no se desincronicen, se listan los archivos del kit y se explican las restricciones del correo."
+        />
+        {why}
+        <PaletteCheck />
+        <AssetsPanel kit={kit} />
+      </section>
+    </div>
+  );
+}
 
-      <AssetsPanel kit={kit} />
+function SectionHead({
+  over,
+  id,
+  title,
+  lede,
+}: {
+  over: string;
+  id: string;
+  title: string;
+  lede: string;
+}) {
+  return (
+    <div className="@container mb-8 min-w-0 max-w-3xl md:mb-10">
+      <p className="font-sans text-overline-sm font-bold uppercase text-[var(--text-eyebrow)]">
+        {over}
+      </p>
+      <h2
+        id={id}
+        className="mt-3 font-display display-title-sm font-black uppercase tracking-tight"
+      >
+        {title}
+      </h2>
+      <p className="mt-4 font-sans text-body-md font-medium text-[var(--text-secondary)]">
+        {lede}
+      </p>
     </div>
   );
 }
@@ -259,7 +355,7 @@ function ProposalCard({
   return (
     <article
       id={p.id}
-      className="grid scroll-mt-20 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-10"
+      className="grid scroll-mt-24 gap-6 border-t border-border pt-10 first:border-t-0 first:pt-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-10 xl:grid-cols-1 xl:gap-6"
     >
       <div className="grid content-start gap-3">
         <div className="flex flex-wrap items-center gap-3">
@@ -562,9 +658,9 @@ function PaletteCheck() {
   return (
     <section aria-label="Paleta de la firma" className="grid gap-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="font-sans text-label-sm font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+        <h3 className="font-sans text-label-sm font-bold uppercase tracking-widest text-[var(--text-secondary)]">
           Paleta de la firma vs tokens
-        </h2>
+        </h3>
         <span
           className={cn(
             "font-mono text-body-xs",

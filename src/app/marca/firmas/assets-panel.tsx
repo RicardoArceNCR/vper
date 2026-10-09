@@ -19,12 +19,9 @@ export default function AssetsPanel({ kit }: { kit: FirmaAssets }) {
     >
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
         <div className="grid max-w-2xl gap-2">
-          <p className="font-sans text-overline-sm font-bold uppercase text-[var(--text-eyebrow)]">
-            Para el desarrollador
-          </p>
-          <h2 id="imagenes-title" className="font-display text-h3 font-black uppercase">
-            Imágenes para publicar
-          </h2>
+          <h3 id="imagenes-title" className="font-display text-h3 font-black uppercase">
+            Archivos del kit
+          </h3>
           <p className="font-sans text-body-sm text-[var(--text-secondary)]">
             Las firmas no llevan las imágenes adentro: el correo las descarga de{" "}
             <code className="font-mono text-body-xs break-all">

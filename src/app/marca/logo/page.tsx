@@ -7,13 +7,13 @@ import { MARKS, type MarkKey } from "./marks-data";
 import s from "./logo.module.css";
 
 export const metadata: Metadata = {
-  title: "Logo — VPER",
+  title: "Logo",
   robots: { index: false, follow: false },
 };
 
 /**
  * Lámina de logo. Patrón de hablemos-de-centroamerica
- * (/design-preview/logo): las versiones en los mismos fondos, prueba de
+ * (/marca/logo): las versiones en los mismos fondos, prueba de
  * reducción y aplicaciones reales lado a lado.
  *
  * Diferencia: allá se elegía entre seis propuestas. Acá hay UN logo en
@@ -397,10 +397,10 @@ export default function LogoPage() {
       <section className="wrap mx-auto max-w-[1217px] pt-10 md:pt-16">
         <div className="flex flex-wrap justify-between gap-3 font-sans text-body-sm font-medium text-muted-foreground">
           <span>
-            <Link href="/design-preview" className="underline underline-offset-4">
-              Sistema
+            <Link href="/marca" className="underline underline-offset-4">
+              Marca
             </Link>{" "}
-            · Identidad
+            · Lineamientos · Logo
           </span>
           <span>Propuesta de uso del logo · Octubre 2026</span>
         </div>

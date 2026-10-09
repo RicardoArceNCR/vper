@@ -8,25 +8,27 @@ import ThemeToggle from "@/components/theme-toggle";
 import { cn } from "@ui/lib/utils";
 
 /**
- * Navegación de las láminas. Sistema y Logo son la identidad; lo que se baja o
- * se instala (firmas hoy; plantillas, fondos o kits después) va bajo Recursos,
- * para que la barra no crezca con cada pieza nueva.
+ * Navegación de Marca VPER, en las tres capas de un portal de marca: Sistema
+ * (design system), Logo (lineamientos) y Recursos (lo que se baja o se instala:
+ * firmas hoy; plantillas, fondos o kits después). Recursos es un menú para que la
+ * barra no crezca con cada pieza nueva.
  */
 
 const MAIN = [
-  { href: "/design-preview", label: "Sistema" },
-  { href: "/design-preview/logo", label: "Logo" },
+  { href: "/marca/sistema", label: "Sistema" },
+  { href: "/marca/logo", label: "Logo" },
 ] as const;
 
 const RESOURCES = [
   {
-    href: "/design-preview/firmas",
+    href: "/marca/firmas",
     label: "Firmas de correo",
     hint: "Ocho propuestas, listas para Gmail y Outlook",
   },
 ] as const;
 
 const OUT = [
+  { href: "/marca", label: "Inicio de Marca" },
   { href: "/lab/proceso", label: "Lab 3D" },
   { href: "/", label: "Sitio" },
 ] as const;
@@ -39,7 +41,7 @@ const idle = "text-[var(--nav-item-default)] hover:text-[var(--nav-item-hover)]"
 const active =
   "text-[var(--text-primary)] after:absolute after:inset-x-0 after:-bottom-1.5 after:h-0.5 after:bg-[var(--text-primary)]";
 
-export default function PreviewNav() {
+export default function MarcaNav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const wrap = useRef<HTMLDivElement>(null);
@@ -70,7 +72,7 @@ export default function PreviewNav() {
   }, [open]);
 
   return (
-    <nav aria-label="Láminas" className="flex min-w-0 items-center gap-4 md:gap-6">
+    <nav aria-label="Marca" className="flex min-w-0 items-center gap-4 md:gap-6">
       {MAIN.map((l) => {
         const on = pathname === l.href;
         return (
@@ -148,7 +150,8 @@ export default function PreviewNav() {
 
       <span aria-hidden className="hidden h-4 w-px bg-border sm:block" />
 
-      {OUT.map((l) => (
+      {/* En escritorio el inicio de Marca es el nombre de la izquierda. */}
+      {OUT.filter((l) => l.href !== "/marca").map((l) => (
         <Link key={l.href} href={l.href} className={cn(item, idle, "hidden sm:inline")}>
           {l.label}
         </Link>
