@@ -37,13 +37,14 @@ const WHY = [
   "El correo no carga fuentes web: el texto va en Arial y todo lo que lleva Obviously Wide o Yellowtail es una imagen.",
   "Ningún cliente invierte imágenes en modo oscuro. Por eso cada logo es un PNG con su fondo incluido: un logo negro transparente desaparece en Gmail para iOS.",
   "Sin SVG, sin gradientes CSS y sin bordes redondeados: Outlook no los dibuja. El filete de Banda y el círculo de Respuesta son PNG.",
-  "Los enlaces van en sky/700: el sky del sitio no llega al contraste mínimo sobre blanco. El clay de las cejas, igual, baja a clay/700.",
+  "Los enlaces van en sky/700 y las cejas en clay/700, igual que el sitio en claro: los tonos más luminosos no llegan al contraste mínimo sobre blanco.",
 ] as const;
 
 function Install() {
   return (
     <section
       id="instalar"
+      data-toc="Instalación"
       aria-labelledby="instalar-title"
       className="grid scroll-mt-20 gap-8 rounded-[var(--radius-xl)] border border-border p-5 md:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-12"
     >

@@ -193,10 +193,12 @@
   --text-on-brand: #0e0e0e;
   --text-brand: #8f5f06; /* amber/700, 5.52:1 en claro */
   --text-brand-accent: #237974; /* jade/700 — mismo rol que success-text */
-  /* Eyebrow / etiqueta (PORTAFOLIO, SERVICIOS…). Clay/600, el
-     danger de la paleta VPER — no un hex suelto. Amber queda para
-     CTAs y la palabra destacada del h2. */
-  --text-eyebrow: var(--color-accent-600);
+  /* Eyebrow / etiqueta (PORTAFOLIO, SERVICIOS…). Clay, el danger de
+     la paleta VPER — no un hex suelto. Amber queda para CTAs y la
+     palabra destacada del h2. 2026-10-09: en claro baja a clay/700
+     (5.37:1 sobre blanco); clay/600 daba 3.92:1 y la ceja es texto de
+     12px. En oscuro sigue clay/600 (5.36:1 sobre negro, ver .dark). */
+  --text-eyebrow: var(--color-accent-700);
 
   --feedback-error-icon: #d55856; /* clay/600 */
   --feedback-error-border: #d55856;
@@ -219,8 +221,10 @@
   --feedback-success-text: #237974; /* jade/700, 4.84:1 */
   --feedback-success-bg: #f1f9f8; /* jade/50 */
 
-  --interaction-link-default: #378ebd; /* sky/600 */
-  --interaction-link-hover: #22729c; /* sky/700 */
+  /* 2026-10-09: un escalón más oscuro. sky/600 (#378ebd) daba 3.64:1
+     sobre blanco: no llega a 4.5:1 para texto. */
+  --interaction-link-default: #22729c; /* sky/700, 5.31:1 */
+  --interaction-link-hover: #11587a; /* sky/800 */
   --interaction-link-visited: #11587a; /* sky/800 */
   --focus-ring-color: #378ebd; /* sky/600, 3.64:1 — sky/500 no llega a 3:1 */
 
@@ -405,9 +409,14 @@
   --brand-section-texture: url("/images/bg-mobile-l.webp");
 
   /* Light: el paquete deja tertiary en 400 (#bebebe) y la página en
-     50 (#fafafa). Los <p> muted se leían pálidos: 500 seguía lavado
-     sobre blanco, así que son 600. Página blanca, no #fafafa. */
-  --text-tertiary: var(--color-neutral-600);
+     50 (#fafafa). Los <p> muted se leían pálidos. 2026-10-09: 600
+     (#808080) daba 3.95:1 sobre blanco, así que tertiary pasa a 700
+     (6.29:1) y secondary a 800 (9.4:1), para que siga habiendo
+     jerarquía entre los dos. Página blanca, no #fafafa.
+     Secondary se repite en .dark: este :root carga después que
+     tokens-dark.css y le ganaría también en oscuro. */
+  --text-secondary: var(--color-neutral-800);
+  --text-tertiary: var(--color-neutral-700);
   --background-page: #ffffff;
   --background-base: #ffffff;
   /* Light: el paquete pinta el nav inverse (fondo 900, items
@@ -460,6 +469,8 @@
      `--muted-foreground` de los <p> (section headers, proceso,
      detalle de work): #808080 se leía apagado sobre fondo de página. */
   --text-tertiary: var(--color-neutral-500);
+  --text-secondary: var(--color-neutral-400); /* el valor del paquete; ver :root */
+  --text-eyebrow: var(--color-accent-600); /* clay/600, 5.36:1 sobre negro */
 
   --brand-section-texture: url("/images/bg-mobile.webp");
 

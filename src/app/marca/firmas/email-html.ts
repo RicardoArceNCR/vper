@@ -72,10 +72,7 @@ export const EMAIL_PALETTE = {
   clayText: "#af403f",
   /** --brand-sky en claro. Decorativo; para texto usar `link`. */
   sky: "#5eb2e3",
-  /**
-   * --interaction-link-hover en claro (sky/700). Enlaces en claro: sky/600 (#378ebd,
-   * --interaction-link-default) da 3.6:1 sobre blanco y no llega a AA.
-   */
+  /** --interaction-link-default en claro (sky/700, 5.31:1 sobre blanco). */
   link: "#22729c",
   /** --brand-leaf en claro (jade). Decorativo. */
   jade: "#74bdb7",
@@ -101,7 +98,7 @@ export const PALETTE_TOKENS: Record<PaletteKey, string> = {
   clay: "--color-accent-600",
   clayText: "--color-accent-700",
   sky: "--brand-sky",
-  link: "--interaction-link-hover",
+  link: "--interaction-link-default",
   jade: "--brand-leaf",
   gray600: "--color-neutral-700",
   gray500: "--color-neutral-600",
