@@ -18,4 +18,12 @@ la familia vive en `brand.css` (`--brand-font-script`).
 
 ## Montserrat / IBM Plex Mono
 
-Van por `next/font/google` en `src/ui/lib/fonts.ts` — no van aquí.
+Self-hosted desde 2026-10-09 (antes `next/font/google`, que rompió el build
+de Vercel). Los carga `next/font/local` en `src/ui/lib/fonts.ts`; no van en
+`brand.css`. OFL-1.1, corte latin, vía Fontsource 5.3.0.
+
+- `Montserrat-Variable-latin.woff2` — variable, wght 100–900.
+- `IBMPlexMono-Regular-latin.woff2` y `IBMPlexMono-Medium-latin.woff2`.
+
+En el port a Vite: `@font-face` con estos archivos, `font-weight: 100 900`
+para la variable.
