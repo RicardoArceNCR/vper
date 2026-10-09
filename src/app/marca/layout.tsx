@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import MarcaNav from "./marca-nav";
+import MarcaMobileNav from "./marca-mobile-nav";
 import MarcaSidebar from "./marca-sidebar";
 
 /**
@@ -28,19 +27,8 @@ export default function MarcaLayout({ children }: { children: React.ReactNode })
       <MarcaSidebar />
       <div className="min-w-0">
         {/* Mobile y tablet: barra arriba. En escritorio la reemplaza el sidebar. */}
-        <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur-md lg:hidden">
-          <div className="wrap flex items-center justify-between gap-4 py-3">
-            <Link
-              href="/marca"
-              className="hidden items-center gap-3 font-sans text-label-sm font-bold uppercase tracking-widest text-foreground sm:inline-flex"
-            >
-              Marca VPER
-              <span className="rounded-[var(--pill-radius)] border border-border px-2 py-0.5 text-label-xs tracking-wider text-[var(--text-secondary)]">
-                Uso interno
-              </span>
-            </Link>
-            <MarcaNav />
-          </div>
+        <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur-md lg:hidden">
+          <MarcaMobileNav />
         </header>
         {children}
       </div>

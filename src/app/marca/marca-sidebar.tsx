@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
@@ -8,6 +7,7 @@ import ThemeToggle from "@/components/theme-toggle";
 import { cn } from "@ui/lib/utils";
 import { Logo } from "./logo/marks";
 import { MARCA_GROUPS, MARCA_HOME, MARCA_OUT, isActive, type NavItem } from "./lib/nav";
+import { useToc, type Toc } from "./lib/use-toc";
 
 /**
  * Sidebar de escritorio (lg+). Tres cosas a la vez:
@@ -19,62 +19,6 @@ import { MARCA_GROUPS, MARCA_HOME, MARCA_OUT, isActive, type NavItem } from "./l
  * El índice no se mantiene a mano: lee el DOM. Una sección nueva con id y h2
  * aparece sola; `data-toc` pisa el texto cuando el h2 es largo o no existe.
  */
-
-type Toc = { id: string; label: string }[];
-
-function readToc(): Toc {
-  const sections = Array.from(document.querySelectorAll<HTMLElement>("main section[id]"));
-  return sections
-    .filter((s) => !s.parentElement?.closest("section[id]"))
-    .map((s) => {
-      const raw = s.dataset.toc ?? s.querySelector("h2")?.textContent ?? "";
-      return { id: s.id, label: raw.trim().replace(/\.$/, "") };
-    })
-    .filter((t) => t.label);
-}
-
-function useToc(pathname: string) {
-  const [toc, setToc] = useState<Toc>([]);
-  const [current, setCurrent] = useState("");
-
-  useEffect(() => {
-    // Un frame después de navegar: la página nueva ya montó sus secciones.
-    const raf = requestAnimationFrame(() => setToc(readToc()));
-    return () => cancelAnimationFrame(raf);
-  }, [pathname]);
-
-  useEffect(() => {
-    if (!toc.length) return;
-    let raf = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        // Activa: la última sección cuyo borde superior ya pasó el 30 % de la
-        // ventana. Al fondo de la página, la última.
-        const line = window.innerHeight * 0.3;
-        let id = "";
-        for (const t of toc) {
-          const el = document.getElementById(t.id);
-          if (el && el.getBoundingClientRect().top <= line) id = t.id;
-        }
-        const atEnd =
-          window.innerHeight + window.scrollY >=
-          document.documentElement.scrollHeight - 4;
-        setCurrent(atEnd ? (toc[toc.length - 1]?.id ?? id) : id);
-      });
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, [toc]);
-
-  return { toc, current };
-}
 
 const focus =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--focus-ring-offset)]";
