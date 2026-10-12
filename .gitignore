@@ -34,3 +34,4 @@ public/images/bg-mobile*.jpeg
 # Nombrar así cualquier cosa de una sesión que no deba llegar a un commit.
 .tmp-*
 .worktrees/
+.vercel

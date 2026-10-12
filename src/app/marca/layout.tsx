@@ -27,7 +27,7 @@ export default function MarcaLayout({ children }: { children: React.ReactNode })
   // "Salir" se muestra siempre, salvo en el modo local abierto: el mismo criterio
   // que usa el middleware para no pedir contraseña. Las rutas de /marca se
   // prerenderizan, así que esto se evalúa al compilar; por eso NO depende de
-  // MARCA_PASSWORD (que puede no estar en el build) sino de NODE_ENV, que en
+  // MARCA_USERS (que puede no estar en el build) sino de NODE_ENV, que en
   // `next build` siempre es "production" → en producción, "Salir" siempre está.
   const protegido = !isOpenForDev();
   return (

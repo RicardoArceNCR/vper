@@ -61,12 +61,17 @@ lineamientos (`/marca/logo`, `/marca/voz`, `/marca/imagen`) y recursos
 redirige acá (`next.config.ts`).
 
 - Vive en `src/app/marca/`, fuera de `src/sections/`: **no se porta a Vite**.
-- **Pide contraseña.** `src/middleware.ts` cuida `/marca` y todo lo de abajo;
-  el ingreso es `/ingresar` (fuera de `/marca` para no heredar su layout). La
-  contraseña es la variable `MARCA_PASSWORD` de Vercel: cambiarla cierra todas
-  las sesiones. Sin ella, en local el portal queda abierto y en producción,
-  cerrado. Las imágenes de las firmas (`public/images/firma/`) siguen públicas:
-  los correos las cargan desde ahí.
+- **Pide correo y contraseña, una por persona.** `src/middleware.ts` cuida
+  `/marca` y todo lo de abajo; el ingreso es `/ingresar` (fuera de `/marca`
+  para no heredar su layout). Quién entra está en la variable `MARCA_USERS` de
+  Vercel (correo + hash, nunca la contraseña en claro) y las cookies se firman
+  con `MARCA_SESSION_SECRET`. Alta o cambio de contraseña:
+  `node scripts/marca-usuario.mjs correo@x.com`; baja: borrar su entrada, y su
+  sesión deja de valer en el acto. Cada ingreso queda en los logs de Vercel
+  con el correo. Sin `MARCA_USERS`, en local el portal queda abierto y en
+  producción, cerrado. Mecanismo en `marca/lib/session.ts`. Las imágenes de
+  las firmas (`public/images/firma/`) siguen públicas: los correos las cargan
+  desde ahí.
 - La página de sistema no escribe hex ni px: pinta con `var(--token)` y lee lo
   que computa el navegador (`marca/live.tsx`). No copiar valores a mano ahí.
 - Las firmas son HTML de correo (`marca/firmas/email-html.ts`): tablas, estilos

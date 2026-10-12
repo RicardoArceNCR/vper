@@ -4,7 +4,7 @@ import ThemeToggle from "@/components/theme-toggle";
 import { Logo } from "@/app/marca/logo/marks";
 import { MARCA, hasOwner } from "@/app/marca/lib/config";
 import { aOwner } from "@/app/marca/lib/owner-copy";
-import { isOpenForDev, marcaPassword, safeNext } from "@/app/marca/lib/session";
+import { isConfigured, isOpenForDev, safeNext } from "@/app/marca/lib/session";
 import LoginForm from "./login-form";
 
 /**
@@ -23,11 +23,13 @@ export default async function IngresarPage({
   searchParams: Promise<{ next?: string }>;
 }) {
   const next = safeNext((await searchParams).next);
-  const configured = Boolean(marcaPassword());
+  const configured = isConfigured();
   const devOpen = isOpenForDev();
   if (!configured && !devOpen) {
     // Solo al log del servidor: a quien llega no le sirve el nombre de la variable.
-    console.error("[marca] /ingresar cerrado: falta la variable MARCA_PASSWORD en Vercel.");
+    console.error(
+      "[marca] /ingresar cerrado: faltan MARCA_USERS o MARCA_SESSION_SECRET en Vercel.",
+    );
   }
   // "Marca VPER" → "Marca" + golpe en gradiente sobre la última palabra.
   const cut = MARCA.name.lastIndexOf(" ");
@@ -70,7 +72,7 @@ export default async function IngresarPage({
             <LoginForm next={next} />
           ) : devOpen ? (
             <Notice>
-              En local y sin <code className="font-mono">MARCA_PASSWORD</code>, el portal
+              En local y sin <code className="font-mono">MARCA_USERS</code>, el portal
               está abierto.{" "}
               <Link href={next} className="font-bold underline underline-offset-4">
                 Entrar
@@ -78,8 +80,7 @@ export default async function IngresarPage({
             </Notice>
           ) : (
             <Notice>
-              El acceso está cerrado por ahora. Escribí{" "}
-              {hasOwner() ? "a " : null}
+              El acceso está cerrado por ahora. Escribí {hasOwner() ? "a " : null}
               {hasOwner() ? (
                 <a
                   href={`mailto:${MARCA.owner.email}`}

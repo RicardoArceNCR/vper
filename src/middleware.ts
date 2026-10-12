@@ -3,7 +3,7 @@ import {
   LOGIN_PATH,
   SESSION_COOKIE,
   isOpenForDev,
-  marcaPassword,
+  sessionSecret,
   verifySession,
 } from "@/app/marca/lib/session";
 
@@ -15,7 +15,9 @@ import {
 export async function middleware(req: NextRequest) {
   if (isOpenForDev()) return NextResponse.next();
 
-  const secret = marcaPassword();
+  // verifySession también confirma que el correo siga en MARCA_USERS: sacar a
+  // alguien de la lista lo deja afuera en el próximo pedido.
+  const secret = sessionSecret();
   if (secret && (await verifySession(req.cookies.get(SESSION_COOKIE)?.value, secret))) {
     return NextResponse.next();
   }

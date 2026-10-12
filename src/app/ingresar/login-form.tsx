@@ -14,6 +14,7 @@ export default function LoginForm({ next }: { next: string }) {
   const [state, action, pending] = useActionState<LoginState, FormData>(ingresar, {});
   const [visible, setVisible] = useState(false);
   const id = useId();
+  const emailId = `${id}-email`;
   const errorId = `${id}-error`;
   // El ancla (#kit) no viaja al servidor: se lee acá y va en un campo oculto.
   const [hash, setHash] = useState("");
@@ -28,6 +29,25 @@ export default function LoginForm({ next }: { next: string }) {
       <input type="hidden" name="next" value={next} />
       <input type="hidden" name="hash" value={hash} />
       <div className="grid gap-2">
+        <label htmlFor={emailId} className="font-sans text-label-sm font-bold uppercase">
+          Correo
+        </label>
+        <Input
+          id={emailId}
+          name="email"
+          type="email"
+          defaultValue={state.email}
+          autoComplete="username"
+          autoCapitalize="none"
+          spellCheck={false}
+          autoFocus
+          required
+          state={state.error ? "error" : "default"}
+          aria-describedby={state.error ? errorId : undefined}
+          className="h-12 text-body-md"
+        />
+      </div>
+      <div className="grid gap-2">
         <label htmlFor={id} className="font-sans text-label-sm font-bold uppercase">
           Contraseña
         </label>
@@ -37,7 +57,6 @@ export default function LoginForm({ next }: { next: string }) {
             name="password"
             type={visible ? "text" : "password"}
             autoComplete="current-password"
-            autoFocus
             required
             state={state.error ? "error" : "default"}
             aria-describedby={state.error ? errorId : undefined}
@@ -67,13 +86,18 @@ export default function LoginForm({ next }: { next: string }) {
           </p>
         ) : null}
       </div>
-      <Button type="submit" size="lg" disabled={pending || Boolean(state.to)} className="w-full">
+      <Button
+        type="submit"
+        size="lg"
+        disabled={pending || Boolean(state.to)}
+        className="w-full"
+      >
         {pending || state.to ? "Entrando…" : "Entrar"}
         {pending || state.to ? null : <ArrowRight aria-hidden />}
       </Button>
       <div className="grid gap-1.5 font-sans text-body-sm text-[var(--text-secondary)]">
         <p>
-          ¿No tenés la contraseña? Pedísela{" "}
+          ¿No tenés acceso o te olvidaste la contraseña? Pedísela{" "}
           {hasOwner() ? "a " : null}
           {hasOwner() ? (
             <a
@@ -97,7 +121,9 @@ export default function LoginForm({ next }: { next: string }) {
             ¿Ya entraste? Ir a {MARCA.name}
           </Link>
         </p>
-        <p className="text-body-xs">La sesión dura {SESSION_DAYS} días en este navegador.</p>
+        <p className="text-body-xs">
+          La sesión dura {SESSION_DAYS} días en este navegador.
+        </p>
       </div>
     </form>
   );
