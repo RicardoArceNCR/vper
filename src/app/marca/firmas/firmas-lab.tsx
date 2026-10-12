@@ -2,9 +2,11 @@
 
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
+  type HTMLInputTypeAttribute,
   type KeyboardEvent,
   type ReactNode,
 } from "react";
@@ -18,6 +20,7 @@ import {
   PALETTE_TOKEN_SCHEME,
   auditSignature,
   isPublicHttpsUrl,
+  isValidEmail,
   webHref,
   type PaletteKey,
 } from "./email-html";
@@ -37,14 +40,167 @@ import { FIRMA_DEFAULT, PROPOSALS, type Firma, type Proposal } from "./proposals
  *   que tienen que estar publicados en esa dirección antes de instalar la firma.
  */
 
-const FIELDS: { key: keyof Firma; label: string; placeholder?: string }[] = [
-  { key: "nombre", label: "Nombre" },
-  { key: "cargo", label: "Cargo (opcional)", placeholder: "Dirección de cuentas" },
-  { key: "correo", label: "Correo" },
-  { key: "telefono", label: "Teléfono" },
-  { key: "web", label: "Sitio" },
-  { key: "sedes", label: "Sedes" },
+type Field = {
+  key: keyof Firma;
+  label: string;
+  placeholder: string;
+  type?: HTMLInputTypeAttribute;
+  autoComplete: string;
+  inputMode?: "email" | "tel" | "url";
+  required?: boolean;
+};
+
+const FIELDS: Field[] = [
+  {
+    key: "nombre",
+    label: "Nombre",
+    placeholder: "Nombre y apellido",
+    autoComplete: "name",
+    required: true,
+  },
+  {
+    key: "cargo",
+    label: "Cargo (opcional)",
+    placeholder: "Dirección de cuentas",
+    autoComplete: "organization-title",
+  },
+  {
+    key: "correo",
+    label: "Correo",
+    placeholder: "nombre@vpermedia.com",
+    type: "email",
+    autoComplete: "email",
+    inputMode: "email",
+    required: true,
+  },
+  {
+    key: "telefono",
+    label: "Teléfono (opcional)",
+    placeholder: "+505 0000 0000",
+    type: "tel",
+    autoComplete: "tel",
+    inputMode: "tel",
+  },
+  {
+    key: "web",
+    label: "Sitio",
+    placeholder: "vpermedia.com",
+    type: "url",
+    autoComplete: "url",
+    inputMode: "url",
+  },
+  {
+    key: "sedes",
+    label: "Sedes",
+    placeholder: "Panamá · Nicaragua",
+    autoComplete: "off",
+  },
 ];
+
+const fieldId = (k: keyof Firma) => `firma-${k}`;
+
+/* ─────────────────────────── validación ─────────────────────────── */
+
+type FieldMsg = { level: "error" | "warn"; text: string };
+type FieldMsgs = Partial<Record<keyof Firma, FieldMsg>>;
+
+/**
+ * Errores bloquean la copia; avisos no. Nombre y correo son obligatorios porque
+ * todas las firmas los muestran (o enlazan); el resto puede quedar vacío.
+ */
+function validateFirma(d: Firma): FieldMsgs {
+  const out: FieldMsgs = {};
+  if (!d.nombre.trim()) out.nombre = { level: "error", text: "Escribí tu nombre." };
+
+  const mail = d.correo.trim();
+  if (!mail) out.correo = { level: "error", text: "Escribí tu correo." };
+  else if (!isValidEmail(mail))
+    out.correo = {
+      level: "error",
+      text: "Revisá el correo: tiene que ser como nombre@vpermedia.com.",
+    };
+  else if (!/@vpermedia\.com$/i.test(mail))
+    out.correo = {
+      level: "warn",
+      text: "No termina en @vpermedia.com. Si es tu correo de trabajo, está bien.",
+    };
+
+  const phone = d.telefono.trim();
+  if (phone) {
+    const digits = phone.replace(/\D/g, "").length;
+    if (!/^[+(]?[\d\s().-]+$/.test(phone) || digits < 7 || digits > 15)
+      out.telefono = {
+        level: "error",
+        text: "Revisá el teléfono: solo números, espacios y +, entre 7 y 15 dígitos.",
+      };
+  }
+
+  const site = d.web.trim();
+  if (
+    site &&
+    (/\s/.test(site) || !/^(https?:\/\/)?[^/\s]+\.[a-z]{2,}(\/.*)?$/i.test(site))
+  )
+    out.web = {
+      level: "error",
+      text: "Revisá el sitio: tiene que ser como vpermedia.com.",
+    };
+
+  return out;
+}
+
+/* ─────────────────────────── persistencia ─────────────────────────── */
+
+/** Solo en este navegador. Datos de la persona + esquema de la vista previa. */
+const STORE_KEY = "vper-marca-firma";
+const PERSONAL: (keyof Firma)[] = ["nombre", "cargo", "correo", "telefono"];
+
+function readStore(): { data?: Firma; scheme?: Scheme } {
+  try {
+    const raw = window.localStorage.getItem(STORE_KEY);
+    if (!raw) return {};
+    const v = JSON.parse(raw) as { data?: Partial<Firma>; scheme?: string };
+    const scheme = SCHEMES.find((x) => x === v.scheme);
+    const d = v.data;
+    const data =
+      d && typeof d === "object"
+        ? (Object.fromEntries(
+            (Object.keys(FIRMA_DEFAULT) as (keyof Firma)[]).map((k) => [
+              k,
+              typeof d[k] === "string" ? d[k] : FIRMA_DEFAULT[k],
+            ]),
+          ) as unknown as Firma)
+        : undefined;
+    return { data, scheme };
+  } catch {
+    return {};
+  }
+}
+
+function writeStore(data: Firma, scheme: Scheme) {
+  try {
+    const blank = PERSONAL.every((k) => !data[k].trim());
+    // Sin datos propios no se guarda nada personal: al volver aparece el ejemplo.
+    window.localStorage.setItem(
+      STORE_KEY,
+      JSON.stringify(
+        blank || sameAs(data, FIRMA_DEFAULT) ? { scheme } : { data, scheme },
+      ),
+    );
+  } catch {
+    /* almacenamiento bloqueado: la página sigue funcionando sin recordar */
+  }
+}
+
+function clearStore() {
+  try {
+    window.localStorage.removeItem(STORE_KEY);
+  } catch {
+    /* nada que borrar */
+  }
+}
+
+const sameAs = (a: Firma, b: Firma) =>
+  (Object.keys(b) as (keyof Firma)[]).every((k) => a[k] === b[k]);
 
 const SCHEMES = ["claro", "oscuro"] as const;
 type Scheme = (typeof SCHEMES)[number];
@@ -64,9 +220,34 @@ export default function FirmasLab({
   const [publicBase, setPublicBase] = useState("https://vpermedia.com");
   const [origin, setOrigin] = useState("");
   const [scheme, setScheme] = useState<Scheme>("claro");
+  const [loaded, setLoaded] = useState(false);
   const radios = useRef<(HTMLButtonElement | null)[]>([]);
+  const firstField = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => setOrigin(window.location.origin), []);
+
+  // Se lee después de hidratar (el servidor no conoce localStorage).
+  useEffect(() => {
+    const saved = readStore();
+    if (saved.data) setData(saved.data);
+    if (saved.scheme) setScheme(saved.scheme);
+    setLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (loaded) writeStore(data, scheme);
+  }, [data, scheme, loaded]);
+
+  const msgs = useMemo(() => validateFirma(data), [data]);
+  const invalid = FIELDS.filter((f) => msgs[f.key]?.level === "error");
+  const isExample = sameAs(data, FIRMA_DEFAULT);
+  const hasOwn = PERSONAL.some((k) => data[k].trim()) && !isExample;
+
+  const clearData = () => {
+    clearStore();
+    setData((d) => ({ ...d, nombre: "", cargo: "", correo: "", telefono: "" }));
+    firstField.current?.focus();
+  };
 
   // "vpermedia.com" a secas también vale: se normaliza a https:// antes de usarla.
   const copyBase = publicBase.trim() ? webHref(publicBase) : "";
@@ -88,9 +269,7 @@ export default function FirmasLab({
   };
 
   return (
-    <div className="grid gap-16 md:gap-24">
-      <DownloadKit kit={kit} />
-
+    <div className="grid gap-14 md:gap-20">
       {/* ── taller: datos fijos a la izquierda, propuestas a la derecha ── */}
       <section
         id="taller"
@@ -99,65 +278,93 @@ export default function FirmasLab({
         className="scroll-mt-20"
       >
         <SectionHead
-          over="Taller"
+          over="Paso 1"
           id="taller-title"
           title="Elegí y copiá"
-          lede="Escribí los datos una vez: las ocho firmas se actualizan juntas."
+          lede="Escribí tus datos una vez y las ocho firmas se actualizan juntas. Si no sabés cuál usar: Estándar para los correos nuevos y Respuestas para los hilos."
         />
         <div className="grid gap-10 xl:grid-cols-[19rem_minmax(0,1fr)] xl:gap-12">
           <aside
             aria-label="Datos de la firma"
             className="grid content-start gap-6 rounded-[var(--radius-xl)] border border-border bg-[var(--background-subtle)] p-5 md:p-6 xl:sticky xl:top-6 xl:max-h-[calc(100dvh-3rem)] xl:overflow-y-auto"
           >
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
-              {FIELDS.map((f) => (
-                <label key={f.key} className="grid gap-1.5">
-                  <span className={label}>{f.label}</span>
-                  <Input
-                    value={data[f.key]}
-                    placeholder={f.placeholder}
-                    onChange={(e) => setData((d) => ({ ...d, [f.key]: e.target.value }))}
-                  />
-                </label>
-              ))}
-            </div>
-
-            <div className="grid gap-4 border-t border-border pt-5 sm:grid-cols-2 xl:grid-cols-1">
-              <label className="grid gap-1.5">
-                <span className={label}>URL pública de las imágenes</span>
-                <Input
-                  value={publicBase}
-                  state={baseOk ? "default" : "error"}
-                  onChange={(e) => setPublicBase(e.target.value)}
-                />
-                <span
-                  className={cn(
-                    "font-sans text-body-xs",
-                    baseOk
-                      ? "text-[var(--text-secondary)]"
-                      : "text-[var(--feedback-error-text)]",
-                  )}
+            {isExample ? (
+              <div
+                role="note"
+                className="grid gap-2 rounded-[var(--radius-lg)] border border-[var(--feedback-warning-border)] bg-[var(--feedback-warning-bg)] p-4"
+              >
+                <p className="font-sans text-body-sm font-bold text-[var(--feedback-warning-text)]">
+                  Estos son datos de ejemplo: escribí los tuyos.
+                </p>
+                <button
+                  type="button"
+                  onClick={clearData}
+                  className="w-fit font-sans text-body-xs font-bold text-[var(--feedback-warning-text)] underline underline-offset-4"
                 >
-                  {baseOk ? (
-                    <>
-                      Se usa al copiar. Las imágenes tienen que estar publicadas ahí:{" "}
-                      <a
-                        href="#kit"
-                        className="font-bold text-[var(--interaction-link-default)] underline underline-offset-4 hover:text-[var(--interaction-link-hover)]"
+                  Empezar con los campos vacíos
+                </button>
+              </div>
+            ) : null}
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
+              {FIELDS.map((f, i) => {
+                const m = msgs[f.key];
+                const msgId = `${fieldId(f.key)}-msg`;
+                return (
+                  <div key={f.key} className="grid content-start gap-1.5">
+                    <label htmlFor={fieldId(f.key)} className={label}>
+                      {f.label}
+                    </label>
+                    <Input
+                      ref={i === 0 ? firstField : undefined}
+                      id={fieldId(f.key)}
+                      name={f.key}
+                      type={f.type ?? "text"}
+                      autoComplete={f.autoComplete}
+                      inputMode={f.inputMode}
+                      spellCheck={
+                        f.type === "email" || f.type === "url" ? false : undefined
+                      }
+                      required={f.required}
+                      value={data[f.key]}
+                      placeholder={f.placeholder}
+                      state={m?.level === "error" ? "error" : "default"}
+                      aria-describedby={m ? msgId : undefined}
+                      onChange={(e) =>
+                        setData((d) => ({ ...d, [f.key]: e.target.value }))
+                      }
+                    />
+                    {m ? (
+                      <span
+                        id={msgId}
+                        className={cn(
+                          "font-sans text-body-xs",
+                          m.level === "error"
+                            ? "text-[var(--feedback-error-text)]"
+                            : "text-[var(--feedback-warning-text)]",
+                        )}
                       >
-                        kit
-                      </a>
-                      .
-                    </>
-                  ) : (
-                    "Tiene que ser https y pública (no localhost). Copiar queda desactivado."
-                  )}
+                        {m.text}
+                      </span>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+            {hasOwn ? (
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="font-sans text-body-xs text-[var(--text-secondary)]">
+                  Se guardan solo en este navegador.
                 </span>
-              </label>
+                <Button size="sm" variant="outline" onClick={clearData}>
+                  Borrar mis datos
+                </Button>
+              </div>
+            ) : null}
 
+            <div className="grid gap-4 border-t border-border pt-5">
               <div className="grid content-start gap-1.5">
                 <span id="bandeja-label" className={label}>
-                  Bandeja
+                  Vista previa
                 </span>
                 <div
                   role="radiogroup"
@@ -188,7 +395,8 @@ export default function FirmasLab({
                   ))}
                 </div>
                 <span className="font-sans text-body-xs text-[var(--text-secondary)]">
-                  Oscuro simula Gmail en iOS, el cliente que más invierte.
+                  Oscuro muestra cómo la ve alguien con Gmail en iPhone, que le cambia los
+                  colores.
                 </span>
               </div>
             </div>
@@ -230,6 +438,8 @@ export default function FirmasLab({
                 previewBase={origin}
                 copyBase={baseOk ? copyBase : ""}
                 scheme={scheme}
+                invalid={invalid.map((f) => ({ id: fieldId(f.key), label: f.label }))}
+                example={isExample}
               />
             ))}
           </div>
@@ -238,15 +448,22 @@ export default function FirmasLab({
 
       {install}
 
+      <DownloadKit
+        kit={kit}
+        publicBase={publicBase}
+        onPublicBaseChange={setPublicBase}
+        baseOk={baseOk}
+      />
+
       {/* ── control técnico: para quien mantiene el sistema, no para quien elige ── */}
       <section
         id="control"
         data-toc="Control técnico"
         aria-labelledby="control-title"
-        className="grid scroll-mt-20 gap-10 border-t border-border pt-14"
+        className="grid scroll-mt-20 gap-10 border-t border-border pt-14 md:pt-20"
       >
         <SectionHead
-          over="Control técnico"
+          over="Para el desarrollador · control técnico"
           id="control-title"
           title="Para quien mantiene"
           lede="La firma no puede leer los tokens del sitio, así que repite sus colores en hex. Acá se verifica que no se desincronicen, se listan los archivos del kit y se explican las restricciones del correo."
@@ -299,6 +516,8 @@ function ProposalCard({
   previewBase,
   copyBase,
   scheme,
+  invalid,
+  example,
 }: {
   n: number;
   p: Proposal;
@@ -307,6 +526,10 @@ function ProposalCard({
   /** "" si la URL pública no es válida: no se puede copiar. */
   copyBase: string;
   scheme: Scheme;
+  /** Campos con error: bloquean la copia. */
+  invalid: { id: string; label: string }[];
+  /** Los datos son los de ejemplo: se avisa, no se bloquea. */
+  example: boolean;
 }) {
   // Sin origen todavía (primer render en servidor) no se pinta: si no, las
   // imágenes saldrían a pedirse a la URL pública antes de hidratar.
@@ -332,7 +555,7 @@ function ProposalCard({
   };
 
   const copy = async (kind: "firma" | "html") => {
-    if (!copyHtml) return flash("error");
+    if (!copyHtml || invalid.length) return flash("error");
     try {
       if (kind === "html") {
         await navigator.clipboard.writeText(copyHtml);
@@ -355,7 +578,7 @@ function ProposalCard({
 
   const errors = issues.filter((i) => i.level === "error");
   const warns = issues.filter((i) => i.level === "warn");
-  const canCopy = Boolean(copyHtml) && errors.length === 0;
+  const canCopy = Boolean(copyHtml) && errors.length === 0 && invalid.length === 0;
 
   return (
     <article
@@ -381,9 +604,7 @@ function ProposalCard({
             <dd className="inline text-[var(--text-secondary)]">{p.forWho}</dd>
           </div>
           <div>
-            <dt className="inline font-bold text-[var(--feedback-error-text)]">
-              Riesgo:{" "}
-            </dt>
+            <dt className="inline font-bold">A tener en cuenta: </dt>
             <dd className="inline text-[var(--text-secondary)]">{p.risk}</dd>
           </div>
         </dl>
@@ -401,15 +622,37 @@ function ProposalCard({
               {copied === "html" ? "HTML copiado" : "Copiar HTML"}
             </Button>
           </div>
-          <p className="font-mono text-body-xs text-[var(--text-secondary)]">
-            {copyHtml
-              ? `${copyHtml.length.toLocaleString("es")} caracteres · ${imgs} ${imgs === 1 ? "imagen" : "imágenes"} · ${
-                  errors.length + warns.length === 0
-                    ? "sin problemas"
-                    : `${errors.length} errores, ${warns.length} avisos`
-                }`
-              : "Sin URL pública válida no hay firma para copiar."}
-          </p>
+          {invalid.length ? (
+            <p className="font-sans text-body-xs text-[var(--feedback-error-text)]">
+              No se puede copiar: revisá{" "}
+              {invalid.map((f, i) => (
+                <span key={f.id}>
+                  {i ? (i === invalid.length - 1 ? " y " : ", ") : ""}
+                  <a href={`#${f.id}`} className="font-bold underline underline-offset-4">
+                    {f.label.replace(/ \(opcional\)$/, "")}
+                  </a>
+                </span>
+              ))}{" "}
+              en tus datos.
+            </p>
+          ) : !copyHtml ? (
+            <p className="font-sans text-body-xs text-[var(--feedback-error-text)]">
+              Todavía no se puede copiar: falta configurar dónde están publicadas las
+              imágenes.{" "}
+              <a href="#kit" className="font-bold underline underline-offset-4">
+                Lo resuelve el desarrollador
+              </a>
+              .
+            </p>
+          ) : errors.length + warns.length > 0 ? (
+            <p className="font-mono text-body-xs text-[var(--text-secondary)]">
+              {`${copyHtml.length.toLocaleString("es")} caracteres · ${imgs} ${imgs === 1 ? "imagen" : "imágenes"} · ${errors.length} errores, ${warns.length} avisos`}
+            </p>
+          ) : example ? (
+            <p className="font-sans text-body-xs text-[var(--feedback-warning-text)]">
+              Tiene los datos de ejemplo: escribí los tuyos antes de copiar.
+            </p>
+          ) : null}
           <p
             role="status"
             className="font-sans text-body-xs text-[var(--feedback-error-text)]"
@@ -426,7 +669,7 @@ function ProposalCard({
               ""
             )}
           </p>
-          {errors.length + warns.length > 0 ? (
+          {!invalid.length && errors.length + warns.length > 0 ? (
             <ul className="grid gap-1 font-sans text-body-xs text-[var(--feedback-error-text)]">
               {[...errors, ...warns].slice(0, 4).map((i) => (
                 <li key={i.code + i.message}>{i.message}</li>
@@ -567,37 +810,90 @@ function Inbox({ html, scheme }: { html: string; scheme: Scheme }) {
           Re: Propuesta de campaña · para cliente@empresa.com
         </span>
       </div>
-      <div className="overflow-x-auto">
-        <div
-          className={cn(
-            "min-w-fit px-5 py-6",
-            dark
-              ? "bg-black text-[var(--color-neutral-50)]"
-              : "bg-white text-[var(--color-neutral-950)]",
-          )}
-          style={{
-            fontFamily: "Arial, Helvetica, sans-serif",
-            fontSize: 14,
-            lineHeight: 1.5,
-          }}
-        >
-          <p>Hola, Andrea:</p>
-          <p className="mt-3 max-w-md">
-            Te comparto la propuesta con los cambios que hablamos. Quedo atenta a tus
-            comentarios.
-          </p>
-          <p className="mt-3">Saludos,</p>
-          <div className="mt-5" inert dangerouslySetInnerHTML={{ __html: shown }} />
-        </div>
-      </div>
-      <p
+      <div
         className={cn(
-          "px-4 py-2 font-sans text-body-xs sm:hidden",
-          dark ? "text-[var(--color-neutral-400)]" : "text-[var(--color-neutral-700)]",
+          "px-4 py-6 sm:px-5",
+          dark
+            ? "bg-black text-[var(--color-neutral-50)]"
+            : "bg-white text-[var(--color-neutral-950)]",
         )}
+        style={{
+          fontFamily: "Arial, Helvetica, sans-serif",
+          fontSize: 14,
+          lineHeight: 1.5,
+        }}
       >
-        Deslizá la firma hacia los lados: mide lo mismo que en un correo.
-      </p>
+        <p>Hola, Andrea:</p>
+        <p className="mt-3 max-w-md">
+          Te comparto la propuesta con los cambios que hablamos. Quedo atenta a tus
+          comentarios.
+        </p>
+        <p className="mt-3">Saludos,</p>
+        <FitSignature html={shown} dark={dark} />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * La firma a su ancho real (400–520 px) no entra en un teléfono. Se mide su ancho
+ * natural y, si no cabe, se achica entera con transform (el alto del contenedor se
+ * ajusta a mano, porque transform no cambia la caja). Solo la vista previa: el HTML
+ * que se copia es el mismo de siempre.
+ */
+function FitSignature({ html, dark }: { html: string; dark: boolean }) {
+  const outer = useRef<HTMLDivElement>(null);
+  const inner = useRef<HTMLDivElement>(null);
+  const [fit, setFit] = useState({ scale: 1, w: 0, h: 0 });
+
+  useLayoutEffect(() => {
+    const o = outer.current;
+    const i = inner.current;
+    if (!o || !i) return;
+    const measure = () => {
+      const w = i.offsetWidth;
+      const h = i.offsetHeight;
+      const avail = o.clientWidth;
+      const scale = w && avail ? Math.min(1, avail / w) : 1;
+      setFit((f) => (f.scale === scale && f.w === w && f.h === h ? f : { scale, w, h }));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(o);
+    ro.observe(i);
+    return () => ro.disconnect();
+  }, [html]);
+
+  const scaled = fit.scale < 0.999;
+  return (
+    <div className="mt-5">
+      <div
+        ref={outer}
+        className="w-full overflow-hidden"
+        style={scaled ? { height: Math.ceil(fit.h * fit.scale) } : undefined}
+      >
+        <div
+          ref={inner}
+          inert
+          className="w-max"
+          style={
+            scaled
+              ? { transform: `scale(${fit.scale})`, transformOrigin: "top left" }
+              : undefined
+          }
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      </div>
+      {scaled ? (
+        <p
+          className={cn(
+            "mt-3 font-sans text-body-xs",
+            dark ? "text-[var(--color-neutral-400)]" : "text-[var(--color-neutral-700)]",
+          )}
+        >
+          {`Achicada al ${Math.round(fit.scale * 100)} % para que entre en la pantalla: en el correo mide ${fit.w} px de ancho.`}
+        </p>
+      ) : null}
     </div>
   );
 }

@@ -64,3 +64,20 @@ export function useToc(pathname: string) {
 
   return { toc, current };
 }
+
+/**
+ * Lleva el foco a una sección después de saltar a ella desde un índice. Sin
+ * esto el scroll se mueve pero el foco queda donde estaba (o en <body>), y el
+ * próximo Tab o el lector de pantalla arrancan desde arriba de la página.
+ * `preventScroll`: el scroll ya lo hizo quien llama (o el ancla nativa).
+ */
+export function focusSection(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (!el.hasAttribute("tabindex")) {
+    el.setAttribute("tabindex", "-1");
+    // Foco de destino, no de control: sin anillo (no es algo que se active).
+    el.style.outline = "none";
+  }
+  el.focus({ preventScroll: true });
+}

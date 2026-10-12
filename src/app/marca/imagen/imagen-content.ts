@@ -49,7 +49,7 @@ export const IMAGEN: {
   fuentes: string[];
 } = {
   resumen:
-    "En imagen, VPER se ve en clave baja: fondos que caen a negro, una sola luz dirigida y un único color saturado que viene de la marca del cliente (el rojo de una lata, el ámbar de la madera, el neón magenta y azul de un retrato). El encuadre es cerrado y táctil (rostros que miran a cámara, manos trabajando, producto que sangra por el borde) y la paleta propia de VPER (sky → clay → amber) nunca tiñe la foto: vive en la interfaz que la rodea, como anillo de hover, título en degradé o textura de radios. La única foto 'de casa' es la del equipo: blanco y negro, retrato a la altura del pecho sobre gris claro con el wordmark VPER gigante detrás.",
+    "En imagen, VPER se ve en clave baja: fondos que caen a negro, una sola luz dirigida y un único color saturado que viene de la marca del cliente (el rojo de una lata, el ámbar de la madera, el neón magenta y azul de un retrato). El encuadre es cerrado y táctil (rostros que miran a cámara, manos trabajando, producto que sangra por el borde) y la paleta propia de VPER (Sky → Clay → Amber) nunca tiñe la foto: vive en la interfaz que la rodea, como anillo de hover, título en degradé o textura de radios. La única foto 'de casa' es la del equipo: blanco y negro, retrato a la altura del pecho sobre gris claro con el wordmark VPER gigante detrás.",
 
   fotografia: {
     principios: [
@@ -81,7 +81,7 @@ export const IMAGEN: {
       {
         titulo: "Tratamiento: la foto del cliente intacta; el equipo en blanco y negro",
         regla:
-          "Sobre fotos de clientes no se aplican filtros, tintes ni el degradé de VPER: la marca VPER aparece alrededor (anillo cónico sky → clay → amber al hover, título con `title-brand-gradient`, textura de radios en la sección). El movimiento también es del contenedor: zoom suave al hover (1.05 en cards de proyecto, 1.06 en equipo) y Ken Burns de 1 a 1.08 en 6 s en el hero. Las fotos de equipo son la excepción: blanco y negro, fondo gris claro con las letras VPER gigantes en gris medio y la parte baja que funde a oscuro.",
+          "Sobre fotos de clientes no se aplican filtros, tintes ni el degradé de VPER: la marca VPER aparece alrededor (anillo cónico Sky → Clay → Amber al hover, título con `title-brand-gradient`, textura de radios en la sección). El movimiento también es del contenedor: zoom suave al hover (1.05 en cards de proyecto, 1.06 en equipo) y Ken Burns de 1 a 1.08 en 6 s en el hero. Las fotos de equipo son la excepción: blanco y negro, fondo gris claro con las letras VPER gigantes en gris medio y la parte baja que funde a oscuro.",
       },
     ],
 
@@ -145,7 +145,7 @@ export const IMAGEN: {
     evitar: [
       "Producto recortado sobre blanco infinito con luz pareja y sin sombra: el sitio no tiene una sola foto de catálogo así, y al lado de las demás se lee como stock.",
       "Texto, logo o producto importante en el tercio inferior de un hero de la home: ahí el sitio pinta un degradé a negro del 28 % del alto más el titular y el CTA.",
-      "Teñir fotos de clientes con el degradé sky → clay → amber, ponerles un velo de color o un filtro de marca VPER: la paleta de VPER va en el anillo, el título y la textura, no sobre la foto.",
+      "Teñir fotos de clientes con el degradé Sky → Clay → Amber, ponerles un velo de color o un filtro de marca VPER: la paleta de VPER va en el anillo, el título y la textura, no sobre la foto.",
       "Dos o más colores saturados compitiendo en el mismo cuadro, o fondos grises lavados sin negro real: rompen el contraste del que depende el texto blanco del hero.",
       "Fotos de equipo en color, con fondo de oficina o en plano general: las ocho fotos actuales son blanco y negro, a la altura del pecho, sobre el mismo fondo con letras VPER.",
       "Imágenes genéricas de stock sin el producto o la marca del cliente (gente en reuniones, manos sobre un teclado): fueron justamente los placeholders que se sacaron del portafolio en 2026-08.",
@@ -200,7 +200,7 @@ export const IMAGEN: {
       {
         titulo: "Monocromo, con el color puesto por el contexto",
         regla:
-          "Cada ícono es de un solo color. En servicios el trazo usa el tono fuerte y la baldosa el mismo tono en claro: ámbar sobre `--color-main-200` (Creatividad, Audiovisual), cielo sobre `--color-info-300` (Branding, ATL & BTL) y verde agua sobre `--color-leaf-200` (Digital & Web, Planeación). En interfaz el ícono hereda `currentColor` (`text-foreground`, `text-primary`). El 3D toma `--brand-sky`; la única excepción de color es la llama naranja del cohete.",
+          "Cada ícono es de un solo color. En servicios el trazo usa el tono fuerte y la baldosa el mismo tono en claro: Amber sobre `--color-main-200` (Creatividad, Audiovisual), Sky sobre `--color-info-300` (Branding, ATL & BTL) y Jade sobre `--color-leaf-200` (Digital & Web, Planeación). En interfaz el ícono hereda `currentColor` (`text-foreground`, `text-primary`). El 3D toma `--brand-sky`; la única excepción de color es la llama naranja del cohete.",
       },
       {
         titulo: "Siempre dentro de un contenedor",
@@ -218,46 +218,46 @@ export const IMAGEN: {
       {
         nombre: "Servicios (ilustrativos de trazo)",
         descripcion:
-          "Seis íconos de contorno, de trazo medio y uniforme con terminales redondeadas, cada uno en un solo color (cielo, ámbar o verde agua) y apoyado en una baldosa del mismo tono en claro. Hoy son WebP de 80 px con el color ya horneado.",
+          "Seis íconos de contorno, de trazo medio y uniforme con terminales redondeadas, cada uno en un solo color (Sky, Amber o Jade) y apoyado en una baldosa del mismo tono en claro. Hoy son WebP de 80 px con el color ya horneado.",
         cuando:
           "Solo para nombrar uno de los seis servicios de `lib/services.ts`, en la grilla de servicios. Uno por servicio, siempre el mismo.",
         iconos: [
           {
             src: "/images/service-creatividad.webp",
             nombre: "Creatividad (foco)",
-            uso: "Card Creatividad. Trazo ámbar sobre baldosa `--color-main-200`.",
+            uso: "Card Creatividad. Trazo Amber sobre baldosa `--color-main-200`.",
           },
           {
             src: "/images/service-branding.webp",
             nombre: "Branding (pluma con curva Bézier)",
-            uso: "Card Branding. Trazo cielo sobre baldosa `--color-info-300`.",
+            uso: "Card Branding. Trazo Sky sobre baldosa `--color-info-300`.",
           },
           {
             src: "/images/service-digital.webp",
             nombre: "Digital & Web (globo)",
-            uso: "Card Digital & Web. Trazo verde agua sobre baldosa `--color-leaf-200`.",
+            uso: "Card Digital & Web. Trazo Jade sobre baldosa `--color-leaf-200`.",
           },
           {
             src: "/images/service-planeacion.webp",
             nombre: "Planeación Estratégica (diana)",
-            uso: "Card Planeación Estratégica. Trazo verde agua sobre baldosa `--color-leaf-200`.",
+            uso: "Card Planeación Estratégica. Trazo Jade sobre baldosa `--color-leaf-200`.",
           },
           {
             src: "/images/service-audiovisual.webp",
             nombre: "Audiovisual (claqueta)",
-            uso: "Card Audiovisual. Trazo ámbar sobre baldosa `--color-main-200`.",
+            uso: "Card Audiovisual. Trazo Amber sobre baldosa `--color-main-200`.",
           },
           {
             src: "/images/service-atl.webp",
             nombre: "ATL & BTL (megáfono)",
-            uso: "Card ATL & BTL. Trazo cielo sobre baldosa `--color-info-300`.",
+            uso: "Card ATL & BTL. Trazo Sky sobre baldosa `--color-info-300`.",
           },
         ],
       },
       {
         nombre: "Proceso 3D (vidrio azul)",
         descripcion:
-          "Cinco objetos 3D (GLB) con material de vidrio: color base `--brand-sky`, fresnel claro en los bordes, brillo violáceo en la parte baja y glow difuso alrededor; el cohete suma una llama naranja. Giran lento en reposo y más rápido al hover. Cuando hay movimiento reducido o el bloque todavía no se acercó al viewport, se muestra su render plano en WebP (768×764, fondo negro), que es el `src` de esta lista.",
+          "Cinco objetos 3D (GLB) con material de vidrio: color base Sky (`--brand-sky`), fresnel claro en los bordes, brillo violáceo en la parte baja y glow difuso alrededor; el cohete suma una llama naranja. Giran lento en reposo y más rápido al hover. Cuando hay movimiento reducido o el bloque todavía no se acercó al viewport, se muestra su render plano en WebP (768×764, fondo negro), que es el `src` de esta lista.",
         cuando:
           "Solo en la sección Metodología, un objeto por paso (Preguntar, Pensar, Crear, Hacer, Aprender), dentro del anillo circular con `hover-brand-ring-thick`. No se usa en cards chicas ni como ícono de interfaz.",
         iconos: [
@@ -426,7 +426,7 @@ export const IMAGEN: {
       {
         titulo: "El degradé de marca va en el contenedor, no en el ícono",
         regla:
-          "El anillo cónico sky → clay → amber (`hover-brand-ring`) y el glow ámbar al hover se aplican a la baldosa, la card o el anillo. Ningún ícono se rellena con el degradé ni con `title-brand-gradient`.",
+          "El anillo cónico Sky → Clay → Amber (`hover-brand-ring`) y el glow Amber al hover se aplican a la baldosa, la card o el anillo. Ningún ícono se rellena con el degradé ni con `title-brand-gradient`.",
       },
       {
         titulo: "No mezclar trazo grueso con trazo fino",
@@ -457,7 +457,7 @@ export const IMAGEN: {
       donde: "src/lib/services.ts + public/images/service-*.webp",
       que: "Los íconos de servicios son WebP de 59–80 px con el color horneado, mientras todos los demás íconos son vector (SVG, lucide) o 3D. No escalan bien en pantallas 3×, no siguen los tokens si cambia la paleta y no se adaptan al tema oscuro.",
       propuesta:
-        "Redibujarlos (o vectorizarlos) como SVG de trazo en `currentColor` y poner el color desde el token de la baldosa (ámbar, cielo, verde agua en su stop fuerte), igual que lucide.",
+        "Redibujarlos (o vectorizarlos) como SVG de trazo en `currentColor` y poner el color desde el token de la baldosa (Amber, Sky o Jade en su stop fuerte), igual que lucide.",
     },
     {
       donde: "src/lab/proceso/icons.ts (Pensar y Hacer)",

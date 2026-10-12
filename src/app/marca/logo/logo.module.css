@@ -3,16 +3,6 @@
    ajenos al sitio: no son escalones del DS y no se "corrigen" a la
    escala de spacing (mismo criterio que un asset en px, patrón 0001). */
 
-.section {
-  border-top: 1px solid var(--border-default);
-  padding-block: var(--spacing-16);
-}
-@media (min-width: 768px) {
-  .section {
-    padding-block: var(--spacing-24);
-  }
-}
-
 /* ── soportes fijos (no siguen el tema: son el papel de la muestra) ── */
 .onBlack {
   background: var(--color-neutral-950);
@@ -75,31 +65,70 @@
   color: var(--feedback-error-icon);
 }
 
-/* ── reducción ── */
+/* ── reducción ──
+   Filas en bloque, no tabla: cada fila mide por su lado y los tamaños bajan
+   de renglón cuando no entran (390 px), sin scroll horizontal. */
 .scale {
-  border-collapse: collapse;
-  min-width: 640px;
-  width: 100%;
+  display: grid;
 }
-.scale th {
-  text-align: left;
+.scaleRow {
+  display: grid;
+  gap: var(--spacing-4);
+  padding-block: var(--spacing-5);
+  border-bottom: 1px solid var(--border-subtle);
+}
+@media (min-width: 1024px) {
+  .scaleRow {
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: var(--spacing-6);
+    align-items: end;
+  }
+}
+.scaleLabel {
   font: var(--typography-weight-bold) var(--typography-size-xs) / 1.3 var(--font-sans);
   text-transform: uppercase;
   letter-spacing: var(--typography-tracking-wide);
   color: var(--text-tertiary);
-  padding-right: var(--spacing-6);
-  white-space: nowrap;
 }
-.scale td {
-  padding: var(--spacing-5) var(--spacing-4);
-  border-bottom: 1px solid var(--border-subtle);
-  vertical-align: bottom;
+.scaleItems {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--spacing-5) var(--spacing-6);
+  min-width: 0;
 }
-.scale td small {
+@media (min-width: 1024px) {
+  .scaleItems {
+    gap: var(--spacing-5) var(--spacing-8);
+  }
+}
+.scaleItems li {
+  min-width: 0;
+  max-width: 100%;
+}
+.scaleItems svg {
+  display: block;
+  max-width: 100%;
+}
+.scaleItems small {
   display: block;
   margin-top: var(--spacing-2);
   font: var(--typography-size-xs) var(--font-mono);
   color: var(--text-tertiary);
+}
+
+/* ── área de respeto: las cuatro cajas con la misma proporción ── */
+.clearBox {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-lg);
+}
+.clearBox svg {
+  position: absolute;
+  inset: var(--spacing-6);
+  width: calc(100% - 2 * var(--spacing-6));
+  height: calc(100% - 2 * var(--spacing-6));
+  overflow: visible;
 }
 
 /* ── navegador ── */
@@ -148,6 +177,20 @@
 }
 .tab svg {
   flex: none;
+}
+/* Como src/app/icon.svg: placa amber (rx 8 de 64 → 12.5 %) con el monograma. */
+.favicon {
+  flex: none;
+  display: grid;
+  width: 16px;
+  height: 16px;
+  border-radius: 12.5%;
+  background: var(--brand-action);
+  color: var(--text-on-brand);
+}
+.favicon svg {
+  width: 100%;
+  height: 100%;
 }
 .tabGhost {
   background: transparent;
@@ -207,6 +250,7 @@
 
 /* ── header del sitio ── */
 .siteBar {
+  container-type: inline-size;
   display: flex;
   align-items: center;
   gap: 24px;
@@ -215,13 +259,20 @@
   border-radius: var(--radius-md);
   overflow: hidden;
 }
-.siteBar svg {
-  flex: none;
+/* La línea cede antes que el CTA: 150 px de base, se achica en barras angostas. */
+.siteBar > svg {
+  flex: 0 1 150px;
+  min-width: 0;
 }
+/* Los ítems que no entran bajan a un segundo renglón oculto: el nav pierde
+   ítems enteros, nunca corta una palabra. */
 .siteNav {
+  flex: 1 1 0;
   display: flex;
-  gap: 20px;
-  margin-left: auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  column-gap: 20px;
+  height: 12px;
   min-width: 0;
   overflow: hidden;
   font: 700 12px/1 var(--font-sans);
@@ -240,12 +291,9 @@
   letter-spacing: var(--button-letter-spacing);
   text-transform: uppercase;
 }
-@media (max-width: 900px) {
+@container (max-width: 520px) {
   .siteNav {
-    display: none;
-  }
-  .siteCta {
-    margin-left: auto;
+    visibility: hidden;
   }
 }
 .phone {
@@ -443,6 +491,7 @@
   width: auto;
 }
 .cardBack {
+  grid-template-columns: minmax(0, 1fr);
   place-items: stretch;
   align-content: space-between;
   font: 400 12px/1.35 var(--font-sans);
@@ -450,13 +499,24 @@
 .cardBack > div {
   display: grid;
   gap: 2px;
+  min-width: 0;
 }
+/* Correo y línea comparten renglón si entran; si no, el logo baja. */
 .cardBack > div:last-child {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 12px;
+  gap: 6px 12px;
   color: var(--color-neutral-300);
+}
+.cardBack span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.cardLine {
+  width: min(110px, 100%);
+  height: auto;
 }
 
 /* ── una tinta ── */

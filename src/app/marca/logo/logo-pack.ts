@@ -107,8 +107,8 @@ MÍNIMOS (por debajo, cambiar de versión en vez de achicar)
   Bloque 120 px de ancho  · Línea 120 px de ancho
 
 ÁREA DE RESPETO
-  Bloque y Columna: el alto de MEDIA alrededor. Línea: su propio alto.
-  Monograma: media fila.
+  x = el alto de MEDIA, libre alrededor de las cuatro versiones.
+  En la Línea es el alto del logo; en el Monograma, media fila de VP/ER.
 
 NO
   deformar, rotar, contornear, agregar sombras ni recomponer las piezas.

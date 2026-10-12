@@ -23,9 +23,10 @@ export interface Mark {
   viewBox: readonly [number, number];
   strokes: readonly Stroke[];
   /**
-   * Unidad del área de respeto, en unidades del viewBox. h1 y v: el alto
-   * de MEDIA. h2: el alto de la línea. iso: la mitad de una fila. Es
-   * propuesta del estudio, no viene del archivo de diseño.
+   * Unidad del área de respeto, en unidades del viewBox: el alto de MEDIA
+   * (una sola regla, la que dice la lámina). En h2 coincide con el alto de
+   * la línea; iso no tiene MEDIA y usa media fila de VP/ER. Es propuesta
+   * del estudio, no viene del archivo de diseño.
    */
   x: number;
 }

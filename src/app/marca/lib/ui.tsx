@@ -1,10 +1,12 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { ChevronDown } from "lucide-react";
 import { cn } from "@ui/lib/utils";
+import { MARCA } from "./config";
 
 /**
  * Piezas de maquetación compartidas por las láminas de lineamientos (voz,
- * imagen). Sin estado: sirven en servidor.
+ * imagen, personaje) y el Inicio. Sin estado: sirven en servidor.
  */
 
 /** Migas + fecha, arriba de cada lámina. */
@@ -13,7 +15,7 @@ export function Crumbs({ trail, note }: { trail: string[]; note: string }) {
     <div className="flex flex-wrap justify-between gap-3 pt-10 font-sans text-body-sm font-medium text-muted-foreground md:pt-16">
       <span>
         <Link href="/marca" className="underline underline-offset-4">
-          Marca
+          {MARCA.name}
         </Link>
         {trail.map((t) => ` · ${t}`).join("")}
       </span>
@@ -22,22 +24,32 @@ export function Crumbs({ trail, note }: { trail: string[]; note: string }) {
   );
 }
 
-/** Encabezado de lámina: ceja, titular display con golpe en gradiente y bajada. */
+/**
+ * Encabezado de lámina: ceja, titular display con golpe en gradiente y bajada.
+ *
+ * Por defecto va en un panel con la textura de radios de la marca
+ * (`.bg-brand-texture`, recortes claro/oscuro de brand.css) y el filete
+ * Sky → Clay → Amber arriba (`.brand-rule`). La textura es casi plana (≥96 %
+ * de sus píxeles a menos de 4 % del fondo), así que el contraste del texto es
+ * el mismo que sobre la página. `texture={false}` vuelve al encabezado liso.
+ */
 export function PageHero({
   over,
   title,
   accent,
   lede,
   children,
+  texture = true,
 }: {
   over: string;
   title: string;
   accent: string;
   lede: string;
   children?: ReactNode;
+  texture?: boolean;
 }) {
-  return (
-    <div className="@container min-w-0 py-10 md:py-16">
+  const body = (
+    <>
       <p className="font-sans text-overline-sm font-bold uppercase text-[var(--text-eyebrow)]">
         {over}
       </p>
@@ -48,6 +60,15 @@ export function PageHero({
         {lede}
       </p>
       {children}
+    </>
+  );
+  if (!texture) {
+    return <div className="@container min-w-0 py-10 md:py-16">{body}</div>;
+  }
+  return (
+    <div className="mt-6 mb-2 min-w-0 overflow-hidden rounded-[var(--radius-xl)] border border-border bg-background bg-brand-texture md:mt-8">
+      <div aria-hidden className="brand-rule" />
+      <div className="@container min-w-0 px-4 py-10 sm:px-6 md:px-10 md:py-14">{body}</div>
     </div>
   );
 }
@@ -119,6 +140,64 @@ export function Rich({ text }: { text: string }) {
   );
 }
 
+/**
+ * Numeral de lista (01, 02… o 1, 2…) como insignia Amber: relleno
+ * `--brand-action` y texto `--text-on-brand` (11.8:1 en claro y oscuro). El
+ * numeral suelto en amber/700 se leía marrón oliva.
+ */
+export function Numeral({ n, pad = false }: { n: number; pad?: boolean }) {
+  return (
+    <span className="inline-grid h-9 w-fit min-w-9 place-items-center rounded-[var(--pill-radius)] bg-[var(--brand-action)] px-2 font-display text-body-sm font-black text-[var(--text-on-brand)]">
+      {pad ? String(n).padStart(2, "0") : n}
+    </span>
+  );
+}
+
+/**
+ * Lista de trabajo del equipo web, al final de la lámina y plegada: no es un
+ * lineamiento, es lo que falta corregir en el sitio. Entra al índice con su
+ * propio nombre.
+ */
+export function Pending({
+  id = "corregir",
+  count,
+  lede,
+  children,
+  className,
+}: {
+  id?: string;
+  count: number;
+  lede?: ReactNode;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <Section
+      id={id}
+      toc="Pendientes del sitio"
+      over="Para el equipo web"
+      title="Pendientes del sitio (equipo web)"
+      lede={lede}
+      className={className}
+    >
+      <details className="group rounded-[var(--radius-lg)] border border-border bg-[var(--surface-raised)]">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-[var(--radius-lg)] p-4 font-sans text-body-md font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] md:p-5 [&::-webkit-details-marker]:hidden">
+          <span>
+            <span className="group-open:hidden">Ver</span>
+            <span className="hidden group-open:inline">Ocultar</span> los {count}{" "}
+            pendientes
+          </span>
+          <ChevronDown
+            aria-hidden
+            className="size-5 shrink-0 transition-transform group-open:rotate-180"
+          />
+        </summary>
+        <div className="border-t border-border p-4 md:p-5">{children}</div>
+      </details>
+    </Section>
+  );
+}
+
 /** Lista "Para corregir en el sitio": cada lámina termina con lo que encontró. */
 export function Findings({
   items,
@@ -130,11 +209,9 @@ export function Findings({
       {items.map((it, n) => (
         <li
           key={it.donde + it.que}
-          className="grid gap-3 rounded-[var(--radius-lg)] border border-border p-4 md:grid-cols-[2.5rem_minmax(0,1fr)_minmax(0,1fr)] md:gap-6 md:p-5"
+          className="grid gap-3 rounded-[var(--radius-lg)] border border-border p-4 md:grid-cols-[3rem_minmax(0,1fr)_minmax(0,1fr)] md:gap-6 md:p-5"
         >
-          <span className="font-display text-h3 font-black text-[var(--text-brand)]">
-            {n + 1}
-          </span>
+          <Numeral n={n + 1} />
           <div className="grid content-start gap-1.5">
             <code className="font-mono text-body-xs [overflow-wrap:anywhere] text-[var(--text-secondary)]">
               {it.donde}

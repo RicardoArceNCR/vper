@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Vpercito } from "@/components/vpercito";
-import { Crumbs, Findings, PageHero, Rich, Section } from "../lib/ui";
+import { Crumbs, Findings, Numeral, PageHero, Pending, Rich, Section } from "../lib/ui";
 import PersonajeDownload from "./personaje-download";
 import { PERSONAJE } from "./personaje-content";
 
@@ -9,7 +9,8 @@ export const metadata: Metadata = { title: "Personaje" };
 /**
  * Lineamientos · Personaje (vpercito). Contenido en ./personaje-content.ts;
  * descargas en ./personaje-pack.ts. El componente que usa el sitio es
- * src/components/vpercito.tsx: esta página lo muestra tal cual.
+ * src/components/vpercito.tsx: esta página lo muestra tal cual. «En el correo»
+ * (#correo) va dentro de #donde, fuera del índice.
  */
 
 function Estado({ ok, label }: { ok: boolean; label: string }) {
@@ -32,7 +33,7 @@ export default function PersonajePage() {
     <main className="wrap mx-auto max-w-[1217px] pb-24">
       <Crumbs
         trail={["Lineamientos", "Personaje"]}
-        note="Primera versión · Octubre 2026"
+        note="En revisión · Actualizado oct. 2026"
       />
       <PageHero over="Personaje" title="Conocé a" accent="vpercito." lede={P.resumen}>
         <dl className="mt-8 grid max-w-3xl gap-x-8 gap-y-3 sm:grid-cols-2">
@@ -47,7 +48,9 @@ export default function PersonajePage() {
         </dl>
       </PageHero>
 
-      <PersonajeDownload />
+      <div className="mt-6 md:mt-8">
+        <PersonajeDownload />
+      </div>
 
       <Section
         id="papel"
@@ -55,6 +58,7 @@ export default function PersonajePage() {
         over="Papel"
         title="Anfitrión, no protagonista"
         lede="Cuatro reglas que deciden si una pantalla lleva a vpercito o no."
+        className="border-t-0"
       >
         <ol className="grid gap-4 md:grid-cols-2">
           {P.principios.map((p, n) => (
@@ -62,9 +66,7 @@ export default function PersonajePage() {
               key={p.titulo}
               className="grid content-start gap-2 rounded-[var(--radius-xl)] border border-border p-5"
             >
-              <span className="font-display text-h3 font-black text-[var(--text-brand)]">
-                {String(n + 1).padStart(2, "0")}
-              </span>
+              <Numeral n={n + 1} pad />
               <h3 className="font-sans text-h5 font-bold">{p.titulo}</h3>
               <p className="font-sans text-body-sm text-[var(--text-secondary)]">
                 <Rich text={p.regla} />
@@ -125,34 +127,31 @@ export default function PersonajePage() {
             </ul>
           </div>
         </div>
-      </Section>
 
-      <section
-        id="correo"
-        data-toc="En el correo"
-        aria-labelledby="correo-title"
-        className="mb-4 grid gap-3 rounded-[var(--radius-xl)] border border-border p-5 md:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] md:gap-8 md:p-6"
-      >
-        <h2 id="correo-title" className="font-display text-h3 font-black uppercase">
-          En el correo
-        </h2>
-        <p className="font-sans text-body-sm text-[var(--text-secondary)]">
-          <Rich text={P.firmas} />
-        </p>
-      </section>
+        <div
+          id="correo"
+          className="mt-12 grid scroll-mt-24 gap-4 rounded-[var(--radius-xl)] border border-border p-5 md:mt-16 md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] md:gap-8 md:p-6"
+        >
+          <div className="@container min-w-0">
+            <p className="font-sans text-overline-sm font-bold uppercase text-[var(--text-eyebrow)]">
+              Firmas
+            </p>
+            <h3 className="mt-3 font-display display-title-sm font-black uppercase tracking-tight">
+              En el correo
+            </h3>
+          </div>
+          <p className="font-sans text-body-md font-medium text-[var(--text-secondary)]">
+            <Rich text={P.firmas} />
+          </p>
+        </div>
+      </Section>
 
       <Section
         id="uso"
         toc="Uso"
         over="Uso"
         title="Cómo se pone"
-        lede={
-          <>
-            En el sitio, siempre con el componente <Rich text="`<Vpercito />`" /> (
-            <Rich text="`src/components/vpercito.tsx`" />
-            ). Así se ve sobre los dos fondos:
-          </>
-        }
+        lede="En pantallas de espera, error o confirmación; nunca junto al trabajo de un cliente. Así se ve sobre los dos fondos:"
       >
         <div className="mb-10 grid gap-4 sm:grid-cols-2">
           <figure className="grid gap-3">
@@ -168,7 +167,7 @@ export default function PersonajePage() {
               <Vpercito size={180} halo />
             </div>
             <figcaption className="font-sans text-body-xs text-[var(--text-secondary)]">
-              Oscuro: el halo sky es lo que recorta el cuerpo negro.
+              Oscuro: el halo Sky es lo que recorta el cuerpo negro.
             </figcaption>
           </figure>
         </div>
@@ -185,6 +184,12 @@ export default function PersonajePage() {
             </li>
           ))}
         </ul>
+        <p className="mt-6 font-sans text-body-xs text-[var(--text-secondary)]">
+          <b className="font-bold">Para desarrollo:</b> en el sitio va siempre con el
+          componente <Rich text="`<Vpercito />`" /> (
+          <Rich text="`src/components/vpercito.tsx`" />
+          ).
+        </p>
       </Section>
 
       <Section
@@ -215,15 +220,12 @@ export default function PersonajePage() {
         </ul>
       </Section>
 
-      <Section
-        id="corregir"
-        toc="Para corregir"
-        over="Revisión del sitio"
-        title="Pendientes"
-        lede="Lo que falta para que vpercito esté donde tiene que estar. Ninguno está cambiado todavía."
+      <Pending
+        count={P.pendientes.length}
+        lede="Lo que falta en el sitio para que vpercito esté donde tiene que estar. Es la lista de trabajo del equipo web, y nada está cambiado todavía."
       >
         <Findings items={P.pendientes} />
-      </Section>
+      </Pending>
     </main>
   );
 }

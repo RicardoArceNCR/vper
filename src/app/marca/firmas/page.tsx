@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Crumbs, Numeral } from "../lib/ui";
 import FirmasLab from "./firmas-lab";
 
 export const metadata: Metadata = {
@@ -11,9 +11,10 @@ export const metadata: Metadata = {
  * ingeniería de correo (./email-html.ts, ./RESTRICCIONES.md). Cada propuesta es el
  * HTML real que se instala en Gmail/Outlook: lo que se ve acá es lo que se copia.
  *
- * Orden de la página = orden del trabajo: kit (lo publica el desarrollador) →
- * taller (datos + propuestas, juntos) → instalación → control técnico (para quien
- * mantiene el sistema; no compite con la elección).
+ * Orden de la página = por persona: primero quien elige e instala (taller →
+ * instalación), después quien mantiene (kit de imágenes → control técnico). El
+ * kit se publica una vez antes de que el equipo instale, pero no es tarea del
+ * equipo: por eso va abajo, con un enlace desde la entrada.
  */
 
 const INSTALL = [
@@ -46,17 +47,21 @@ function Install() {
       id="instalar"
       data-toc="Instalación"
       aria-labelledby="instalar-title"
-      className="grid scroll-mt-20 gap-8 rounded-[var(--radius-xl)] border border-border p-5 md:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-12"
+      className="scroll-mt-20 border-t border-border pt-14 md:pt-20"
     >
-      <div className="grid content-start gap-2">
+      {/* Mismo encabezado que las demás secciones (SectionHead en ./firmas-lab). */}
+      <div className="@container mb-8 min-w-0 max-w-3xl md:mb-10">
         <p className="font-sans text-overline-sm font-bold uppercase text-[var(--text-eyebrow)]">
-          Instalación
+          Paso 2
         </p>
-        <h2 id="instalar-title" className="font-display text-h2 font-black uppercase">
+        <h2
+          id="instalar-title"
+          className="mt-3 font-display display-title-sm font-black uppercase tracking-tight"
+        >
           Cómo instalarla
         </h2>
-        <p className="font-sans text-body-sm text-[var(--text-secondary)]">
-          Con el kit ya publicado. Un minuto por persona.
+        <p className="mt-4 font-sans text-body-md font-medium text-[var(--text-secondary)]">
+          Pegala en tu correo. Toma un minuto.
         </p>
       </div>
       <div className="grid gap-4">
@@ -66,9 +71,7 @@ function Install() {
               key={i.client}
               className="grid content-start gap-2 rounded-[var(--radius-lg)] bg-[var(--background-subtle)] p-4"
             >
-              <span className="font-display text-h3 font-black text-[var(--text-brand)]">
-                {n + 1}
-              </span>
+              <Numeral n={n + 1} />
               <b className="font-sans text-body-sm font-bold">{i.client}</b>
               <span className="font-sans text-body-xs text-[var(--text-secondary)]">
                 {i.steps}
@@ -103,28 +106,29 @@ function Why() {
 export default function FirmasPage() {
   return (
     <main className="wrap mx-auto max-w-[1217px] pb-24">
-      <div className="flex flex-wrap justify-between gap-3 pt-10 font-sans text-body-sm font-medium text-muted-foreground md:pt-16">
-        <span>
-          <Link href="/marca" className="underline underline-offset-4">
-            Marca
-          </Link>{" "}
-          · Recursos · Firmas de correo
-        </span>
-        <span>Propuesta de firmas de correo · Octubre 2026</span>
-      </div>
+      <Crumbs
+        trail={["Recursos", "Firmas de correo"]}
+        note="Propuesta · Actualizado oct. 2026"
+      />
 
       <div className="@container min-w-0 py-10 md:py-16">
         <p className="font-sans text-overline-sm font-bold uppercase text-[var(--text-eyebrow)]">
-          Ocho propuestas · una bandeja
+          Firmas de correo · ocho propuestas
         </p>
         <h1 className="mt-3 font-display display-title font-black uppercase tracking-tight">
-          La firma también <span className="title-brand-gradient">es marca.</span>
+          Elegí tu <span className="title-brand-gradient">firma.</span>
         </h1>
         <p className="mt-6 max-w-2xl font-sans text-body-lg font-medium text-muted-foreground">
-          Es la pieza de VPER que más se ve y la que menos se diseña: va al pie de cada
-          correo. Acá están ocho caminos, desde uno sobrio hasta uno de campaña, armados
-          como HTML de correo real. Cambiá los datos, mirá cómo se ven en una bandeja
-          clara y en una oscura, y copiá la que quieras instalar.
+          Escribí tus datos, mirá las ocho propuestas en una bandeja clara y en una
+          oscura, y copiá la tuya. Lo que ves es exactamente lo que se pega en Gmail u
+          Outlook.
+        </p>
+        <p className="mt-3 max-w-2xl font-sans text-body-sm text-[var(--text-secondary)]">
+          ¿Mantenés el sitio? El kit de imágenes y el control técnico están{" "}
+          <a href="#kit" className="font-bold underline underline-offset-4">
+            al final
+          </a>
+          .
         </p>
       </div>
 

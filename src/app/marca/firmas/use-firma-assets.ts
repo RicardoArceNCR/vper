@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FIRMA_DEFAULT, FIRMA_IMAGES, PROPOSALS } from "./proposals";
 import { saveBlob } from "../lib/save";
 import { makeZip } from "../lib/zip";
@@ -15,7 +15,50 @@ export const FIRMA_FILES = Object.values(FIRMA_IMAGES).map((path) => ({
   name: path.split("/").pop() ?? path,
 }));
 
-export type LiveState = "idle" | "checking" | "ok" | "missing";
+/**
+ * "missing": el servidor respondió pero la imagen no está (404, otra cosa).
+ * "unknown": no se pudo comprobar (sin red, el servidor no respondió en 8 s).
+ */
+export type LiveState = "idle" | "checking" | "ok" | "missing" | "unknown";
+
+/** Tiempo máximo por imagen antes de dar la verificación por no concluyente. */
+const CHECK_TIMEOUT_MS = 8000;
+
+/**
+ * Un <img> puede leer otro dominio sin CORS: si carga, el archivo está publicado.
+ * Si falla, un fetch no-cors distingue "el servidor contestó" (falta el archivo)
+ * de "no hubo respuesta" (red caída, DNS, timeout): ahí no se sabe.
+ */
+function probe(url: string): Promise<Exclude<LiveState, "idle" | "checking">> {
+  if (typeof navigator !== "undefined" && navigator.onLine === false) {
+    return Promise.resolve("unknown");
+  }
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = (s: Exclude<LiveState, "idle" | "checking">) => {
+      if (done) return;
+      done = true;
+      window.clearTimeout(timer);
+      img.onload = img.onerror = null;
+      resolve(s);
+    };
+    const timer = window.setTimeout(() => {
+      img.src = "";
+      finish("unknown");
+    }, CHECK_TIMEOUT_MS);
+    const img = new Image();
+    img.onload = () => finish("ok");
+    img.onerror = () => {
+      const ctrl = new AbortController();
+      const left = window.setTimeout(() => ctrl.abort(), CHECK_TIMEOUT_MS);
+      fetch(url, { mode: "no-cors", cache: "no-store", signal: ctrl.signal })
+        .then(() => finish("missing"))
+        .catch(() => finish("unknown"))
+        .finally(() => window.clearTimeout(left));
+    };
+    img.src = url;
+  });
+}
 export type FileMeta = { bytes: number; w: number; h: number };
 
 /** Qué propuestas usan cada imagen: se deduce del HTML, no se mantiene a mano. */
@@ -59,15 +102,27 @@ export function useFirmaAssets(copyBase: string) {
 
   const base = copyBase.replace(/\/+$/, "");
 
-  // Un <img> puede leer otro dominio sin CORS: si carga, el archivo está publicado.
+  // El resultado vale para una base: si la URL cambia, se descarta (y cualquier
+  // verificación en curso para la base anterior deja de escribir).
+  const [checkedBase, setCheckedBase] = useState("");
+  const run = useRef(0);
+  useEffect(() => {
+    run.current += 1;
+    setLive({});
+    setCheckedBase("");
+  }, [base]);
+
   const check = () => {
     if (!base) return;
+    const id = ++run.current;
+    const stamp = Date.now();
+    setCheckedBase(base);
+    setLive(Object.fromEntries(FIRMA_FILES.map((f) => [f.path, "checking" as const])));
     for (const f of FIRMA_FILES) {
-      setLive((s) => ({ ...s, [f.path]: "checking" }));
-      const img = new Image();
-      img.onload = () => setLive((s) => ({ ...s, [f.path]: "ok" }));
-      img.onerror = () => setLive((s) => ({ ...s, [f.path]: "missing" }));
-      img.src = `${base}${f.path}?v=${Date.now()}`;
+      void probe(`${base}${f.path}?v=${stamp}`).then((st) => {
+        if (run.current !== id) return;
+        setLive((s) => ({ ...s, [f.path]: st }));
+      });
     }
   };
 
@@ -92,6 +147,8 @@ export function useFirmaAssets(copyBase: string) {
         "- No recomprimir ni redimensionar: están a 2x para pantallas retina.",
         "- Tienen que ser públicas (sin login, sin protección de preview) y por https.",
         "- Si se reemplaza una imagen, usar un nombre nuevo: Gmail guarda copia de la anterior.",
+        "- Las -v2 (oct. 2026) suman el área de respeto del logo. Dejar publicadas también",
+        "  las versiones sin -v2: las firmas instaladas antes las siguen pidiendo.",
         "",
         "Archivos:",
         ...FIRMA_FILES.map((f) => `  ${f.path}`),
@@ -112,8 +169,12 @@ export function useFirmaAssets(copyBase: string) {
   const states = FIRMA_FILES.map((f) => live[f.path] ?? "idle");
   const ok = states.filter((s) => s === "ok").length;
   const missing = states.filter((s) => s === "missing").length;
+  const unknown = states.filter((s) => s === "unknown").length;
   const checking = states.some((s) => s === "checking");
-  const checked = ok + missing === FIRMA_FILES.length;
+  const checked =
+    Boolean(checkedBase) &&
+    checkedBase === base &&
+    ok + missing + unknown === FIRMA_FILES.length;
 
   return {
     files: FIRMA_FILES,
@@ -125,7 +186,9 @@ export function useFirmaAssets(copyBase: string) {
     zipping,
     ok,
     missing,
+    unknown,
     checking,
+    checkedBase,
     checked,
     download,
     check,

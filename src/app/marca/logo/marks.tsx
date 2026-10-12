@@ -74,29 +74,29 @@ export function Logo({
         </defs>
       ) : null}
       {clear ? (
-        <g
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={Math.max(w, h) / 400}
-          opacity={0.55}
-        >
-          <rect
-            x={-m.x}
-            y={-m.x}
-            width={w + 2 * m.x}
-            height={h + 2 * m.x}
-            strokeDasharray={`${m.x / 6} ${m.x / 6}`}
-          />
-          <rect x={0} y={0} width={w} height={h} />
+        // Trazo de 1 px de pantalla a cualquier escala (non-scaling-stroke), en sky:
+        // la guía tiene que verse sobre negro sin competir con la marca.
+        <g fill="none" style={{ stroke: "var(--brand-sky)" }} strokeWidth={1}>
           {/* La unidad x, dibujada en la esquina: un cuadrado de x × x. */}
           <rect
             x={-m.x}
             y={-m.x}
             width={m.x}
             height={m.x}
-            fill="currentColor"
-            opacity={0.25}
+            style={{
+              fill: "color-mix(in srgb, var(--brand-sky) 40%, transparent)",
+              stroke: "none",
+            }}
           />
+          <rect
+            x={-m.x}
+            y={-m.x}
+            width={w + 2 * m.x}
+            height={h + 2 * m.x}
+            strokeDasharray="4 3"
+            vectorEffect="non-scaling-stroke"
+          />
+          <rect x={0} y={0} width={w} height={h} vectorEffect="non-scaling-stroke" />
         </g>
       ) : null}
       {m.strokes.map(([role, d]) =>

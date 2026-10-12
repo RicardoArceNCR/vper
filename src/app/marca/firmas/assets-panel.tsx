@@ -51,14 +51,30 @@ export default function AssetsPanel({ kit }: { kit: FirmaAssets }) {
         </div>
       </div>
 
-      <p className="font-sans text-body-xs text-[var(--text-secondary)]">
+      <p
+        role="status"
+        className={cn(
+          "font-sans text-body-xs",
+          kit.checked && kit.missing
+            ? "text-[var(--feedback-error-text)]"
+            : kit.checked && kit.unknown
+              ? "text-[var(--feedback-warning-text)]"
+              : "text-[var(--text-secondary)]",
+        )}
+      >
         {kit.checked
           ? kit.missing
-            ? `${kit.missing} de ${files.length} imágenes todavía no están publicadas.`
-            : `Las ${files.length} imágenes cargan desde ${base}.`
-          : kit.total
-            ? `${files.length} PNG · ${(kit.total / 1024).toFixed(0)} KB en total.`
-            : ""}
+            ? `${kit.missing} de ${files.length} imágenes no están publicadas en ${kit.checkedBase}.${
+                kit.unknown ? ` Otras ${kit.unknown} no se pudieron comprobar.` : ""
+              }`
+            : kit.unknown
+              ? `No se pudo comprobar ${kit.unknown} de ${files.length}: sin conexión o el servidor no respondió.`
+              : `Las ${files.length} imágenes cargan desde ${kit.checkedBase}.`
+          : kit.checking
+            ? `Verificando en ${kit.checkedBase}…`
+            : kit.total
+              ? `${files.length} PNG · ${(kit.total / 1024).toFixed(0)} KB en total. Sin verificar en ${base || "la URL pública"}.`
+              : ""}
       </p>
 
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -67,7 +83,7 @@ export default function AssetsPanel({ kit }: { kit: FirmaAssets }) {
           const st = live[f.path] ?? "idle";
           return (
             <li key={f.path} className="grid min-w-0 content-start gap-2">
-              <div className="flex h-20 items-center justify-center overflow-hidden rounded-[var(--radius-md)] border border-border bg-[var(--color-neutral-200)] p-2">
+              <div className="flex h-24 items-center justify-center overflow-hidden rounded-[var(--radius-md)] border border-border bg-[var(--color-neutral-200)] p-4">
                 <img
                   src={f.path}
                   alt=""
@@ -89,6 +105,7 @@ export default function AssetsPanel({ kit }: { kit: FirmaAssets }) {
                     "font-sans text-label-xs font-bold uppercase",
                     st === "ok" && "text-[var(--feedback-success-text)]",
                     st === "missing" && "text-[var(--feedback-error-text)]",
+                    st === "unknown" && "text-[var(--feedback-warning-text)]",
                     st === "checking" && "text-[var(--text-secondary)]",
                   )}
                 >
@@ -96,7 +113,9 @@ export default function AssetsPanel({ kit }: { kit: FirmaAssets }) {
                     ? "Publicada"
                     : st === "missing"
                       ? "No está"
-                      : "Verificando…"}
+                      : st === "unknown"
+                        ? "No se pudo comprobar"
+                        : "Verificando…"}
                 </span>
               ) : null}
             </li>

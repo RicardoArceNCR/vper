@@ -9,7 +9,8 @@ import { cn } from "@ui/lib/utils";
 import { Logo } from "./logo/marks";
 import { MARCA_GROUPS, MARCA_HOME, MARCA_OUT, isActive, type NavItem } from "./lib/nav";
 import { salir } from "./lib/auth-actions";
-import { useToc } from "./lib/use-toc";
+import { MARCA } from "./lib/config";
+import { focusSection, useToc } from "./lib/use-toc";
 
 /**
  * Navegación de Marca VPER bajo lg (celular y tablet). Es el sidebar plegado:
@@ -17,7 +18,9 @@ import { useToc } from "./lib/use-toc";
  *   completas, con la misma estructura que el sidebar.
  * - Fila 2: "En esta página", con la sección que se está leyendo. Las láminas
  *   miden 15–20 pantallas en un celular; sin índice, navegar es scrollear.
- * Un panel a la vez. Se cierran al navegar, con Escape o tocando afuera.
+ * Un panel a la vez. Se cierran al navegar, con Escape, tocando afuera o cuando
+ * el foco sale del panel (Tab). Al abrir, el foco entra al panel; con Escape
+ * vuelve al botón que lo abrió.
  */
 
 type Panel = "menu" | "toc" | null;
@@ -34,7 +37,7 @@ function MenuLink({ item, active }: { item: NavItem; active: boolean }) {
       className={cn(
         "relative flex items-center gap-3 rounded-[var(--radius-md)] px-3 py-2.5 transition-colors",
         focus,
-        active ? "bg-[var(--background-subtle)]" : "hover:bg-[var(--background-subtle)]",
+        active ? "bg-[var(--brand-subtle)]" : "hover:bg-[var(--background-subtle)]",
       )}
     >
       <span
@@ -62,6 +65,10 @@ export default function MarcaMobileNav({ protegido }: { protegido: boolean }) {
   const { toc, current } = useToc(pathname);
   const [panel, setPanel] = useState<Panel>(null);
   const root = useRef<HTMLDivElement>(null);
+  const menuBtn = useRef<HTMLButtonElement>(null);
+  const tocBtn = useRef<HTMLButtonElement>(null);
+  const menuPanel = useRef<HTMLDivElement>(null);
+  const tocPanel = useRef<HTMLDivElement>(null);
   const menuId = useId();
   const tocId = useId();
   const currentLabel = toc.find((t) => t.id === current)?.label ?? toc[0]?.label ?? "";
@@ -69,17 +76,37 @@ export default function MarcaMobileNav({ protegido }: { protegido: boolean }) {
   useEffect(() => setPanel(null), [pathname]);
   useEffect(() => {
     if (!panel) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setPanel(null);
+    // Escape: se cierra y el foco vuelve al botón que abrió el panel.
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setPanel(null);
+      (panel === "menu" ? menuBtn : tocBtn).current?.focus();
+    };
     const onDown = (e: PointerEvent) => {
       if (!root.current?.contains(e.target as Node)) setPanel(null);
     };
     document.addEventListener("keydown", onKey);
     document.addEventListener("pointerdown", onDown);
+    // Al abrir, el foco entra al panel: al ítem actual o al primero.
+    const box = (panel === "menu" ? menuPanel : tocPanel).current;
+    const target =
+      box?.querySelector<HTMLElement>("[aria-current]") ??
+      box?.querySelector<HTMLElement>("a[href], button");
+    target?.focus();
     return () => {
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("pointerdown", onDown);
     };
   }, [panel]);
+
+  /** Si el foco sale del panel (Tab hacia afuera), el panel se cierra. */
+  const onPanelBlur =
+    (button: React.RefObject<HTMLButtonElement | null>) =>
+    (e: React.FocusEvent<HTMLDivElement>) => {
+      const to = e.relatedTarget as Node | null;
+      if (!to || e.currentTarget.contains(to) || to === button.current) return;
+      setPanel(null);
+    };
 
   const toggle = (p: Exclude<Panel, null>) => setPanel((cur) => (cur === p ? null : p));
 
@@ -92,12 +119,13 @@ export default function MarcaMobileNav({ protegido }: { protegido: boolean }) {
         >
           <Logo k="h2" className="h-auto w-24" />
           <span className="border-l border-border pl-2.5 font-sans text-label-xs font-bold uppercase tracking-widest text-[var(--text-secondary)]">
-            Marca
+            {MARCA.name}
           </span>
         </Link>
         <div className="flex items-center gap-1">
           <ThemeToggle />
           <button
+            ref={menuBtn}
             type="button"
             aria-expanded={panel === "menu"}
             aria-controls={menuId}
@@ -119,6 +147,7 @@ export default function MarcaMobileNav({ protegido }: { protegido: boolean }) {
 
       {toc.length > 0 ? (
         <button
+          ref={tocBtn}
           type="button"
           aria-expanded={panel === "toc"}
           aria-controls={tocId}
@@ -146,8 +175,10 @@ export default function MarcaMobileNav({ protegido }: { protegido: boolean }) {
 
       {/* Menú: las tres capas, igual que el sidebar. */}
       <div
+        ref={menuPanel}
         id={menuId}
         hidden={panel !== "menu"}
+        onBlur={onPanelBlur(menuBtn)}
         className="absolute inset-x-0 top-full max-h-[calc(100dvh-6rem)] overflow-y-auto border-b border-border bg-background shadow-[var(--shadow-lg)]"
       >
         <nav aria-label="Marca VPER" className="wrap grid gap-4 py-4">
@@ -196,8 +227,10 @@ export default function MarcaMobileNav({ protegido }: { protegido: boolean }) {
 
       {/* Índice de la página. */}
       <div
+        ref={tocPanel}
         id={tocId}
         hidden={panel !== "toc"}
+        onBlur={onPanelBlur(tocBtn)}
         className="absolute inset-x-0 top-full max-h-[60dvh] overflow-y-auto border-b border-border bg-background shadow-[var(--shadow-lg)]"
       >
         <ol className="wrap grid py-2">
@@ -218,6 +251,8 @@ export default function MarcaMobileNav({ protegido }: { protegido: boolean }) {
                         el.getBoundingClientRect().top + window.scrollY - header - 12;
                       window.scrollTo({ top: y, behavior: "smooth" });
                       history.replaceState(null, "", `#${t.id}`);
+                      // El foco va a la sección (no queda en <body>).
+                      focusSection(t.id);
                     }
                     setPanel(null);
                   }}

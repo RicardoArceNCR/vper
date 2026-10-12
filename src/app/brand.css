@@ -7,7 +7,7 @@
  *
  *   1. Familias
  *   2. Neutros (acromático — ver justificación abajo)
- *   3. Escalas de color (amber/clay/jade — propuesta 2026-08-11)
+ *   3. Escalas de color (amber/clay/jade/sky — propuesta 2026-08-11)
  *   4. Paleta brand + feedback + links (overrides exactos, ganan siempre)
  *   5. Escala tipográfica cruda (size / weight / leading / tracking)
  *   6. Estilos tipográficos (display → overline → code) size+lh+tracking
@@ -22,7 +22,7 @@
  * tokens-dark.css del paquete), solo se les mete el valor de la escala
  * nueva por ROL:
  *   main   ← amber (marca/warning)      accent ← clay (danger)
- *   leaf   ← jade (success/teal marca)   info  ← sin cambio (ya era sky)
+ *   leaf   ← jade (success/teal marca)   info  ← sky (mismo 500)
  * Cuando @misitio/ui adopte la propuesta de verdad (Figma → Style
  * Dictionary → tokens.css con los nombres nuevos), este archivo se
  * simplifica: se borra la sección 3 entera y listo.
@@ -124,8 +124,11 @@
      el hex exacto de marca queda anclado en el stop donde su luminancia
      real cae (no forzado a un 500 arbitrario — eso rompía la monotonía,
      ver intento anterior en el historial de este archivo).
-     - info NO se toca: --color-info-500 (#5eb2e3) ya es idéntico a
-       --brand-sky, byte a byte.
+     - info ← sky. El 500 del paquete (#5eb2e3) ya era --brand-sky,
+       pero el resto de su rampa (600 #4f94bc, 700 #417696…) no es la
+       de la propuesta, y links/foco/info ya usaban los hex de la
+       propuesta rotulados sky/600–950. 2026-10-12: se ancla la escala
+       sky entera acá, como las otras tres, y los roles la referencian.
      - gold/amarillo/ink NO se tocan: código muerto confirmado por grep,
        ningún token semántico alcanzable en vper los usa.
      ═══════════════════════════════════════════════════════════════ */
@@ -167,6 +170,19 @@
   --color-leaf-800: #125d59;
   --color-leaf-900: #05433f;
   --color-leaf-950: #002c2a;
+
+  /* info ← sky (enlaces, foco, info). Ancla #5EB2E3 en el stop 500. */
+  --color-info-50: #f0f8fd;
+  --color-info-100: #e0effa;
+  --color-info-200: #c4e3f8;
+  --color-info-300: #a0d4f5;
+  --color-info-400: #7cc1eb;
+  --color-info-500: #5eb2e3;
+  --color-info-600: #378ebd;
+  --color-info-700: #22729c;
+  --color-info-800: #11587a;
+  --color-info-900: #053e59;
+  --color-info-950: #00293d;
 
   /* ═══════════════════════════════════════════════════════════════
      4. PALETA DE MARCA — overrides exactos, ganan siempre sobre la
@@ -211,10 +227,10 @@
   --feedback-warning-text: #8f5f06; /* amber/700, 5.12:1 */
   --feedback-warning-bg: #fff5e9; /* amber/50 */
 
-  --feedback-info-icon: #5eb2e3; /* sky/500 */
-  --feedback-info-border: #378ebd; /* sky/600 */
-  --feedback-info-text: #22729c; /* sky/700, 4.94:1 */
-  --feedback-info-bg: #f0f8fd; /* sky/50 */
+  --feedback-info-icon: var(--color-info-500); /* sky/500 */
+  --feedback-info-border: var(--color-info-600); /* sky/600 */
+  --feedback-info-text: var(--color-info-700); /* sky/700, 4.94:1 */
+  --feedback-info-bg: var(--color-info-50); /* sky/50 */
 
   --feedback-success-icon: #74bdb7; /* jade/400 */
   --feedback-success-border: #39958f; /* jade/600 */
@@ -223,10 +239,18 @@
 
   /* 2026-10-09: un escalón más oscuro. sky/600 (#378ebd) daba 3.64:1
      sobre blanco: no llega a 4.5:1 para texto. */
-  --interaction-link-default: #22729c; /* sky/700, 5.31:1 */
-  --interaction-link-hover: #11587a; /* sky/800 */
-  --interaction-link-visited: #11587a; /* sky/800 */
-  --focus-ring-color: #378ebd; /* sky/600, 3.64:1 — sky/500 no llega a 3:1 */
+  --interaction-link-default: var(--color-info-700); /* sky/700, 5.31:1 */
+  --interaction-link-hover: var(--color-info-800); /* sky/800 */
+  --interaction-link-visited: var(--color-info-800); /* sky/800 */
+  --focus-ring-color: var(--color-info-600); /* sky/600, 3.64:1 — sky/500 no llega a 3:1 */
+
+  /* Pill de marca (Logo, selector de Firmas, Sistema). El paquete pinta
+     amber/600 (#b17706) sobre --brand-subtle: 3.52:1 a 10–12px, no
+     llega a AA. En claro va el par del botón: relleno Amber y texto
+     --text-on-brand, 11.8:1. El oscuro conserva el del paquete (ver
+     .dark): este :root le ganaría también ahí. */
+  --pill-brand-bg: var(--brand-action);
+  --pill-brand-text: var(--text-on-brand);
 
   /* ═══════════════════════════════════════════════════════════════
      5. ESCALAS CRUDAS (primitivos tipográficos)
@@ -470,7 +494,21 @@
      detalle de work): #808080 se leía apagado sobre fondo de página. */
   --text-tertiary: var(--color-neutral-500);
   --text-secondary: var(--color-neutral-400); /* el valor del paquete; ver :root */
-  --text-eyebrow: var(--color-accent-600); /* clay/600, 5.36:1 sobre negro */
+  /* 2026-10-12: clay/600 daba 3.66:1 sobre la card (#2a2a2a). clay/500
+     (#f1716d): 5.01:1 sobre card, 7.32:1 sobre la página negra. */
+  --text-eyebrow: var(--color-accent-500);
+
+  /* Pill de marca: en oscuro, el par del paquete (Amber 16 % + amber/200,
+     ≥10:1). Se repite porque el :root de arriba carga después. */
+  --pill-brand-bg: var(--brand-subtle);
+  --pill-brand-text: var(--brand-strong);
+
+  /* Botón destructivo: el paquete pone texto claro (--text-primary)
+     sobre clay/600 = 3.75:1. clay/700 da 5.55:1; press un stop abajo.
+     El hover del paquete (--background-subtle) no se toca. */
+  --button-danger-bg: var(--color-accent-700);
+  --button-danger-border: var(--color-accent-700);
+  --button-danger-bg-press: var(--color-accent-800);
 
   --brand-section-texture: url("/images/bg-mobile.webp");
 
@@ -498,21 +536,25 @@
   --feedback-warning-icon: #f4a508; /* amber/400 */
   --feedback-warning-border: #6e4802; /* amber/800 */
   --feedback-warning-text: #fdbf66; /* amber/300, 9.44:1 (mismo tono que el fill de marca — a propósito, ver propuesta sección 6) */
+  /* Se lee café, y es lo que es: un ámbar oscuro ES marrón. No hay stop
+     amber oscuro que se lea ámbar; los que sí se leen (300/400) no
+     dejan contraste para el texto amber/300 encima. amber/900 (#4f3301)
+     da 7.1:1 pero es igual de café. Se queda en 950 (9.44:1). */
   --feedback-warning-bg: #352000; /* amber/950 */
 
-  --feedback-info-border: #11587a; /* sky/800 */
-  --feedback-info-text: #7cc1eb; /* sky/400, 7.72:1 */
-  --feedback-info-bg: #00293d; /* sky/950 */
-  --feedback-info-icon: #7cc1eb; /* sky/400 */
+  --feedback-info-border: var(--color-info-800); /* sky/800 */
+  --feedback-info-text: var(--color-info-400); /* sky/400, 7.72:1 */
+  --feedback-info-bg: var(--color-info-950); /* sky/950 */
+  --feedback-info-icon: var(--color-info-400); /* sky/400 */
 
   --feedback-success-icon: #a2d9d4; /* jade/300 */
   --feedback-success-border: #125d59; /* jade/800 */
   --feedback-success-text: #a2d9d4; /* jade/300, 9.62:1 */
   --feedback-success-bg: #002c2a; /* jade/950 */
 
-  --interaction-link-default: #7cc1eb; /* sky/400 */
-  --interaction-link-hover: #a0d4f5; /* sky/300, más claro en hover oscuro */
-  --focus-ring-color: #7cc1eb; /* sky/400, 10.68:1 */
+  --interaction-link-default: var(--color-info-400); /* sky/400 */
+  --interaction-link-hover: var(--color-info-300); /* sky/300, más claro en hover oscuro */
+  --focus-ring-color: var(--color-info-400); /* sky/400, 10.68:1 */
 
   /* Escalera de 4 niveles (revisión de sitio completo, 2026-08-12; card
      re-oscurecida el mismo día tras feedback directo sobre WorkGallery —

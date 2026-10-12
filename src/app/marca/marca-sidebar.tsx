@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, LogOut } from "lucide-react";
@@ -8,14 +9,16 @@ import { cn } from "@ui/lib/utils";
 import { Logo } from "./logo/marks";
 import { MARCA_GROUPS, MARCA_HOME, MARCA_OUT, isActive, type NavItem } from "./lib/nav";
 import { salir } from "./lib/auth-actions";
-import { useToc, type Toc } from "./lib/use-toc";
+import { MARCA, hasOwner } from "./lib/config";
+import { aOwner } from "./lib/owner-copy";
+import { focusSection, useToc, type Toc } from "./lib/use-toc";
 
 /**
  * Sidebar de escritorio (lg+). Tres cosas a la vez:
  * 1. Dónde estoy: las tres capas del portal, con la página activa marcada.
  * 2. Qué hay en esta página: el índice de la página activa, armado desde sus
  *    <section id> de primer nivel, con la sección visible resaltada al scrollear.
- * 3. Salidas: tema, laboratorio, sitio y cerrar sesión.
+ * 3. Salidas: sitio, tema y cerrar sesión; versión y a quién escribir.
  *
  * El índice no se mantiene a mano: lee el DOM. Una sección nueva con id y h2
  * aparece sola; `data-toc` pisa el texto cuando el h2 es largo o no existe.
@@ -44,17 +47,28 @@ function Item({
   current: string;
 }) {
   const Icon = item.icon;
+  const list = useRef<HTMLOListElement>(null);
+  // El índice tiene scroll propio: la sección que se lee no se esconde abajo.
+  useEffect(() => {
+    const ol = list.current;
+    const on = ol?.querySelector<HTMLElement>('[aria-current="location"]');
+    if (!ol || !on) return;
+    const top = on.offsetTop - ol.offsetTop;
+    if (top < ol.scrollTop) ol.scrollTop = top;
+    else if (top + on.offsetHeight > ol.scrollTop + ol.clientHeight)
+      ol.scrollTop = top + on.offsetHeight - ol.clientHeight;
+  }, [current]);
   return (
     <li>
       <Link
         href={item.href}
         aria-current={active ? "page" : undefined}
         className={cn(
-          "group relative flex items-center gap-3 rounded-[var(--radius-md)] px-3 py-2 font-sans text-body-sm font-bold transition-[background-color,color]",
+          "group relative flex items-center gap-3 rounded-[var(--radius-md)] px-3 py-1.5 font-sans text-body-sm font-bold transition-[background-color,color]",
           motion,
           focus,
           active
-            ? "bg-[var(--background-subtle)] text-[var(--text-primary)]"
+            ? "bg-[var(--brand-subtle)] text-[var(--text-primary)]"
             : cn("text-[var(--text-secondary)]", lift),
         )}
       >
@@ -95,9 +109,14 @@ function Item({
       </Link>
 
       {active && toc.length > 0 ? (
+        // Scroll propio, con el alto que deja libre el resto del sidebar (~43rem:
+        // marca, 10 ítems, grupos y pie), entre 5 y 14rem. Con las 12 secciones de
+        // Sistema, un índice entero empujaba fuera de pantalla el resto del menú
+        // (1440×900 y 768 de alto). Si el menú crece mucho, el nav scrollea igual.
         <ol
+          ref={list}
           aria-label={`En ${item.label}`}
-          className="mb-2 ml-[1.15rem] mt-1 grid border-l border-border"
+          className="relative mb-2 ml-[1.15rem] mt-1 grid max-h-[clamp(5rem,calc(100dvh-43rem),14rem)] overflow-y-auto overscroll-contain border-l border-border"
         >
           {toc.map((t) => {
             const on = t.id === current;
@@ -105,6 +124,8 @@ function Item({
               <li key={t.id}>
                 <a
                   href={`#${t.id}`}
+                  // El ancla nativa hace el scroll; después, el foco a la sección.
+                  onClick={() => requestAnimationFrame(() => focusSection(t.id))}
                   aria-current={on ? "location" : undefined}
                   className={cn(
                     "-ml-px block border-l py-1 pl-4 pr-2 font-sans text-body-xs transition-[border-color,color]",
@@ -126,13 +147,14 @@ function Item({
   );
 }
 
+/** `protegido`: hay que mostrar "Salir" (todo menos el modo local abierto). */
 export default function MarcaSidebar({ protegido }: { protegido: boolean }) {
   const pathname = usePathname();
   const { toc, current } = useToc(pathname);
 
   return (
     <aside
-      aria-label="Marca VPER"
+      aria-label={MARCA.name}
       className="sticky top-0 hidden h-dvh flex-col border-r border-border bg-background lg:flex"
     >
       <div
@@ -146,18 +168,18 @@ export default function MarcaSidebar({ protegido }: { protegido: boolean }) {
 
       <Link
         href={MARCA_HOME.href}
-        className={cn("grid gap-2 px-6 pb-5 pt-6 text-[var(--text-primary)]", focus)}
+        className={cn("grid gap-2 px-6 pb-4 pt-5 text-[var(--text-primary)]", focus)}
       >
         <Logo k="h2" className="h-auto w-36" />
         <span className="flex items-center gap-2 font-sans text-label-xs font-bold uppercase tracking-widest text-[var(--text-secondary)]">
-          Marca
+          {MARCA.name}
           <span className="rounded-[var(--pill-radius)] border border-border px-1.5 py-px">
-            Uso interno
+            Equipo
           </span>
         </span>
       </Link>
 
-      <nav aria-label="Marca" className="min-h-0 flex-1 overflow-y-auto px-3 pb-6">
+      <nav aria-label={`Secciones de ${MARCA.name}`} className="min-h-0 flex-1 overflow-y-auto px-3 pb-4">
         <ul className="grid gap-0.5">
           <Item
             item={MARCA_HOME}
@@ -167,7 +189,7 @@ export default function MarcaSidebar({ protegido }: { protegido: boolean }) {
           />
         </ul>
         {MARCA_GROUPS.map((g) => (
-          <div key={g.label} className="mt-5">
+          <div key={g.label} className="mt-4">
             <p className="mb-1.5 px-3 font-sans text-label-xs font-bold uppercase tracking-widest text-[var(--text-eyebrow)]">
               {g.label}
             </p>
@@ -186,51 +208,66 @@ export default function MarcaSidebar({ protegido }: { protegido: boolean }) {
         ))}
       </nav>
 
-      <div className="grid shrink-0 gap-1 border-t border-border px-3 py-4">
-        {MARCA_OUT.map((l) => (
-          <Link
-            key={l.href}
-            href={l.href}
-            className={cn(
-              "group flex items-center justify-between rounded-[var(--radius-md)] px-3 py-1.5 font-sans text-body-sm font-bold text-[var(--text-secondary)] transition-[background-color,color]",
-              lift,
-              motion,
-              focus,
-            )}
-          >
-            {l.label}
-            <ArrowUpRight
-              aria-hidden
+      <div className="grid shrink-0 gap-2 border-t border-border px-3 py-3">
+        {/* Sitio, tema y Salir en una fila: el alto se lo queda el menú. */}
+        <div className="flex items-center gap-1">
+          {MARCA_OUT.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
               className={cn(
-                "size-4 transition-[translate]",
-                motion,
-                "group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-focus-visible:translate-x-0.5 group-focus-visible:-translate-y-0.5 motion-reduce:translate-none",
-              )}
-            />
-          </Link>
-        ))}
-        <div className="flex items-center justify-between px-3 pt-1">
-          <span className="font-sans text-label-xs font-bold uppercase tracking-widest text-[var(--text-secondary)]">
-            Tema
-          </span>
-          <ThemeToggle />
-        </div>
-        {protegido ? (
-          <form action={salir}>
-            <button
-              type="submit"
-              className={cn(
-                "flex w-full items-center justify-between rounded-[var(--radius-md)] px-3 py-1.5 font-sans text-body-sm font-bold text-[var(--text-secondary)] transition-[background-color,color]",
+                "group flex min-w-0 flex-1 items-center gap-1.5 rounded-[var(--radius-md)] px-3 py-1.5 font-sans text-body-sm font-bold text-[var(--text-secondary)] transition-[background-color,color]",
                 lift,
                 motion,
                 focus,
               )}
             >
-              Salir
-              <LogOut aria-hidden className="size-4" />
-            </button>
-          </form>
-        ) : null}
+              {l.label}
+              <ArrowUpRight
+                aria-hidden
+                className={cn(
+                  "size-4 transition-[translate]",
+                  motion,
+                  "group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-focus-visible:translate-x-0.5 group-focus-visible:-translate-y-0.5 motion-reduce:translate-none",
+                )}
+              />
+            </Link>
+          ))}
+          <ThemeToggle />
+          {protegido ? (
+            <form action={salir}>
+              <button
+                type="submit"
+                className={cn(
+                  "flex items-center gap-1.5 rounded-[var(--radius-md)] px-3 py-1.5 font-sans text-body-sm font-bold text-[var(--text-secondary)] transition-[background-color,color]",
+                  lift,
+                  motion,
+                  focus,
+                )}
+              >
+                Salir
+                <LogOut aria-hidden className="size-4" />
+              </button>
+            </form>
+          ) : null}
+        </div>
+        <p className="px-3 font-sans text-body-xs text-[var(--text-secondary)]">
+          v{MARCA.version} · {MARCA.updated}
+          <br />
+          {hasOwner() ? (
+            <>
+              Dueño: {MARCA.owner.name} ·{" "}
+              <a
+                href={`mailto:${MARCA.owner.email}`}
+                className={cn("underline underline-offset-2", focus)}
+              >
+                {MARCA.owner.email}
+              </a>
+            </>
+          ) : (
+            <>¿Algo mal? Escribile {aOwner()}.</>
+          )}
+        </p>
       </div>
     </aside>
   );

@@ -480,6 +480,11 @@ export function mailtoHref(email: string): string {
   return `mailto:${address}`;
 }
 
+/** Formato de correo razonable: algo@dominio.tld, sin espacios. No verifica que exista. */
+export function isValidEmail(email: string): boolean {
+  return /^[^\s@<>"']+@[^\s@<>"']+\.[a-z]{2,}$/i.test(email.trim());
+}
+
 /** Asegura https://: "vpermedia.com" → "https://vpermedia.com"; http:// → https://. */
 export function webHref(url: string): string {
   const u = url.trim();
@@ -674,6 +679,16 @@ export interface SignatureIssue {
   message: string;
 }
 
+/** Deshace el escape de atributos de `escAttr` (solo para leer el HTML generado). */
+function decodeEntities(s: string): string {
+  return s
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&");
+}
+
 /**
  * Chequeo estático del HTML final contra las reglas de este archivo. No reemplaza
  * mirar la firma en los clientes, pero atrapa lo que rompe en silencio.
@@ -689,6 +704,12 @@ export function auditSignature(html: string): SignatureIssue[] {
   }
   if (/\shref="(https?:\/\/|mailto:|tel:)?"/i.test(html)) {
     add("warn", "empty-href", "Hay un enlace sin destino (campo vacío).");
+  }
+  for (const m of html.matchAll(/\shref="mailto:([^"]*)"/gi)) {
+    const address = decodeEntities(m[1] ?? "");
+    if (address && !isValidEmail(address)) {
+      add("error", "mailto", `El correo no tiene formato válido: ${address}`);
+    }
   }
   if (html.length > GMAIL_SIGNATURE_MAX_CHARS) {
     add("error", "size", `${html.length} caracteres: Gmail acepta hasta 10.000.`);

@@ -102,44 +102,46 @@ export default function LogoDownload() {
           </div>
         </div>
 
-        <ul className="grid grid-cols-2 gap-3">
-          {KEYS.map((k) => (
-            <li
-              key={k}
-              className="grid min-w-0 content-between gap-3 rounded-[var(--radius-lg)] bg-[var(--color-neutral-900)] p-4"
-            >
-              <div className="grid h-20 place-items-center">
-                <Logo
-                  k={k}
-                  decorative
-                  style={{
-                    width: k === "h2" ? "92%" : k === "h1" ? "74%" : "auto",
-                    height: k === "v" || k === "iso" ? "100%" : "auto",
-                  }}
-                />
-              </div>
-              <div className="flex items-center justify-between gap-2">
-                <b className="truncate font-sans text-body-sm font-bold">
-                  {LOGO_FILES[k].name}
-                </b>
-                <button
-                  type="button"
-                  onClick={() => run(k)}
-                  disabled={st.busy !== null}
-                  aria-label={`Descargar solo ${LOGO_FILES[k].name}`}
-                  className="inline-flex shrink-0 items-center gap-1 rounded-[var(--radius-sm)] px-1.5 py-1 font-sans text-label-xs font-bold uppercase text-[var(--color-neutral-300)] transition-colors hover:bg-[var(--color-neutral-800)] hover:text-[var(--color-neutral-50)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] disabled:opacity-50"
-                >
-                  {st.busy === k ? (
-                    <LoaderCircle aria-hidden className="size-3.5 animate-spin" />
-                  ) : (
-                    <Download aria-hidden className="size-3.5" />
-                  )}
-                  .zip
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <div className="@container min-w-0">
+          <ul className="grid grid-cols-1 gap-3 @sm:grid-cols-2">
+            {KEYS.map((k) => (
+              <li
+                key={k}
+                className="grid min-w-0 content-between gap-3 rounded-[var(--radius-lg)] bg-[var(--color-neutral-900)] p-4"
+              >
+                <div className="grid h-20 place-items-center">
+                  <Logo
+                    k={k}
+                    decorative
+                    style={{
+                      width: k === "h2" ? "92%" : k === "h1" ? "74%" : "auto",
+                      height: k === "v" || k === "iso" ? "100%" : "auto",
+                    }}
+                  />
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <b className="truncate font-sans text-body-sm font-bold">
+                    {LOGO_FILES[k].name}
+                  </b>
+                  <button
+                    type="button"
+                    onClick={() => run(k)}
+                    disabled={st.busy !== null}
+                    aria-label={`Descargar solo ${LOGO_FILES[k].name}`}
+                    className="inline-flex shrink-0 items-center gap-1 rounded-[var(--radius-sm)] px-1.5 py-1 font-sans text-label-xs font-bold uppercase text-[var(--color-neutral-300)] transition-colors hover:bg-[var(--color-neutral-800)] hover:text-[var(--color-neutral-50)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] disabled:opacity-50"
+                  >
+                    {st.busy === k ? (
+                      <LoaderCircle aria-hidden className="size-3.5 animate-spin" />
+                    ) : (
+                      <Download aria-hidden className="size-3.5" />
+                    )}
+                    .zip
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );

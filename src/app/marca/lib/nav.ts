@@ -1,8 +1,11 @@
 import {
   Bot,
+  Box,
+  Download,
   Home,
   Image,
   Mail,
+  Package,
   MessageSquareQuote,
   Palette,
   Shapes,
@@ -11,8 +14,12 @@ import {
 
 /**
  * Mapa de Marca VPER: una sola fuente para el sidebar de escritorio y la barra
- * de mobile. Tres capas, como en un portal de marca: design system,
- * lineamientos y recursos. Una pieza nueva se suma acá y aparece en los dos.
+ * de mobile. Ordenado por uso: primero lo que consulta todo el equipo
+ * (lineamientos), después lo que se baja (recursos) y al final lo de diseño y
+ * desarrollo. Una pieza nueva se suma acá y aparece en los dos.
+ *
+ * Un ítem con ancla (`/marca/logo#descargas`) es un atajo a una sección: nunca
+ * se marca como página activa (ver `isActive`).
  */
 
 export interface NavItem {
@@ -35,17 +42,6 @@ export const MARCA_HOME: NavItem = {
 };
 
 export const MARCA_GROUPS: readonly NavGroup[] = [
-  {
-    label: "Design system",
-    items: [
-      {
-        href: "/marca/sistema",
-        label: "Sistema",
-        hint: "Color, tipo y componentes, leídos en vivo",
-        icon: Palette,
-      },
-    ],
-  },
   {
     label: "Lineamientos",
     items: [
@@ -84,17 +80,49 @@ export const MARCA_GROUPS: readonly NavGroup[] = [
         hint: "Ocho propuestas, listas para Gmail y Outlook",
         icon: Mail,
       },
+      {
+        href: "/marca/logo#descargas",
+        label: "Descargas del logo",
+        hint: "SVG y PNG en negro, blanco y amber",
+        icon: Download,
+      },
+      {
+        href: "/marca/personaje#descargas",
+        label: "Kit de vpercito",
+        hint: "PNG, avatar y emoji, en un ZIP",
+        icon: Package,
+      },
+    ],
+  },
+  {
+    label: "Para diseño y desarrollo",
+    items: [
+      {
+        href: "/marca/sistema",
+        label: "Sistema",
+        hint: "Color, tipo y componentes, leídos en vivo",
+        icon: Palette,
+      },
+      {
+        href: "/lab/proceso",
+        label: "Lab 3D",
+        hint: "Los íconos 3D del proceso, en vivo",
+        icon: Box,
+      },
     ],
   },
 ];
 
-/** Fuera de Marca: laboratorio y sitio público. */
-export const MARCA_OUT = [
-  { href: "/lab/proceso", label: "Lab 3D" },
-  { href: "/", label: "Sitio" },
-] as const;
+/** Fuera de Marca: el sitio público. */
+export const MARCA_OUT = [{ href: "/", label: "Sitio" }] as const;
 
+/**
+ * Página activa. Un ítem con ancla es un atajo a una sección de otra página
+ * (o de la misma): no cuenta como página activa, así no quedan dos marcados.
+ */
 export const isActive = (pathname: string, href: string) =>
-  href === "/marca"
+  href.includes("#")
+    ? false
+    : href === "/marca"
     ? pathname === href
     : pathname === href || pathname.startsWith(`${href}/`);

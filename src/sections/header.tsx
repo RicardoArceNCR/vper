@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useId } from "react";
+import { useState, useEffect, useId, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@ui/components/button";
@@ -58,6 +58,8 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const grainId = useId().replace(/:/g, "");
+  const headerRef = useRef<HTMLElement>(null);
+  const burgerRef = useRef<HTMLButtonElement>(null);
   const reduceMotion = useReducedMotion();
   // La sonda de scroll solo encuentra secciones en la home; fuera de
   // ella el item activo lo decide el pathname (PROYECTOS en /work y en
@@ -78,12 +80,56 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Menú mobile = diálogo modal: mientras está abierto, el resto de la página
+  // queda `inert` (ni Tab ni lector de pantalla llegan a "VER REEL" de atrás) y
+  // el Tab da la vuelta dentro del header (logo, hamburguesa y menú). Escape
+  // cierra y devuelve el foco a la hamburguesa. Solo React + DOM: se porta a Vite.
   useEffect(() => {
     if (!mobileMenuOpen) return;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+
+    // inert a todo lo que no contiene al header, subiendo hasta <body>.
+    const inerted: Element[] = [];
+    for (let node = headerRef.current; node && node !== document.body; ) {
+      const parent: HTMLElement | null = node.parentElement;
+      if (!parent) break;
+      for (const sib of Array.from(parent.children)) {
+        if (sib !== node && !sib.hasAttribute("inert")) {
+          sib.setAttribute("inert", "");
+          inerted.push(sib);
+        }
+      }
+      node = parent;
+    }
+
+    // Primer foco: el primer enlace del menú (el panel monta en este mismo commit).
+    const first = document.querySelector<HTMLElement>("#mobile-nav a[href]");
+    first?.focus();
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMobileMenuOpen(false);
+      if (e.key === "Escape") {
+        setMobileMenuOpen(false);
+        burgerRef.current?.focus();
+        return;
+      }
+      if (e.key !== "Tab" || !headerRef.current) return;
+      const items = Array.from(
+        headerRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => el.getClientRects().length > 0);
+      if (!items.length) return;
+      const firstItem = items[0]!;
+      const lastItem = items[items.length - 1]!;
+      const active = document.activeElement;
+      if (e.shiftKey && (active === firstItem || !headerRef.current.contains(active))) {
+        e.preventDefault();
+        lastItem.focus();
+      } else if (!e.shiftKey && (active === lastItem || !headerRef.current.contains(active))) {
+        e.preventDefault();
+        firstItem.focus();
+      }
     };
     const mq = window.matchMedia("(min-width: 768px)");
     const onMq = () => {
@@ -93,13 +139,14 @@ export default function Header() {
     mq.addEventListener("change", onMq);
     return () => {
       document.body.style.overflow = prevOverflow;
+      for (const el of inerted) el.removeAttribute("inert");
       window.removeEventListener("keydown", onKey);
       mq.removeEventListener("change", onMq);
     };
   }, [mobileMenuOpen]);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50">
+    <header ref={headerRef} className="fixed top-0 left-0 w-full z-50">
       {/* Blur acá, no en <header>: el overlay mobile es hermano, no agranda
           la región de backdrop-filter (eso sí pegaría al scrollear). */}
       <div
@@ -177,6 +224,7 @@ export default function Header() {
           </div>
 
           <button
+            ref={burgerRef}
             type="button"
             className="md:hidden shrink-0 flex size-11 items-center justify-center text-[var(--nav-logo-text)]"
             onClick={() => setMobileMenuOpen((open) => !open)}

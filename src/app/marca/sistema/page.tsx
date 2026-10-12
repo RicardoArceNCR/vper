@@ -5,6 +5,7 @@ import { Card } from "@ui/components/card";
 import { Input } from "@ui/components/input";
 import { Pill } from "@ui/components/pill";
 import ServicesGrid from "@/sections/services-grid";
+import { Crumbs, PageHero, Section } from "../lib/ui";
 import { Pair, Ramp, ReplayHero, Swatch, TokenName, TypeRow, WidthProbe } from "../live";
 
 /**
@@ -19,20 +20,6 @@ import { Pair, Ramp, ReplayHero, Swatch, TokenName, TypeRow, WidthProbe } from "
  */
 
 export const metadata: Metadata = { title: "Sistema" };
-
-const SECTIONS = [
-  ["escalas", "Escalas"],
-  ["marca", "Marca"],
-  ["espacio", "Espacio"],
-  ["tipo", "Tipografía"],
-  ["superficies", "Superficies"],
-  ["radio", "Radio y sombra"],
-  ["componentes", "Componentes"],
-  ["efectos", "Efectos de marca"],
-  ["titulares", "Titulares"],
-  ["movimiento", "Movimiento"],
-  ["composicion", "Composición"],
-] as const;
 
 const SPACING = [
   "1",
@@ -52,8 +39,9 @@ const RADII = ["none", "xs", "sm", "md", "lg", "xl", "2xl", "full"] as const;
 const SHADOWS = ["sm", "md", "lg"] as const;
 
 // nowrap: en 390 el display-hero no entra. Se recorta en vez de partir
-// la palabra — la muestra es del tamaño, no del titular.
-const display = "font-display font-black uppercase tracking-tight whitespace-nowrap";
+// la palabra — la muestra es del tamaño, no del titular. Sin tracking-tight:
+// el tracking lo pone el token, y la muestra tiene que mostrar ese.
+const display = "font-display font-black uppercase whitespace-nowrap";
 const TYPE: { name: string; className: string; sample: ReactNode }[] = [
   {
     name: "text-display-hero",
@@ -153,34 +141,15 @@ const TYPE: { name: string; className: string; sample: ReactNode }[] = [
       "font-sans text-overline-sm font-bold uppercase text-[var(--text-eyebrow)]",
     sample: "Portafolio",
   },
-  { name: "text-code-md", className: "font-mono text-code-md", sample: "--brand-action" },
+  // No hay utilidad text-code-md en el bridge: se lee el estilo de brand.css.
+  {
+    name: "--typography-styles-code-md",
+    className:
+      "font-mono text-[length:var(--typography-styles-code-md-size)] leading-[var(--typography-styles-code-md-line-height)]",
+    sample: "--brand-action",
+  },
 ];
 
-function Section({
-  id,
-  title,
-  lede,
-  children,
-}: {
-  id: string;
-  title: string;
-  lede: ReactNode;
-  children: ReactNode;
-}) {
-  return (
-    <section id={id} className="scroll-mt-20 border-t border-border py-14 md:py-20">
-      <div className="@container mb-8 min-w-0 max-w-3xl md:mb-10">
-        <h2 className="font-display display-title-sm font-black uppercase tracking-tight">
-          {title}
-        </h2>
-        <p className="mt-4 font-sans text-body-md font-medium text-muted-foreground">
-          {lede}
-        </p>
-      </div>
-      {children}
-    </section>
-  );
-}
 
 function Sub({ children }: { children: ReactNode }) {
   return (
@@ -190,87 +159,98 @@ function Sub({ children }: { children: ReactNode }) {
   );
 }
 
+/** Nota al pie de una muestra, para el equipo. */
+function Note({ children }: { children: ReactNode }) {
+  return (
+    <p className="mt-4 max-w-2xl font-sans text-body-sm text-[var(--text-secondary)]">
+      {children}
+    </p>
+  );
+}
+
+/**
+ * El detalle técnico de una sección (nombres de archivo, clases, umbrales):
+ * chico y aparte, para que la bajada quede en idioma del equipo.
+ */
+function DevNote({ children }: { children: ReactNode }) {
+  return (
+    <aside className="mt-8 max-w-3xl border-l-2 border-[var(--border-default)] pl-4 font-sans text-body-xs text-[var(--text-secondary)]">
+      <p className="mb-1 font-sans text-label-xs font-bold uppercase tracking-widest text-[var(--text-tertiary)]">
+        Para desarrollo
+      </p>
+      <div className="grid gap-1">{children}</div>
+    </aside>
+  );
+}
+
 export default function SistemaPage() {
   return (
     <main className="wrap mx-auto max-w-[1217px] pb-24">
-      <div className="py-12 md:py-20">
-        <p className="font-sans text-overline-sm font-bold uppercase text-[var(--text-eyebrow)]">
-          Marca · Design system
-        </p>
-        <div className="@container min-w-0">
-          <h1 className="mt-3 font-display display-title font-black uppercase tracking-tight title-brand-gradient">
-            Sistema.
-          </h1>
-        </div>
-        <p className="mt-6 max-w-2xl font-sans text-body-lg font-medium text-muted-foreground">
-          @misitio/ui más brand.css, resuelto por el navegador. Cada hex, tamaño y
-          contraste de esta página se lee en vivo: si un override deja de ganar, se ve acá
-          antes que en una sección. Usá el sol o la luna arriba para cambiar de tema.
-        </p>
-        <nav aria-label="Secciones" className="mt-8 flex flex-wrap gap-2">
-          {SECTIONS.map(([id, label]) => (
-            <a
-              key={id}
-              href={`#${id}`}
-              className="rounded-[var(--pill-radius)] border border-border px-3 py-1 font-sans text-label-sm font-bold uppercase text-[var(--text-secondary)] transition-colors hover:border-[var(--border-strong)] hover:text-foreground"
-            >
-              {label}
-            </a>
-          ))}
-        </nav>
-      </div>
+      <Crumbs
+        trail={["Design system", "Sistema"]}
+        note="En revisión · Actualizado oct. 2026"
+      />
+      <PageHero
+        over="Design system"
+        title="Con qué está"
+        accent="hecho."
+        lede="Los colores, las letras y las piezas del sitio, tal como se ven hoy. Tocá un color para copiarlo. Cada muestra trae su nombre técnico para diseño y desarrollo."
+      />
 
       <Section
         id="escalas"
+        toc="Escalas"
+        over="Tokens · color"
         title="Escalas"
-        lede={
-          <>
-            Cada familia se ancla en el hex de marca en el stop donde cae su luminancia,
-            no en un 500 forzado. El stop con aro es ese hex. Los nombres siguen siendo
-            los del paquete (main, accent, leaf, info): brand.css les mete la escala nueva
-            por rol.
-          </>
-        }
+        lede="Las cuatro familias de color de VPER (Amber, Clay, Jade y Sky) y el neutro, de claro a oscuro. El cuadro con aro es el color de marca tal cual; el resto de la escala se arma alrededor de él."
       >
         <div className="grid gap-10">
           <Ramp
             family="main"
             role="Amber"
             anchor={300}
-            note="main · marca, aviso · #FDBF66"
+            note="marca, aviso · #FDBF66"
           />
           <Ramp
             family="accent"
             role="Clay"
             anchor={600}
-            note="accent · error, cejas · #D55856"
+            note="error, cejas · #D55856"
           />
-          <Ramp family="leaf" role="Jade" anchor={400} note="leaf · éxito · #74BDB7" />
-          <Ramp
-            family="info"
-            role="Sky"
-            anchor={500}
-            note="info · enlaces, foco · #5EB2E3"
-          />
-          <Ramp family="neutral" role="Neutral" note="acromático, croma 0" />
+          <Ramp family="leaf" role="Jade" anchor={400} note="éxito · #74BDB7" />
+          <Ramp family="info" role="Sky" anchor={500} note="enlaces, foco · #5EB2E3" />
+          <Ramp family="neutral" role="Neutral" note="gris puro, sin tinte" />
         </div>
+        <DevNote>
+          <p>
+            Cada familia se ancla en el hex de marca en el stop donde cae su luminancia,
+            no en un 500 forzado. Los tokens conservan los nombres del paquete:{" "}
+            <TokenName>--color-main-*</TokenName> = Amber,{" "}
+            <TokenName>--color-accent-*</TokenName> = Clay,{" "}
+            <TokenName>--color-leaf-*</TokenName> = Jade,{" "}
+            <TokenName>--color-info-*</TokenName> = Sky. brand.css les mete la escala
+            nueva por rol.
+          </p>
+        </DevNote>
       </Section>
 
       <Section
         id="marca"
+        toc="Marca"
+        over="Tokens · roles"
         title="Marca"
-        lede="Los roles que usa la interfaz, y el contraste de cada par medido contra el fondo real del tema activo. Un par en rojo no llega al mínimo para texto (4.5:1, o 3:1 para el anillo de foco)."
+        lede="Los colores con un trabajo fijo en la interfaz: botón, enlace, ceja, foco. Cada par muestra su contraste medido en el tema que estés viendo. Si el número sale en rojo, ese par no se lee bien como texto."
       >
         <Sub>Paleta</Sub>
         <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-8">
-          <Swatch token="--brand-action" label="action" anchor />
-          <Swatch token="--brand-action-hover" label="action hover" />
-          <Swatch token="--brand-action-press" label="action press" />
-          <Swatch token="--brand-strong" label="strong" />
-          <Swatch token="--brand-sky" label="sky" anchor />
-          <Swatch token="--color-accent-600" label="clay" anchor />
-          <Swatch token="--brand-leaf" label="teal" anchor />
-          <Swatch token="--brand-subtle" label="subtle" />
+          <Swatch token="--brand-action" label="Amber · acción" anchor />
+          <Swatch token="--brand-action-hover" label="Acción hover" />
+          <Swatch token="--brand-action-press" label="Acción press" />
+          <Swatch token="--brand-strong" label="Amber fuerte" />
+          <Swatch token="--brand-sky" label="Sky" anchor />
+          <Swatch token="--color-accent-600" label="Clay" anchor />
+          <Swatch token="--brand-leaf" label="Jade" anchor />
+          <Swatch token="--brand-subtle" label="Amber suave" />
         </div>
 
         <div className="mt-10">
@@ -280,7 +260,13 @@ export default function SistemaPage() {
               fg="--text-on-brand"
               bg="--brand-action"
               label="Texto sobre la acción"
-              sample="Agenda"
+              sample="¿Nos reunimos?"
+            />
+            <Pair
+              fg="--pill-brand-text"
+              bg="--pill-brand-bg"
+              label="Pill de marca"
+              sample={<span className="text-label-sm uppercase">Destacada</span>}
             />
             <Pair fg="--text-brand" bg="--background-page" label="Texto de marca" />
             <Pair
@@ -303,11 +289,11 @@ export default function SistemaPage() {
               min={4.5}
             />
           </div>
-          <p className="mt-4 max-w-2xl font-sans text-body-sm text-muted-foreground">
-            El último par es la razón de una regla: amber como texto o logo funciona sobre
-            negro y falla sobre blanco. En claro, la palabra destacada y el item activo
-            del nav no van en <TokenName>--brand-main</TokenName>.
-          </p>
+          <Note>
+            El último par explica una regla: Amber como texto o logo funciona sobre negro
+            y falla sobre blanco. En claro, la palabra destacada y el ítem activo del menú
+            no van en Amber.
+          </Note>
         </div>
 
         <div className="mt-10">
@@ -326,12 +312,26 @@ export default function SistemaPage() {
             ))}
           </div>
         </div>
+        <DevNote>
+          <p>
+            Umbral WCAG AA: 4.5:1 para texto, 3:1 para el anillo de foco. Se mide contra
+            el fondo que resolvió el navegador en el tema activo. El Amber como texto es{" "}
+            <TokenName>--brand-main</TokenName>: en claro, usá{" "}
+            <TokenName>--text-brand</TokenName>.
+          </p>
+          <p>
+            La pill de marca tiene fondo translúcido (<TokenName>--pill-brand-bg</TokenName>
+            ): el número se mide contra el fondo opaco de abajo.
+          </p>
+        </DevNote>
       </Section>
 
       <Section
         id="espacio"
+        toc="Espacio"
+        over="Tokens · espacio"
         title="Espacio"
-        lede="Escala del paquete. El largo de la barra es el token. La página usa .wrap: 16px de margen en mobile, 32px desde 768."
+        lede="Los pasos de espacio para márgenes y separaciones. El largo de cada barra es el paso. No hay medidas sueltas: todo sale de esta lista."
       >
         <ul className="flex flex-wrap items-end gap-x-6 gap-y-4">
           {SPACING.map((step) => (
@@ -344,19 +344,20 @@ export default function SistemaPage() {
             </li>
           ))}
         </ul>
+        <DevNote>
+          <p>
+            Escala del paquete. La página usa <TokenName>.wrap</TokenName>: 16px de margen
+            en mobile, 32px desde 768.
+          </p>
+        </DevNote>
       </Section>
 
       <Section
         id="tipo"
+        toc="Tipografía"
+        over="Tokens · tipografía"
         title="Tipografía"
-        lede={
-          <>
-            Display en Obviously Wide Black, siempre en mayúsculas. Todo lo demás en
-            Montserrat: títulos en 700, cuerpo en 500, etiquetas y botones en 700. La
-            columna del medio es lo que computó el navegador: tamaño / interlineado ·
-            tracking · peso.
-          </>
-        }
+        lede="Display en Obviously Wide Black, siempre en mayúsculas. Todo lo demás en Montserrat: títulos en 700, cuerpo en 500, etiquetas y botones en 700. Al lado de cada muestra va su medida real: tamaño / interlineado · espaciado · peso."
       >
         <ul>
           {TYPE.map((t) => (
@@ -371,16 +372,25 @@ export default function SistemaPage() {
             Crear.
           </TypeRow>
         </ul>
-        <p className="mt-4 max-w-2xl font-sans text-body-sm text-muted-foreground">
+        <Note>
           Yellowtail es solo para el golpe del hero, una palabra. No es un estilo de
           texto.
-        </p>
+        </Note>
+        <DevNote>
+          <p>
+            La medida la computa el navegador, no se copia de un comentario. Código no
+            tiene utilidad <TokenName>text-code-md</TokenName> en el bridge: se pinta con{" "}
+            <TokenName>--typography-styles-code-md-size</TokenName> y su line-height.
+          </p>
+        </DevNote>
       </Section>
 
       <Section
         id="superficies"
+        toc="Superficies"
+        over="Tokens · superficies"
         title="Superficies"
-        lede="La escalera de fondos. En oscuro son cuatro niveles: página negra, sección, card y borde. ServicesGrid invierte la card a propósito: se hunde al negro de la página y la forma la dibuja el borde fuerte."
+        lede="La escalera de fondos. En oscuro son cuatro niveles: página negra, sección, card y borde. La grilla de servicios invierte la card a propósito: la hunde al negro de la página y la dibuja con el borde."
       >
         <div className="rounded-[var(--radius-lg)] border border-border bg-[var(--background-page)] p-4 md:p-6">
           <TokenName>--background-page</TokenName>
@@ -394,10 +404,14 @@ export default function SistemaPage() {
                 </p>
               </div>
               <div className="rounded-[var(--card-radius)] border border-[var(--border-strong)] bg-[var(--surface-accent-bg)] p-4">
-                <TokenName>--surface-accent-bg + --border-strong</TokenName>
-                <p className="mt-2 font-sans text-body-sm text-[var(--surface-accent-text)]">
-                  Card hundida · ServicesGrid
-                </p>
+                {/* El fondo es oscuro en los dos temas: el texto lee los
+                    tokens de oscuro para no caer en gris sobre negro. */}
+                <div className="dark">
+                  <TokenName>--surface-accent-bg + --border-strong</TokenName>
+                  <p className="mt-2 font-sans text-body-sm text-[var(--surface-accent-text)]">
+                    Card hundida · servicios
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -409,7 +423,7 @@ export default function SistemaPage() {
           <Pair
             fg="--text-tertiary"
             bg="--background-page"
-            label="Terciario · párrafos muted"
+            label="Terciario · párrafos suaves"
           />
           <Pair
             fg="--text-tertiary"
@@ -439,22 +453,24 @@ export default function SistemaPage() {
           />
           <Pair fg="--text-primary" bg="--surface-raised" label="Texto en card" />
         </div>
-        <p className="mt-4 max-w-2xl font-sans text-body-sm text-muted-foreground">
-          Los pares con ▇▇ comparan dos fondos, no texto. Su umbral es el piso que se
-          aprobó en la revisión (1.2 card/sección, 1.5 borde/card), no un mínimo de
-          accesibilidad.
-        </p>
+        <Note>
+          Los pares con ▇▇ comparan dos fondos, no texto. Su piso es el que se aprobó en
+          la revisión (1.2 card/sección, 1.5 borde/card), no un mínimo de accesibilidad.
+        </Note>
+        <DevNote>
+          <p>
+            La card hundida es la de <TokenName>ServicesGrid</TokenName>; solo ella
+            consume <TokenName>--surface-accent-bg</TokenName>.
+          </p>
+        </DevNote>
       </Section>
 
       <Section
         id="radio"
+        toc="Radio y sombra"
+        over="Tokens · forma"
         title="Radio y sombra"
-        lede={
-          <>
-            El botón pisa <TokenName>--button-radius</TokenName> a xl (16px): rectángulo
-            muy redondeado, no cápsula. Las pills sí son cápsula.
-          </>
-        }
+        lede="Qué tan redondeadas son las esquinas y cuánta sombra llevan las piezas. El botón es un rectángulo muy redondeado, no una cápsula. Las pills sí son cápsula."
       >
         <ul className="flex flex-wrap gap-6">
           {RADII.map((step) => (
@@ -478,14 +494,22 @@ export default function SistemaPage() {
             </li>
           ))}
         </ul>
+        <DevNote>
+          <p>
+            El botón pisa <TokenName>--button-radius</TokenName> a xl (16px). Las pills
+            usan <TokenName>--pill-radius</TokenName>.
+          </p>
+        </DevNote>
       </Section>
 
       <Section
         id="componentes"
+        toc="Componentes"
+        over="Piezas"
         title="Componentes"
-        lede="Los primitivos de src/ui/components, los mismos que se copian al repo de Vite. Hover y foco con mouse y teclado: el primario invierte a oscuro, el secundario a blanco."
+        lede="Las piezas básicas del sitio: botones, campos, pills y cards. Probalas con el mouse y con el teclado: el botón principal se oscurece al pasar encima y el secundario se aclara."
       >
-        <Sub>Button</Sub>
+        <Sub>Botón</Sub>
         <div className="flex flex-wrap items-center gap-4">
           <Button>Primario</Button>
           <Button variant="secondary">Secundario</Button>
@@ -503,7 +527,7 @@ export default function SistemaPage() {
 
         <div className="mt-10 grid gap-10 lg:grid-cols-2">
           <div>
-            <Sub>Input</Sub>
+            <Sub>Campo</Sub>
             <div className="grid gap-4">
               <Input placeholder="Nombre" aria-label="Nombre" />
               <Input placeholder="Correo con error" state="error" aria-label="Correo" />
@@ -525,23 +549,32 @@ export default function SistemaPage() {
                 </Card>
                 <Card interactive>
                   <p className="font-sans text-body-sm">
-                    Interactiva: hover cambia fondo y borde.
+                    Interactiva: al pasar encima cambian fondo y borde.
                   </p>
                 </Card>
               </div>
             </div>
           </div>
         </div>
+        <DevNote>
+          <p>
+            Son los primitivos de <TokenName>src/ui/components</TokenName> (Button, Input,
+            Pill, Card), los mismos que se copian al repo de Vite. Hover y foco: el
+            primario invierte a oscuro, el secundario a blanco.
+          </p>
+        </DevNote>
       </Section>
 
       <Section
         id="efectos"
+        toc="Efectos de marca"
+        over="Piezas · efectos"
         title="Efectos de marca"
-        lede="Las clases de globals.css que hacen que algo se vea VPER. Viven como utilidades, no como componentes: se ponen en una pieza existente."
+        lede="Los toques que hacen que algo se vea VPER: el titular en gradiente, el anillo de color, la textura y la barra de vidrio. No son piezas nuevas: se suman a una que ya existe."
       >
         <div className="grid gap-10">
           <div>
-            <Sub>.title-brand-gradient · .title-solid</Sub>
+            <Sub>Titular en gradiente</Sub>
             <div className="@container min-w-0 max-w-3xl">
               <p className="font-display display-title font-black uppercase tracking-tight title-brand-gradient">
                 Ideas que no se quedan quietas.
@@ -550,14 +583,14 @@ export default function SistemaPage() {
                 Proyectos <span className="title-brand-gradient">seleccionados.</span>
               </p>
             </div>
-            <p className="mt-4 max-w-2xl font-sans text-body-sm text-muted-foreground">
-              Recorrido sky → clay → amber. Con <TokenName>.title-solid</TokenName> en el
-              h2 el golpe va en un span hijo, como en PORTAFOLIO.
-            </p>
+            <Note>
+              Recorrido Sky → Clay → Amber. Puede ir en todo el titular o solo en la
+              palabra del golpe, como en PORTAFOLIO.
+            </Note>
           </div>
 
           <div>
-            <Sub>.hover-brand-ring</Sub>
+            <Sub>Anillo de marca</Sub>
             <div className="grid gap-6 sm:grid-cols-3">
               <div className="hover-brand-ring hover-brand-ring-rest rounded-[var(--card-radius)]">
                 <div className="bg-[var(--surface-raised)] p-6">
@@ -569,9 +602,7 @@ export default function SistemaPage() {
               <div className="group" data-lit="">
                 <div className="hover-brand-ring hover-brand-ring-rest rounded-[var(--card-radius)]">
                   <div className="bg-[var(--surface-raised)] p-6">
-                    <p className="font-sans text-body-sm font-bold">
-                      Encendida · data-lit
-                    </p>
+                    <p className="font-sans text-body-sm font-bold">Encendida</p>
                   </div>
                 </div>
               </div>
@@ -581,15 +612,15 @@ export default function SistemaPage() {
                 </div>
               </div>
             </div>
-            <p className="mt-4 max-w-2xl font-sans text-body-sm text-muted-foreground">
-              Trazo de 1px en cards, 5px detrás de las figuras del proceso. Con
-              reduced-motion el anillo se queda quieto.
-            </p>
+            <Note>
+              Trazo fino en cards, grueso detrás de las figuras del proceso. Si la persona
+              pidió menos movimiento en su sistema, el anillo se queda quieto.
+            </Note>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
             <div>
-              <Sub>.bg-brand-texture</Sub>
+              <Sub>Textura</Sub>
               <div className="bg-brand-texture grid h-56 place-items-center rounded-[var(--radius-lg)] border border-border [background-attachment:scroll]">
                 <span className="font-sans text-label-sm font-bold uppercase">
                   Contacto · servicios
@@ -597,7 +628,7 @@ export default function SistemaPage() {
               </div>
             </div>
             <div>
-              <Sub>.nav-glass</Sub>
+              <Sub>Barra de vidrio</Sub>
               <div className="relative h-56 overflow-hidden rounded-[var(--radius-lg)]">
                 <img
                   src="/images/hero-tomatola-desktop.webp"
@@ -618,19 +649,28 @@ export default function SistemaPage() {
             </div>
           </div>
         </div>
+        <DevNote>
+          <p>
+            Clases utilitarias de <TokenName>globals.css</TokenName>, no componentes:{" "}
+            <TokenName>.title-brand-gradient</TokenName>,{" "}
+            <TokenName>.title-solid</TokenName> (con el golpe en un span hijo),{" "}
+            <TokenName>.hover-brand-ring</TokenName> (1px; 5px con{" "}
+            <TokenName>.hover-brand-ring-thick</TokenName>; encendida con{" "}
+            <TokenName>data-lit</TokenName>), <TokenName>.bg-brand-texture</TokenName> y{" "}
+            <TokenName>.nav-glass</TokenName>.
+          </p>
+          <p>
+            El anillo se detiene con <TokenName>prefers-reduced-motion</TokenName>.
+          </p>
+        </DevNote>
       </Section>
 
       <Section
         id="titulares"
+        toc="Titulares"
+        over="Piezas · titulares"
         title="Titulares"
-        lede={
-          <>
-            <TokenName>.display-title*</TokenName> mide el ancho del contenedor (cqi) y lo
-            parte por 13.4, el ancho en em de SELECCIONADOS. La palabra más larga de cada
-            titular tiene que entrar en la caja sin recortarse. Si se sale, el problema es
-            la cadena de <TokenName>min-w-0</TokenName>, no el tamaño.
-          </>
-        }
+        lede="Un titular grande se achica según el ancho de su caja, para que la palabra más larga (SELECCIONADOS) entre siempre sin cortarse. Abajo, el mismo titular en tres anchos de pantalla."
       >
         <div className="flex flex-wrap items-start gap-6">
           {[320, 390, 768].map((w) => (
@@ -644,14 +684,25 @@ export default function SistemaPage() {
             </WidthProbe>
           ))}
         </div>
+        <DevNote>
+          <p>
+            <TokenName>.display-title</TokenName> mide el ancho del contenedor (cqi) y lo
+            parte por 13.4, el ancho en em de SELECCIONADOS. Si un titular se sale, el
+            problema es la cadena de <TokenName>min-w-0</TokenName>, no el tamaño.
+          </p>
+        </DevNote>
       </Section>
 
       <Section
         id="movimiento"
+        toc="Movimiento"
+        over="Piezas · movimiento"
         title="Movimiento"
-        lede="La coreografía de entrada del hero: la Wide, después la firma en Yellowtail, el copy y los CTA. Todo se apaga con prefers-reduced-motion."
+        lede="Cómo entra el hero: primero el titular, después la firma en Yellowtail, el texto y los botones. Si la persona pidió menos movimiento en su sistema, todo aparece quieto."
       >
-        <div className="rounded-[var(--radius-lg)] bg-[var(--color-neutral-950)] p-6 md:p-10">
+        {/* El hero real es foto oscura en los dos temas: el escenario lee los
+            tokens de oscuro (enlace "Repetir entrada", botones). */}
+        <div className="dark rounded-[var(--radius-lg)] bg-[var(--color-neutral-950)] p-6 text-[var(--text-primary)] md:p-10">
           <ReplayHero>
             <div className="@container min-w-0">
               <p className="font-display display-title-hero mx-auto flex min-w-0 max-w-3xl flex-col items-center text-center font-extrabold uppercase tracking-tight text-[var(--color-neutral-50)]">
@@ -663,48 +714,55 @@ export default function SistemaPage() {
                 </span>
               </p>
               <p className="hero-enter hero-copy-enter mx-auto mt-4 max-w-md text-center font-sans text-body-sm font-medium text-[var(--color-neutral-300)]">
-                Copy de apoyo, 0.4s después.
+                Las buenas ideas tienen un pequeño problema: nunca se quedan quietas.
               </p>
-              <div className="hero-enter hero-cta-enter mt-6 flex justify-center">
-                <Button>Agenda una cita</Button>
+              <div className="hero-enter hero-cta-enter mt-6 flex flex-col justify-center gap-4 sm:flex-row">
+                <Button variant="secondary">VER REEL</Button>
+                <Button>VER PROYECTOS</Button>
               </div>
             </div>
           </ReplayHero>
         </div>
-        <ul className="mt-6 grid gap-2 font-sans text-body-sm text-muted-foreground md:grid-cols-2">
-          <li>
-            <TokenName>.hero-title-enter</TokenName> 0.5s · espera a{" "}
-            <TokenName>.hero-ready</TokenName> (foto decodificada)
-          </li>
-          <li>
-            <TokenName>.hero-script-enter</TokenName> scale + blur, 0.22s después
-          </li>
-          <li>
-            <TokenName>.hover-brand-ring</TokenName> giro de 5s, solo en hover o data-lit
-          </li>
-          <li>
-            <TokenName>.work-card-index</TokenName> desenfoque por scroll, solo desde 768
-          </li>
-        </ul>
+        <DevNote>
+          <ul className="grid gap-1 md:grid-cols-2">
+            <li>
+              <TokenName>.hero-title-enter</TokenName> 0.5s · espera a{" "}
+              <TokenName>.hero-ready</TokenName> (foto decodificada)
+            </li>
+            <li>
+              <TokenName>.hero-script-enter</TokenName> scale + blur, 0.22s después
+            </li>
+            <li>
+              <TokenName>.hero-copy-enter</TokenName> 0.4s después del titular
+            </li>
+            <li>
+              <TokenName>.hover-brand-ring</TokenName> giro de 5s, solo en hover o
+              data-lit
+            </li>
+            <li>
+              <TokenName>.work-card-index</TokenName> desenfoque por scroll, solo desde
+              768
+            </li>
+            <li>
+              Todo se apaga con <TokenName>prefers-reduced-motion</TokenName>
+            </li>
+          </ul>
+        </DevNote>
       </Section>
 
-      <section
+      <Section
         id="composicion"
-        className="scroll-mt-20 border-t border-border pt-14 md:pt-20"
+        toc="Composición"
+        over="En uso"
+        title="Composición"
+        lede="Una sección real del sitio, sin copiar: si algo de arriba cambia y esto no, la sección se salió del sistema."
       >
-        <div className="@container mb-8 min-w-0 max-w-3xl">
-          <h2 className="font-display display-title-sm font-black uppercase tracking-tight">
-            Composición
-          </h2>
-          <p className="mt-4 font-sans text-body-md font-medium text-muted-foreground">
-            Una sección real del sitio, sin copiar: si algo de arriba cambia y esto no, la
-            sección se salió del sistema.
-          </p>
+        {/* Va dentro de la section: el índice ignora las secciones anidadas,
+            así ServicesGrid no entra como entrada propia. */}
+        <div className="-mx-4 md:-mx-8">
+          <ServicesGrid />
         </div>
-      </section>
-      <div className="-mx-4 md:-mx-8">
-        <ServicesGrid />
-      </div>
+      </Section>
     </main>
   );
 }

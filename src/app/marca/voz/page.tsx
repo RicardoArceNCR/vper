@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Crumbs, Findings, PageHero, Rich, Section, Sources } from "../lib/ui";
+import { Crumbs, Findings, Numeral, PageHero, Pending, Rich, Section, Sources } from "../lib/ui";
 import { VOZ } from "./voz-content";
 
 export const metadata: Metadata = { title: "Voz y tono" };
@@ -40,7 +40,7 @@ export default function VozPage() {
     <main className="wrap mx-auto max-w-[1217px] pb-24">
       <Crumbs
         trail={["Lineamientos", "Voz y tono"]}
-        note="Derivada del copy del sitio · Octubre 2026"
+        note="En revisión · Actualizado oct. 2026"
       />
       <PageHero over="Voz y tono" title="Cómo" accent="suena." lede={VOZ.resumen}>
         <p className="mt-8 max-w-3xl border-l-[3px] border-[var(--brand-action)] pl-5 font-sans text-h3 font-bold">
@@ -54,6 +54,7 @@ export default function VozPage() {
         over="Personalidad"
         title={`${VOZ.rasgos.length} rasgos, una voz`}
         lede="Cada rasgo tiene su límite: lo que es y lo que no. El ejemplo es una cita del sitio."
+        className="border-t-0"
       >
         <div className="grid gap-4 md:grid-cols-2">
           {VOZ.rasgos.map((r) => (
@@ -99,9 +100,7 @@ export default function VozPage() {
               className="grid gap-4 rounded-[var(--radius-xl)] border border-border p-5 md:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] md:gap-8 md:p-6"
             >
               <div className="grid content-start gap-2">
-                <span className="font-display text-h3 font-black text-[var(--text-brand)]">
-                  {String(n + 1).padStart(2, "0")}
-                </span>
+                <Numeral n={n + 1} pad />
                 <h3 className="font-sans text-h4 font-bold">{p.titulo}</h3>
                 <p className="font-sans text-body-sm text-[var(--text-secondary)]">
                   {p.regla}
@@ -261,16 +260,14 @@ export default function VozPage() {
         </ul>
       </Section>
 
-      <Section
-        id="corregir"
-        toc="Para corregir"
-        over="Revisión del sitio"
-        title="Para corregir en el sitio"
-        lede="Lo que la revisión del copy encontró mezclado o fuera de voz. Ninguno está cambiado todavía: es la lista de trabajo."
+      <Pending
+        className="pb-0 md:pb-0"
+        count={VOZ.inconsistencias.length}
+        lede="Lo que la revisión del copy encontró mezclado o fuera de voz en el sitio. No es parte de la guía: es la lista de trabajo del equipo web, y nada está cambiado todavía."
       >
         <Findings items={VOZ.inconsistencias} />
-        <Sources items={VOZ.fuentes} />
-      </Section>
+      </Pending>
+      <Sources items={VOZ.fuentes} />
     </main>
   );
 }

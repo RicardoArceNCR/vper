@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ThemeToggle from "@/components/theme-toggle";
 import { Logo } from "@/app/marca/logo/marks";
+import { MARCA, hasOwner } from "@/app/marca/lib/config";
+import { aOwner } from "@/app/marca/lib/owner-copy";
 import { isOpenForDev, marcaPassword, safeNext } from "@/app/marca/lib/session";
 import LoginForm from "./login-form";
 
@@ -11,7 +13,7 @@ import LoginForm from "./login-form";
  * exceptuarla. Mecanismo en src/app/marca/lib/session.ts.
  */
 export const metadata: Metadata = {
-  title: "Ingresar · Marca VPER",
+  title: `Ingresar · ${MARCA.name}`,
   robots: { index: false, follow: false },
 };
 
@@ -23,6 +25,14 @@ export default async function IngresarPage({
   const next = safeNext((await searchParams).next);
   const configured = Boolean(marcaPassword());
   const devOpen = isOpenForDev();
+  if (!configured && !devOpen) {
+    // Solo al log del servidor: a quien llega no le sirve el nombre de la variable.
+    console.error("[marca] /ingresar cerrado: falta la variable MARCA_PASSWORD en Vercel.");
+  }
+  // "Marca VPER" → "Marca" + golpe en gradiente sobre la última palabra.
+  const cut = MARCA.name.lastIndexOf(" ");
+  const nameHead = MARCA.name.slice(0, cut);
+  const nameTail = MARCA.name.slice(cut + 1);
 
   return (
     <main className="relative grid min-h-dvh grid-rows-[auto_1fr_auto] bg-background text-foreground">
@@ -40,22 +50,19 @@ export default async function IngresarPage({
 
       <div className="wrap grid place-items-center py-16">
         <div className="@container grid w-full min-w-0 max-w-sm gap-8">
-          <div className="grid gap-3 text-[var(--text-primary)]">
+          <div className="flex items-center gap-3 text-[var(--text-primary)]">
             <Logo k="h2" className="h-auto w-40" />
-            <span className="flex items-center gap-2 font-sans text-label-xs font-bold uppercase tracking-widest text-[var(--text-secondary)]">
-              Marca
-              <span className="rounded-[var(--pill-radius)] border border-border px-1.5 py-px">
-                Uso interno
-              </span>
+            <span className="rounded-[var(--pill-radius)] border border-border px-1.5 py-px font-sans text-label-xs font-bold uppercase tracking-widest text-[var(--text-secondary)]">
+              Equipo
             </span>
           </div>
 
-          <div className="grid gap-3">
-            <h1 className="font-display display-title-sm font-black uppercase tracking-tight">
-              Portal de <span className="title-brand-gradient">marca.</span>
+          <div className="@container grid min-w-0 gap-3">
+            <h1 className="font-display text-display-md font-black uppercase tracking-tight">
+              {nameHead} <span className="title-brand-gradient">{nameTail}.</span>
             </h1>
             <p className="font-sans text-body-md font-medium text-[var(--text-secondary)]">
-              Logo, sistema, voz, imagen y firmas de VPER Media.
+              Logo, voz, imagen, personaje, firmas y sistema de VPER&nbsp;Media.
             </p>
           </div>
 
@@ -71,18 +78,33 @@ export default async function IngresarPage({
             </Notice>
           ) : (
             <Notice>
-              El portal está cerrado: falta configurar{" "}
-              <code className="font-mono">MARCA_PASSWORD</code> en Vercel.
+              El acceso está cerrado por ahora. Escribí{" "}
+              {hasOwner() ? "a " : null}
+              {hasOwner() ? (
+                <a
+                  href={`mailto:${MARCA.owner.email}`}
+                  className="font-bold underline underline-offset-4"
+                >
+                  {MARCA.owner.name}
+                </a>
+              ) : (
+                aOwner()
+              )}
+              .
             </Notice>
           )}
+
+          <Link
+            href="/"
+            className="justify-self-start font-sans text-body-sm font-bold text-[var(--text-secondary)] underline-offset-4 hover:text-[var(--text-primary)] hover:underline"
+          >
+            ← Volver al sitio
+          </Link>
         </div>
       </div>
 
-      <footer className="wrap flex justify-between gap-4 py-6 font-sans text-body-sm text-[var(--text-secondary)]">
-        <Link href="/" className="underline-offset-4 hover:underline">
-          ← vpermedia.com
-        </Link>
-        <span>VPER Media · Uso interno</span>
+      <footer className="wrap flex justify-center gap-4 py-6 font-sans text-body-sm text-[var(--text-secondary)]">
+        <span>VPER&nbsp;Media · Uso&nbsp;interno</span>
       </footer>
     </main>
   );

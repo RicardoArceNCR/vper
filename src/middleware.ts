@@ -23,7 +23,10 @@ export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
   url.pathname = LOGIN_PATH;
   url.search = "";
-  url.searchParams.set("next", req.nextUrl.pathname);
+  // Se conserva la query (?x=1); safeNext la vuelve a validar al entrar. El
+  // ancla (#kit) no llega al servidor: el navegador la mantiene en el redirect
+  // y el formulario de /ingresar la manda en un campo oculto.
+  url.searchParams.set("next", req.nextUrl.pathname + req.nextUrl.search);
   return NextResponse.redirect(url);
 }
 

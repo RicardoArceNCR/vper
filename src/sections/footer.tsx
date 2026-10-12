@@ -20,8 +20,10 @@ export default function Footer() {
   return (
     <footer className="bg-[var(--footer-bg)] pt-0 pb-10 md:pt-20">
       <div className="wrap min-w-0">
-        <div className="flex min-w-0 flex-col md:flex-row md:justify-between gap-12 md:gap-16 mb-16 text-center md:text-left">
-            <div className="flex min-w-0 w-full flex-col items-center md:max-w-xs md:items-start">
+        {/* Tres columnas recién en lg: entre 768 y 1023 la tarjeta de contacto no
+            entraba y cortaba "CARLOS ESCOBAR" y el correo. Hasta lg, apiladas. */}
+        <div className="flex min-w-0 flex-col lg:flex-row lg:justify-between gap-12 lg:gap-16 mb-16 text-center lg:text-left">
+            <div className="flex min-w-0 w-full flex-col items-center self-center md:max-w-xs lg:self-auto lg:items-start">
               {/* En mobile el GlowMark de arriba ya es la marca (completo,
                   con barrido). Este wordmark sólido queda para desktop. */}
               <svg
@@ -34,7 +36,7 @@ export default function Footer() {
                   <path key={i} d={d} fill="currentColor" />
                 ))}
               </svg>
-              <p className="text-body-sm text-[var(--footer-text)] font-medium mb-6 max-w-xs text-center md:text-left">
+              <p className="text-body-sm text-[var(--footer-text)] font-medium mb-6 max-w-xs text-center lg:text-left">
                 Creamos. Aprendemos. Volvemos a crear.
                 <br />
                 Siempre hay algo más grande por crear.
@@ -52,9 +54,9 @@ export default function Footer() {
               </div>
             </div>
 
-            <div className="flex min-w-0 flex-col items-center md:items-start">
+            <div className="flex min-w-0 flex-col items-center lg:items-start">
               <h4 className="font-display text-xs font-bold tracking-widest text-[var(--footer-heading)] mb-6 uppercase">NAVEGACIÓN</h4>
-              <ul className="flex flex-col gap-3 items-center md:items-start">
+              <ul className="flex flex-col gap-3 items-center lg:items-start">
                 {/* Antes: <a href={`#${item.id}`}>. El Header ya tenía
                     arreglado este mismo bug (el ancla relativa solo
                     funciona parado en "/"); el footer nunca lo recibió,
@@ -75,13 +77,13 @@ export default function Footer() {
               </ul>
             </div>
 
-            <div className="flex min-w-0 flex-col items-center md:items-start">
+            <div className="flex min-w-0 flex-col items-center lg:items-start">
               <h4 className="font-display text-xs font-bold tracking-widest text-[var(--footer-heading)] mb-6 uppercase">CONTACTO</h4>
               <div className="flex flex-col items-center md:flex-row md:items-center gap-3 md:gap-4 group text-center md:text-left">
                 <div className="w-20 h-20 md:w-16 md:h-16 rounded-full overflow-hidden border border-[var(--border-strong)] group-hover:border-primary/30 transition-all duration-300 shrink-0">
                   <img src={IMAGES.carlos} alt="Carlos Escobar" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                 </div>
-                <div className="flex flex-col items-center md:items-start">
+                <div className="flex min-w-0 flex-col items-center md:items-start">
                   <span className="text-body-sm md:text-base font-bold text-[var(--footer-heading)] block tracking-wide">CARLOS ESCOBAR</span>
                   <a href="mailto:carlos@vpermedia.com" className="text-body-sm text-[var(--footer-text)] hover:text-primary transition-colors block font-medium">carlos@vpermedia.com</a>
                   <a href="tel:+50577824749" className="text-body-sm text-[var(--footer-text)] block font-medium">+505 7782-4749</a>

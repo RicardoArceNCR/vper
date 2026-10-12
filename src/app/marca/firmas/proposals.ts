@@ -70,12 +70,12 @@ export interface Proposal {
  * firmas las descarga juntas en un ZIP para el desarrollador).
  */
 export const FIRMA_IMAGES = {
-  placaBlanca: "/images/firma/bloque-negro-placa-blanca@2x.png",
+  placaBlanca: "/images/firma/bloque-negro-placa-blanca-v2@2x.png",
   sello: "/images/firma/sello-columna-amber@2x.png",
   banda: "/images/firma/banda-gradiente@2x.png",
   ficha: "/images/firma/ficha-bloque-negro@2x.png",
   franjaCrear: "/images/firma/franja-crear@2x.png",
-  lineaAmber: "/images/firma/linea-amber-negro@2x.png",
+  lineaAmber: "/images/firma/linea-amber-negro-v2@2x.png",
   monograma: "/images/firma/monograma-circulo-amber@2x.png",
   banner: "/images/firma/banner-caso@2x.png",
 } as const;
@@ -142,9 +142,9 @@ const f = (o: Parameters<typeof font>[0]) => css(font(o));
 const esencial: Proposal = {
   id: "esencial",
   name: "Esencial",
-  idea: "Dos columnas sobrias. El logo pone la marca; el color queda en un solo acento.",
+  idea: "Dos columnas sobrias: el logo a la izquierda, los datos a la derecha y un solo toque de color.",
   forWho: "Administración, finanzas, clientes corporativos o de gobierno.",
-  risk: "La más genérica. En modo oscuro el logo queda como una placa blanca: legible, pero no diseñada para ese modo.",
+  risk: "Es la más genérica. En modo oscuro el logo queda sobre un recuadro blanco.",
   render: (d, base) => {
     const left = table({}, [
       row(f({ size: 16, lineHeight: 20, color: P.ink, bold: true }), esc(d.nombre)),
@@ -167,8 +167,8 @@ const esencial: Proposal = {
             img({
               src: assetUrl(base, IMG.placaBlanca),
               alt: ALT,
-              width: 144,
-              height: 56,
+              width: 150,
+              height: 62,
               href: siteHref(d),
             }),
             { valign: "middle" },
@@ -184,15 +184,15 @@ const sello: Proposal = {
   id: "sello",
   name: "Sello",
   badge: "Estándar",
-  idea: "Un bloque amber cuadrado como sello junto al nombre. La marca entra por el color, no por el tamaño del logo.",
+  idea: "Un cuadro ámbar junto al nombre, como un sello. La marca se reconoce por el color, sin un logo grande.",
   forWho: "Todo el equipo.",
-  risk: "Repetida en un hilo largo, el amber cansa. Por eso va en pareja con Respuesta.",
+  risk: "En un hilo largo, tanto ámbar repetido cansa. Por eso se usa junto con Respuesta.",
   render: (d, base) => wrapSignature(selloBody(d, base), { width: 470 }),
 };
 
 function selloBody(d: Firma, base: string): string {
   const text = table({}, [
-    row(css(ceja(P.clayText)), "VPER® Media"),
+    row(css(ceja(P.clayText)), "VPER Media"),
     row(
       f({ size: 18, lineHeight: 22, color: P.ink, bold: true }),
       esc(d.nombre),
@@ -239,13 +239,13 @@ function selloBody(d: Firma, base: string): string {
 const ceja3: Proposal = {
   id: "ceja",
   name: "Ceja",
-  idea: "Solo texto, armada como una sección del sitio: ceja arriba y filete clay. Con imágenes bloqueadas se ve igual.",
+  idea: "Solo texto, armada como una sección del sitio, con una línea de color. Se ve igual aunque el correo bloquee imágenes.",
   forWho:
-    "Producción y cuentas que escriben a clientes corporativos, donde Outlook bloquea imágenes.",
-  risk: "Sin logo puede leerse demasiado simple: toda la marca depende de una palabra en texto.",
+    "Producción y cuentas que escriben a clientes corporativos, cuyo Outlook suele bloquear imágenes.",
+  risk: "Sin logo puede verse demasiado simple: toda la marca queda en una palabra.",
   render: (d) => {
     const body = table({}, [
-      row(css(ceja(P.clayText)), esc(d.cargo || "VPER® Media")),
+      row(css(ceja(P.clayText)), esc(d.cargo || "VPER Media")),
       row(
         f({ size: 20, lineHeight: 24, color: P.ink, bold: true }),
         esc(d.nombre),
@@ -258,7 +258,7 @@ const ceja3: Proposal = {
       ),
       row(
         f({ size: 12, lineHeight: 18, color: P.gray600 }),
-        joinWith([d.cargo ? "VPER® Media" : "", esc(d.sedes)], " — "),
+        joinWith([d.cargo ? "VPER Media" : "", esc(d.sedes)], " — "),
         "4px 0 0",
       ),
     ]);
@@ -275,9 +275,9 @@ const ceja3: Proposal = {
 const banda: Proposal = {
   id: "banda",
   name: "Banda",
-  idea: "El gradiente de los titulares (sky → clay → amber) como un filete de 4 px. La huella de VPER en la bandeja.",
+  idea: "Una línea fina con el degradado de los títulos del sitio (celeste, rojo y ámbar). La huella de VPER en la bandeja.",
   forWho: "Dirección y equipo creativo.",
-  risk: "Tres columnas en un móvil de 360 px se escalan y el texto de 12 px baja a ~9 px.",
+  risk: "En celulares chicos se achica entera y el texto queda muy pequeño.",
   render: (d, base) => {
     // Dos columnas (texto | ficha): con tres, un correo largo aplastaba el nombre.
     const text = table({}, [
@@ -302,7 +302,8 @@ const banda: Proposal = {
         ),
         spacer(14, 3),
         tr([
-          td(null, text),
+          // Arriba: la ficha y el nombre arrancan en la misma línea, bajo el filete.
+          td(null, text, { valign: "top" }),
           vSpacer(16),
           // Placa de 110×48 y celda sin fondo: la fila es más alta que la ficha.
           td(
@@ -318,7 +319,7 @@ const banda: Proposal = {
               }),
               { color: P.black, width: 110 },
             ),
-            { width: 110, valign: "middle", align: "right" },
+            { width: 110, valign: "top", align: "right" },
           ),
         ]),
       ]),
@@ -330,9 +331,9 @@ const banda: Proposal = {
 const crear: Proposal = {
   id: "crear",
   name: "Crear.",
-  idea: "La firma completa el lema del sitio: “Siempre hay algo más grande por” en texto, y “Crear.” en Yellowtail amber, como en el hero.",
+  idea: "La firma completa el lema del sitio: “Siempre hay algo más grande por” y, en letra manuscrita ámbar, “Crear.”, como en la portada.",
   forWho: "Comercial y nuevos negocios: el primer correo a un cliente.",
-  risk: "El lema en cada correo se gasta rápido. Y la franja es imagen: con imágenes bloqueadas queda solo el alt.",
+  risk: "El lema en cada correo se gasta rápido. Y la frase es una imagen: si el correo bloquea imágenes, no se ve.",
   render: (d, base) => {
     const top = table({}, [
       row(
@@ -377,9 +378,9 @@ const crear: Proposal = {
 const negativo: Proposal = {
   id: "negativo",
   name: "Negativo",
-  idea: "Toda la firma es una tarjeta negra como el sitio, con el logo amber de punta a punta. Se siente agencia, no oficina.",
+  idea: "Toda la firma es una tarjeta negra como el sitio, con el logo ámbar de punta a punta. Se siente agencia, no oficina.",
   forWho: "Dirección creativa, pitches y contacto con marcas.",
-  risk: "Pesa en los hilos (~150 px de negro por respuesta). Y en Gmail para iOS la tarjeta se invierte a blanca y el logo queda como una franja negra: probalo en modo oscuro.",
+  risk: "Ocupa mucho en los hilos: un bloque negro en cada respuesta. Y en Gmail para iPhone la tarjeta se vuelve blanca y el logo, una franja negra: mirala en la vista oscura.",
   render: (d, base) => {
     // Ceja en amber, no en clay: clay sobre negro cumple (5.4:1), pero cuando Gmail
     // iOS invierte la tarjeta baja a 2.9:1. Amber invertido queda oscuro sobre blanco.
@@ -400,14 +401,17 @@ const negativo: Proposal = {
     ]);
     return wrapSignature(
       table({ width: 480, bgcolor: P.black }, [
+        // Área de respeto de la Línea = su propio alto (x ≈ 30 px a esta medida). El
+        // PNG trae x/2 de negro adentro (sobrevive a la inversión de Gmail iOS) y el
+        // td suma el resto. El texto se alinea con la letra, no con el borde del PNG.
         tr(
           td(
-            { padding: "24px 24px 0" },
+            { padding: "31px 31px 0" },
             img({
               src: assetUrl(base, IMG.lineaAmber),
               alt: ALT,
-              width: 432,
-              height: 34,
+              width: 418,
+              height: 61,
               href: siteHref(d),
               style: font({ size: 16, color: P.amber, bold: true }),
             }),
@@ -415,11 +419,11 @@ const negativo: Proposal = {
           ),
         ),
         tr([
-          td({ padding: "18px 12px 24px 24px" }, left, {
+          td({ padding: "10px 12px 32px 46px" }, left, {
             bgcolor: P.black,
             valign: "bottom",
           }),
-          td({ padding: "18px 24px 24px 12px" }, right, {
+          td({ padding: "10px 46px 32px 12px" }, right, {
             bgcolor: P.black,
             valign: "bottom",
             align: "right",
@@ -435,9 +439,9 @@ const respuesta: Proposal = {
   id: "respuesta",
   name: "Respuesta",
   badge: "Respuestas",
-  idea: "Dos líneas y el monograma como avatar. Para respuestas, hilos largos y móvil.",
-  forWho: "Todo el equipo, en pareja con la estándar.",
-  risk: "Omite el correo porque ya está en el remitente: si alguien reenvía el mensaje, se pierde.",
+  idea: "Dos líneas y el monograma como foto de perfil. Para respuestas, hilos largos y celular.",
+  forWho: "Todo el equipo, junto con la Estándar.",
+  risk: "No repite el correo porque ya está en el remitente: si alguien reenvía el mensaje, se pierde.",
   render: (d, base) =>
     wrapSignature(
       table(
@@ -460,7 +464,7 @@ const respuesta: Proposal = {
             table({}, [
               row(
                 f({ size: 14, lineHeight: 20, color: P.ink, bold: true }),
-                `${esc(d.nombre)}<span style="${f({ size: 12, color: P.gray600 })}">${sep()}${esc(d.cargo || "VPER® Media")}</span>`,
+                `${esc(d.nombre)}<span style="${f({ size: 12, color: P.gray600 })}">${sep()}${esc(d.cargo || "VPER Media")}</span>`,
               ),
               row(
                 f({ size: 12, lineHeight: 18, color: P.gray600 }),
@@ -479,9 +483,9 @@ const cartelera: Proposal = {
   id: "cartelera",
   name: "Cartelera",
   badge: "Campañas",
-  idea: "Sello más un banner intercambiable: un caso, un lanzamiento o un evento, con titular en Obviously Wide y botón.",
+  idea: "La firma Sello más un banner que cambia según la ocasión (un caso, un lanzamiento o un evento), con titular y botón.",
   forWho: "Eventos, lanzamientos y campañas, por tiempo limitado.",
-  risk: "Un banner vencido es peor que ninguno: cada uno con fecha de baja y archivo nuevo (Gmail cachea la URL).",
+  risk: "Un banner vencido es peor que ninguno: cada uno lleva fecha de baja, y para cambiarlo hace falta un archivo nuevo.",
   render: (d, base) =>
     wrapSignature(
       table({ width: 480 }, [

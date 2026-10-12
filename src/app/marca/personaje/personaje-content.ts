@@ -26,13 +26,13 @@ export interface Pose {
 
 export const PERSONAJE = {
   resumen:
-    "vpercito es el robot de VPER: cabeza de monitor sky, cara de LEDs amber, botón clay y cuerpo negro mate. Es el anfitrión de los momentos de transición: aparece cuando alguien se pierde, espera o termina algo. Nunca cuando tiene que mirar el trabajo de un cliente. Es el guiño del bloque hecho personaje, no un logo de reemplazo.",
+    "vpercito es el robot de VPER: cabeza de monitor Sky, cara de LEDs Amber, botón Clay y cuerpo negro mate. Es el anfitrión de los momentos de transición: aparece cuando alguien se pierde, espera o termina algo. Nunca cuando tiene que mirar el trabajo de un cliente. Es el guiño del bloque hecho personaje, no un logo de reemplazo.",
 
   ficha: [
     { k: "Nombre", v: "vpercito (en minúscula, también al inicio de frase)" },
     { k: "Papel", v: "Anfitrión de transiciones" },
     { k: "Carácter", v: "Curioso, servicial, un poco torpe con las puertas" },
-    { k: "Colores", v: "Sky, amber y clay de la paleta VPER, sobre negro" },
+    { k: "Colores", v: "Sky, Amber y Clay de la paleta VPER, sobre negro" },
     { k: "Técnica", v: "3D vinyl toy. Set propio: no se mezcla con otros íconos" },
   ],
 
@@ -98,7 +98,7 @@ export const PERSONAJE = {
     {
       titulo: "Sobre oscuro, siempre con halo",
       regla:
-        "El cuerpo es negro mate y sobre --background-page negro desaparece. El componente `<Vpercito />` pone un halo sky detrás por defecto (clase `vpercito-halo`). En claro el halo baja y suma sombra de contacto.",
+        "El cuerpo es negro mate y sobre el fondo negro (`--background-page`) desaparece. El componente `<Vpercito />` pone un halo Sky detrás por defecto (clase `vpercito-halo`). En claro el halo baja y suma sombra de contacto.",
     },
     {
       titulo: "Tamaño mínimo",
@@ -108,7 +108,7 @@ export const PERSONAJE = {
     {
       titulo: "Sin recolorear ni deformar",
       regla:
-        "No cambiar el sky de la cabeza, no teñirlo con el degradé VPER, no estirarlo, no recortarle los pies (salvo la pose «asomándose», que ya viene recortada).",
+        "No cambiar el Sky de la cabeza, no teñirlo con el degradé VPER, no estirarlo, no recortarle los pies (salvo la pose «asomándose», que ya viene recortada).",
     },
     {
       titulo: "Movimiento corto",
@@ -142,7 +142,7 @@ export const PERSONAJE = {
   ] satisfies Pose[],
 
   pedidoIlustrador:
-    "Misma cámara, luz y escala que el saludo, fondo transparente, 2048 px de lado largo. Todas con un rim light frío (sky) en el contorno para que el cuerpo no se pierda sobre negro. Y la pantalla de LEDs como capa aparte (PNG o SVG): con un solo cuerpo se cambia la expresión sin pedir un render nuevo.",
+    "Misma cámara, luz y escala que el saludo, fondo transparente, 2048 px de lado largo. Todas con un rim light frío (Sky) en el contorno para que el cuerpo no se pierda sobre negro. Y la pantalla de LEDs como capa aparte (PNG o SVG): con un solo cuerpo se cambia la expresión sin pedir un render nuevo.",
 
   firmas:
     "En la firma personal, no: aparece en cada correo (el guiño se vuelve muletilla), compite con la persona que firma y en un hilo de presupuesto resta seriedad. Sí en la respuesta automática de fuera de oficina (una transición de verdad) y en banners de campaña con fecha de baja: 480×120 (archivo 960×240), fondo negro horneado con el halo, vpercito a ~100 px de alto, texto en HTML y PNG cuantizado a ≤ 30 KB.",

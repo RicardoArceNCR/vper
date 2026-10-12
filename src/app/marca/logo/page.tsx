@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { Pair } from "../live";
+import { Crumbs, PageHero, Section } from "../lib/ui";
 import LogoDownload from "./logo-download";
 import { Logo, ratio } from "./marks";
 import { MARKS, type MarkKey } from "./marks-data";
@@ -79,30 +79,6 @@ const SURFACES = [
   [s.onAmber, "Amber"],
 ] as const;
 
-function Head({
-  over,
-  title,
-  children,
-}: {
-  over: string;
-  title: string;
-  children: ReactNode;
-}) {
-  return (
-    <div className="@container mb-8 min-w-0 max-w-3xl md:mb-12">
-      <p className="font-sans text-overline-sm font-bold uppercase text-[var(--text-eyebrow)]">
-        {over}
-      </p>
-      <h2 className="mt-3 font-display display-title-sm font-black uppercase tracking-tight">
-        {title}
-      </h2>
-      <div className="mt-4 font-sans text-body-md font-medium text-muted-foreground">
-        {children}
-      </div>
-    </div>
-  );
-}
-
 function Tag({ k }: { k: MarkKey }) {
   return (
     <span className="inline-flex w-fit items-center rounded-[var(--pill-radius)] bg-[var(--pill-brand-bg)] px-2.5 py-0.5 font-sans text-label-xs font-bold uppercase text-[var(--pill-brand-text)]">
@@ -125,7 +101,10 @@ const APPS: { title: string; k: MarkKey[]; tests: string; mock: ReactNode }[] = 
           <div key={tone} className={`${s.browser} ${tone}`}>
             <div className={s.tabs}>
               <div className={s.tab}>
-                <Logo k="iso" decorative style={{ width: 16, height: 13 }} />
+                {/* Como app/icon.svg: el monograma casi a sangre sobre la placa amber. */}
+                <span className={s.favicon}>
+                  <Logo k="iso" pad={0.07} decorative />
+                </span>
                 <span>VPER Media — Siempre hay algo…</span>
               </div>
               <div className={`${s.tab} ${s.tabGhost}`}>
@@ -175,13 +154,12 @@ const APPS: { title: string; k: MarkKey[]; tests: string; mock: ReactNode }[] = 
       <div className="grid gap-3">
         <div className={`${s.siteBar} ${s.onBlack}`}>
           <Logo k="h2" style={{ width: 150, height: "auto" }} />
+          {/* Solo los ítems que entran: el resto del nav real no cabe en la maqueta. */}
           <nav aria-hidden className={s.siteNav}>
             <span>Proyectos</span>
             <span>Servicios</span>
-            <span>Nuestro proceso</span>
-            <span>Nosotros</span>
           </nav>
-          <span className={s.siteCta}>Agenda una cita</span>
+          <span className={s.siteCta}>¿Nos reunimos?</span>
         </div>
         <div className={s.phone}>
           <div className={`${s.phoneBar} ${s.onBlack}`}>
@@ -303,7 +281,7 @@ const APPS: { title: string; k: MarkKey[]; tests: string; mock: ReactNode }[] = 
           </div>
           <div>
             <span>nombre@vpermedia.com</span>
-            <Logo k="h2" style={{ width: 110, height: "auto" }} />
+            <Logo k="h2" className={s.cardLine} />
           </div>
         </div>
       </div>
@@ -331,6 +309,16 @@ const APPS: { title: string; k: MarkKey[]; tests: string; mock: ReactNode }[] = 
       </div>
     ),
   },
+];
+
+/* ───────────────────────── reducción ───────────────────────── */
+
+/** Cada fila mide por el lado que limita a esa versión: alto o ancho. */
+const SCALE: { label: string; k: MarkKey; by: "alto" | "ancho"; sizes: number[] }[] = [
+  { label: "Monograma · alto", k: "iso", by: "alto", sizes: [16, 24, 32, 48, 96] },
+  { label: "Columna · alto", k: "v", by: "alto", sizes: [32, 48, 64, 96, 128] },
+  { label: "Bloque · ancho", k: "h1", by: "ancho", sizes: [64, 96, 120, 160, 200] },
+  { label: "Línea · ancho", k: "h2", by: "ancho", sizes: [96, 120, 160, 240] },
 ];
 
 /* ───────────────────────── usos incorrectos ───────────────────────── */
@@ -393,35 +381,17 @@ const DONTS: { label: string; why: string; node: ReactNode }[] = [
 
 export default function LogoPage() {
   return (
-    <main className="pb-24">
-      {/* ── cabecera ── */}
-      <section className="wrap mx-auto max-w-[1217px] pt-10 md:pt-16">
-        <div className="flex flex-wrap justify-between gap-3 font-sans text-body-sm font-medium text-muted-foreground">
-          <span>
-            <Link href="/marca" className="underline underline-offset-4">
-              Marca
-            </Link>{" "}
-            · Lineamientos · Logo
-          </span>
-          <span>Propuesta de uso del logo · Octubre 2026</span>
-        </div>
-        <div className="@container mt-10 min-w-0 md:mt-16">
-          <p className="font-sans text-overline-sm font-bold uppercase text-[var(--text-eyebrow)]">
-            Cuatro versiones · una palabra
-          </p>
-          <h1 className="mt-3 font-display display-title font-black uppercase tracking-tight">
-            Cuál va <span className="title-brand-gradient">dónde.</span>
-          </h1>
-          <p className="mt-6 max-w-2xl font-sans text-body-lg font-medium text-muted-foreground">
-            El logo de VPER vive en lugares muy distintos: la barra del sitio, una pestaña
-            de 16 px, un avatar redondo, el cierre de un reel. Estas son las cuatro
-            versiones que entregó diseño, probadas en los mismos contextos para decidir
-            cuál usar en cada uno.
-          </p>
-        </div>
+    <main className="wrap mx-auto max-w-[1217px] pb-24">
+      <Crumbs trail={["Lineamientos", "Logo"]} note="Propuesta · Actualizado oct. 2026" />
+      <PageHero
+        over="Logo · versiones y descargas"
+        title="Cuál va"
+        accent="dónde."
+        lede="El logo de VPER vive en lugares muy distintos: la barra del sitio, una pestaña de 16 px, un avatar redondo, el cierre de un reel. Estas son las cuatro versiones que entregó diseño, probadas en los mismos contextos para decidir cuál usar en cada uno."
+      >
         <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4">
           {KEYS.map((k) => (
-            <a key={k} href={`#v-${k}`} className="group grid gap-2">
+            <a key={k} href={`#v-${k}`} className="group grid min-w-0 gap-2">
               <div className={`${s.tile} ${s.onBlack}`}>
                 <Logo
                   k={k}
@@ -435,342 +405,331 @@ export default function LogoPage() {
             </a>
           ))}
         </div>
-      </section>
+      </PageHero>
 
-      <div className="wrap mx-auto max-w-[1217px]">
-        <div className="pt-12 md:pt-16">
-          <LogoDownload />
-        </div>
+      <LogoDownload />
 
-        {/* ── versiones ── */}
-        <section id="versiones" data-toc="Versiones" className={s.section}>
-          <Head over="Las versiones" title="Cuatro formas del mismo dibujo">
-            Cada versión sobre los tres soportes de la marca: negro, blanco y amber. Sobre
-            negro el logo va blanco; sobre blanco y amber, negro.
-          </Head>
-          <div className="grid gap-12">
-            {KEYS.map((k) => {
-              const v = VERSION[k];
-              return (
-                <article
-                  key={k}
-                  id={`v-${k}`}
-                  className="grid scroll-mt-20 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-10"
-                >
-                  <div className="grid content-start gap-3">
-                    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                      <h3 className="font-display text-h2 font-black uppercase">
-                        {v.name}
-                      </h3>
-                      <code className="font-mono text-body-xs text-[var(--text-tertiary)]">
-                        {v.file} · {ratio(k).toFixed(2)}:1
-                      </code>
-                    </div>
-                    <p className="font-sans text-body-md font-bold">{v.use}</p>
-                    <ul className={s.pros}>
-                      {v.works.map((t) => (
-                        <li key={t}>{t}</li>
-                      ))}
-                      {v.suffers.map((t) => (
-                        <li key={t} className={s.con}>
-                          {t}
-                        </li>
-                      ))}
-                    </ul>
+      {/* ── versiones ── */}
+      <Section
+        id="versiones"
+        toc="Versiones"
+        over="Las versiones"
+        title="Cuatro formas del mismo dibujo"
+        lede="Cada versión sobre los tres soportes de la marca: negro, blanco y amber. Sobre negro el logo va blanco; sobre blanco y amber, negro."
+        className="border-t-0"
+      >
+        <div className="grid gap-12">
+          {KEYS.map((k) => {
+            const v = VERSION[k];
+            return (
+              <article
+                key={k}
+                id={`v-${k}`}
+                className="grid scroll-mt-20 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-10"
+              >
+                <div className="grid content-start gap-3">
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <h3 className="font-display text-h2 font-black uppercase">
+                      {v.name}
+                    </h3>
+                    <code className="font-mono text-body-xs text-[var(--text-tertiary)]">
+                      {v.file} · {ratio(k).toFixed(2)}:1
+                    </code>
                   </div>
-                  <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                    {SURFACES.map(([tone, label]) => (
-                      <figure key={label} className="m-0 grid gap-2">
-                        <div className={`${s.sw} ${tone}`}>
-                          <Logo
-                            k={k}
-                            style={{
-                              width:
-                                k === "h2"
-                                  ? "92%"
-                                  : k === "h1"
-                                    ? "84%"
-                                    : k === "v"
-                                      ? "50%"
-                                      : "44%",
-                              height: "auto",
-                            }}
-                          />
-                        </div>
-                        <figcaption className="font-sans text-label-xs font-bold uppercase text-[var(--text-tertiary)]">
-                          {label}
-                        </figcaption>
-                      </figure>
+                  <p className="font-sans text-body-md font-bold">{v.use}</p>
+                  <ul className={s.pros}>
+                    {v.works.map((t) => (
+                      <li key={t}>{t}</li>
                     ))}
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        </section>
+                    {v.suffers.map((t) => (
+                      <li key={t} className={s.con}>
+                        {t}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                  {SURFACES.map(([tone, label]) => (
+                    <figure key={label} className="m-0 grid gap-2">
+                      <div className={`${s.sw} ${tone}`}>
+                        <Logo
+                          k={k}
+                          style={{
+                            width:
+                              k === "h2"
+                                ? "92%"
+                                : k === "h1"
+                                  ? "84%"
+                                  : k === "v"
+                                    ? "50%"
+                                    : "44%",
+                            height: "auto",
+                          }}
+                        />
+                      </div>
+                      <figcaption className="font-sans text-label-xs font-bold uppercase text-[var(--text-tertiary)]">
+                        {label}
+                      </figcaption>
+                    </figure>
+                  ))}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </Section>
 
-        {/* ── color ── */}
-        <section id="color" data-toc="Color" className={s.section}>
-          <Head over="Color" title="Tres tintas, cuatro pares">
-            El logo no tiene que cumplir el contraste de un texto, pero sí leerse. La
-            medida es la misma que en el sistema: el par en rojo no llega a 3:1 y no se
-            usa.
-          </Head>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <Pair
-              fg="--color-neutral-50"
-              bg="--color-neutral-950"
-              label="Blanco sobre negro"
-              min={3}
-              sample={<Logo k="h2" className="w-40" />}
-            />
-            <Pair
-              fg="--color-neutral-950"
-              bg="--color-neutral-50"
-              label="Negro sobre blanco"
-              min={3}
-              sample={<Logo k="h2" className="w-40" />}
-            />
-            <Pair
-              fg="--color-neutral-950"
-              bg="--brand-action"
-              label="Negro sobre amber"
-              min={3}
-              sample={<Logo k="h2" className="w-40" />}
-            />
-            <Pair
-              fg="--brand-action"
-              bg="--color-neutral-950"
-              label="Amber sobre negro"
-              min={3}
-              sample={<Logo k="h2" className="w-40" />}
-            />
-            <Pair
-              fg="--color-neutral-50"
-              bg="--brand-action"
-              label="No · blanco sobre amber"
-              min={3}
-              sample={<Logo k="h2" className="w-40" />}
-            />
-            <Pair
-              fg="--brand-action"
-              bg="--color-neutral-50"
-              label="No · amber sobre blanco"
-              min={3}
-              sample={<Logo k="h2" className="w-40" />}
-            />
-          </div>
-        </section>
+      {/* ── color ── */}
+      <Section
+        id="color"
+        toc="Color"
+        over="Color"
+        title="Tres tintas, cuatro pares"
+        lede="El logo no tiene que cumplir el contraste de un texto, pero sí leerse. La medida es la misma que en el sistema: el par en rojo no llega a 3:1 y no se usa."
+      >
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Pair
+            fg="--color-neutral-50"
+            bg="--color-neutral-950"
+            label="Blanco sobre negro"
+            min={3}
+            sampleClassName="min-w-0"
+            sample={<Logo k="h2" className="h-auto w-40 max-w-full" />}
+          />
+          <Pair
+            fg="--color-neutral-950"
+            bg="--color-neutral-50"
+            label="Negro sobre blanco"
+            min={3}
+            sampleClassName="min-w-0"
+            sample={<Logo k="h2" className="h-auto w-40 max-w-full" />}
+          />
+          <Pair
+            fg="--color-neutral-950"
+            bg="--brand-action"
+            label="Negro sobre amber"
+            min={3}
+            sampleClassName="min-w-0"
+            sample={<Logo k="h2" className="h-auto w-40 max-w-full" />}
+          />
+          <Pair
+            fg="--brand-action"
+            bg="--color-neutral-950"
+            label="Amber sobre negro"
+            min={3}
+            sampleClassName="min-w-0"
+            sample={<Logo k="h2" className="h-auto w-40 max-w-full" />}
+          />
+          <Pair
+            fg="--color-neutral-50"
+            bg="--brand-action"
+            label="No · blanco sobre amber"
+            min={3}
+            sampleClassName="min-w-0"
+            sample={<Logo k="h2" className="h-auto w-40 max-w-full" />}
+          />
+          <Pair
+            fg="--brand-action"
+            bg="--color-neutral-50"
+            label="No · amber sobre blanco"
+            min={3}
+            sampleClassName="min-w-0"
+            sample={<Logo k="h2" className="h-auto w-40 max-w-full" />}
+          />
+        </div>
+      </Section>
 
-        {/* ── reducción ── */}
-        <section id="reduccion" data-toc="Reducción" className={s.section}>
-          <Head over="Prueba de reducción" title="Qué queda cuando se achica">
-            A tamaño real en pantalla, sin escalar la imagen. La última columna de la
-            línea es la misma sin ®, para ver cuánto ayuda quitarlo en tamaños chicos — es
-            una pregunta para el cliente, no una versión entregada.
-          </Head>
-          <div className="overflow-x-auto">
-            <table className={s.scale}>
-              <tbody>
-                <tr>
-                  <th>Monograma · alto</th>
-                  {[16, 24, 32, 48, 96].map((px) => (
-                    <td key={px}>
-                      <Logo k="iso" style={{ height: px, width: "auto" }} />
-                      <small>{px}</small>
-                    </td>
-                  ))}
-                </tr>
-                <tr>
-                  <th>Columna · alto</th>
-                  {[32, 48, 64, 96, 128].map((px) => (
-                    <td key={px}>
-                      <Logo k="v" style={{ height: px, width: "auto" }} />
-                      <small>{px}</small>
-                    </td>
-                  ))}
-                </tr>
-                <tr>
-                  <th>Bloque · ancho</th>
-                  {[64, 96, 120, 160, 200].map((px) => (
-                    <td key={px}>
-                      <Logo k="h1" style={{ width: px, height: "auto" }} />
-                      <small>{px}</small>
-                    </td>
-                  ))}
-                </tr>
-                <tr>
-                  <th>Línea · ancho</th>
-                  {[96, 120, 160, 240].map((px) => (
-                    <td key={px}>
-                      <Logo k="h2" style={{ width: px, height: "auto" }} />
-                      <small>{px}</small>
-                    </td>
-                  ))}
-                  <td>
+      {/* ── reducción ── */}
+      <Section
+        id="reduccion"
+        toc="Reducción"
+        over="Prueba de reducción"
+        title="Qué queda cuando se achica"
+        lede="A tamaño real en pantalla, sin escalar la imagen. La última columna de la línea es la misma sin ®, para ver cuánto ayuda quitarlo en tamaños chicos — es una pregunta para el cliente, no una versión entregada."
+      >
+        <ul className={s.scale}>
+          {SCALE.map((row) => (
+            <li key={row.label} className={s.scaleRow}>
+              <h3 className={s.scaleLabel}>{row.label}</h3>
+              <ul className={s.scaleItems}>
+                {row.sizes.map((px) => (
+                  <li key={px}>
+                    <Logo
+                      k={row.k}
+                      style={
+                        row.by === "alto"
+                          ? { height: px, width: "auto" }
+                          : { width: px, height: "auto" }
+                      }
+                    />
+                    <small>{px}</small>
+                  </li>
+                ))}
+                {row.k === "h2" ? (
+                  <li>
                     <Logo
                       k="h2"
                       registered={false}
                       style={{ width: 96, height: "auto" }}
                     />
                     <small>96 sin ®</small>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p className="mt-6 max-w-2xl font-sans text-body-sm text-muted-foreground">
-            Mínimos propuestos: monograma 16 px de alto, columna 48 px de alto, bloque 120
-            px de ancho, línea 120 px de ancho. Por debajo de eso, se cambia de versión en
-            vez de achicar.
-          </p>
-        </section>
-
-        {/* ── área de respeto ── */}
-        <section id="respeto" data-toc="Área de respeto" className={s.section}>
-          <Head over="Área de respeto" title="El aire que viene con el logo">
-            Nada entra en la línea punteada. La unidad x está dibujada en la esquina: en
-            el bloque y la columna es el alto de MEDIA; en la línea, su propio alto; en el
-            monograma, media fila. Es una propuesta del estudio, para confirmar con
-            diseño.
-          </Head>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {KEYS.map((k) => (
-              <figure key={k} className="m-0 grid gap-2">
-                <div className={`${s.sw} ${s.onBlack}`}>
-                  <Logo
-                    k={k}
-                    clear
-                    style={{ width: k === "h2" ? "100%" : "80%", height: "auto" }}
-                  />
-                </div>
-                <figcaption className="font-sans text-label-xs font-bold uppercase text-[var(--text-tertiary)]">
-                  {VERSION[k].name}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </section>
-
-        {/* ── aplicaciones ── */}
-        <section id="aplicaciones" data-toc="Aplicaciones" className={s.section}>
-          <Head over="Aplicaciones" title="Nueve lugares donde se decide">
-            Cada contexto con la versión que le corresponde. Los textos, nombres y correos
-            son de ejemplo.
-          </Head>
-          <div className="grid gap-14">
-            {APPS.map((app) => (
-              <article
-                key={app.title}
-                className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-10"
-              >
-                <div className="grid content-start gap-3">
-                  <h3 className="font-display text-h3 font-black uppercase">
-                    {app.title}
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {app.k.map((k) => (
-                      <Tag key={k} k={k} />
-                    ))}
-                  </div>
-                  <p className="font-sans text-body-sm font-medium text-muted-foreground">
-                    {app.tests}
-                  </p>
-                </div>
-                <div className="min-w-0">{app.mock}</div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        {/* ── usos incorrectos ── */}
-        <section id="no" data-toc="Usos incorrectos" className={s.section}>
-          <Head over="Usos incorrectos" title="Lo que no se hace">
-            Seis errores comunes cuando el logo pasa por otras manos: imprentas,
-            proveedores, plantillas de redes.
-          </Head>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {DONTS.map((d) => (
-              <figure key={d.label} className="m-0 grid gap-3">
-                <div className={`${s.dont} ${s.onBlack}`}>
-                  <span className={s.cross} aria-hidden />
-                  {d.node}
-                </div>
-                <figcaption className="grid gap-1">
-                  <b className="font-sans text-body-sm font-bold">{d.label}</b>
-                  <span className="font-sans text-body-sm text-muted-foreground">
-                    {d.why}
-                  </span>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </section>
-
-        {/* ── cierre ── */}
-        <section id="siguiente" data-toc="Qué va dónde" className={s.section}>
-          <div className={`${s.verdict} ${s.onBlack}`}>
-            <div className="grid content-start gap-6">
-              <p className="font-sans text-overline-sm font-bold uppercase text-[var(--color-accent-500)]">
-                Qué versión va dónde
-              </p>
-              <dl className={s.where}>
-                <dt>Línea</dt>
-                <dd>Sitio, correo, documentos, pie.</dd>
-                <dt>Bloque</dt>
-                <dd>Portadas, presentaciones, cierre de video.</dd>
-                <dt>Columna</dt>
-                <dd>Stories, merch, impresos verticales.</dd>
-                <dt>Monograma</dt>
-                <dd>Favicon, avatar, marca de agua.</dd>
-              </dl>
-            </div>
-            <div className="grid content-start gap-8">
-              <div>
-                <h3 className="font-sans text-h4 font-bold">Para revisar con diseño</h3>
-                <ul className={s.list}>
-                  <li>
-                    En el bloque, MEDIA está centrada sobre VPER más el ®, no sobre las
-                    cuatro letras: queda corrida a la derecha un 3 % del ancho. Confirmar
-                    si es a propósito.
                   </li>
-                  <li>
-                    Los cuatro SVG traen el color en un <code>&lt;style&gt;</code> con la
-                    clase <code>.cls-1</code> y negro <code>#010101</code>. Pedir la
-                    exportación con <code>currentColor</code> y sin estilos, para
-                    inlinearlos sin choques.
-                  </li>
-                  <li>
-                    El ® en tamaños chicos: ¿hay una versión sin ® aprobada para usos
-                    menores a 120 px?
-                  </li>
-                </ul>
+                ) : null}
+              </ul>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-6 max-w-2xl font-sans text-body-sm text-muted-foreground">
+          Mínimos propuestos: monograma 16 px de alto, columna 48 px de alto, bloque 120
+          px de ancho, línea 120 px de ancho. Por debajo de eso, se cambia de versión en
+          vez de achicar.
+        </p>
+      </Section>
+
+      {/* ── área de respeto ── */}
+      <Section
+        id="respeto"
+        toc="Área de respeto"
+        over="Área de respeto"
+        title="El aire que viene con el logo"
+        lede="Nada entra en la línea punteada. La unidad x, el cuadrado sky de la esquina, es el alto de MEDIA: en la línea coincide con el alto del logo. El monograma no tiene MEDIA y ahí x es media fila de VP/ER. Propuesta del estudio, para confirmar con diseño."
+      >
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {KEYS.map((k) => (
+            <figure key={k} className="m-0 grid min-w-0 gap-2">
+              <div className={`${s.clearBox} ${s.onBlack}`}>
+                <Logo k={k} clear />
               </div>
-              <div>
-                <h3 className="font-sans text-h4 font-bold">
-                  Siguiente paso en el sitio
-                </h3>
-                <ul className={s.list}>
-                  <li>
-                    Favicon conectado (octubre 2026): el monograma sobre una placa amber
-                    en <code>app/icon.svg</code> y <code>app/apple-icon.png</code>. La
-                    placa hace que se lea igual en pestañas claras y oscuras.
-                  </li>
-                  <li>
-                    El header ya usa la línea (<code>logo-vper-media.svg</code>). Si
-                    diseño aprueba <code>logo-horizontal-2.svg</code> como la fuente, se
-                    regeneran los trazos de <code>lib/vper-wordmark.ts</code> desde ahí.
-                  </li>
-                  <li>
-                    Ver en el cliente si el recorrido BTL en el logo entra como acento de
-                    video.
-                  </li>
-                </ul>
+              <figcaption className="font-sans text-label-xs font-bold uppercase text-[var(--text-tertiary)]">
+                {VERSION[k].name}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </Section>
+
+      {/* ── aplicaciones ── */}
+      <Section
+        id="aplicaciones"
+        toc="Aplicaciones"
+        over="Aplicaciones"
+        title="Nueve lugares donde se decide"
+        lede="Cada contexto con la versión que le corresponde. Los textos, nombres y correos son de ejemplo."
+      >
+        <div className="grid gap-14">
+          {APPS.map((app) => (
+            <article
+              key={app.title}
+              className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-10"
+            >
+              <div className="grid content-start gap-3">
+                <h3 className="font-display text-h3 font-black uppercase">{app.title}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {app.k.map((k) => (
+                    <Tag key={k} k={k} />
+                  ))}
+                </div>
+                <p className="font-sans text-body-sm font-medium text-muted-foreground">
+                  {app.tests}
+                </p>
               </div>
+              <div className="min-w-0">{app.mock}</div>
+            </article>
+          ))}
+        </div>
+      </Section>
+
+      {/* ── usos incorrectos ── */}
+      <Section
+        id="no"
+        toc="Usos incorrectos"
+        over="Usos incorrectos"
+        title="Lo que no se hace"
+        lede="Seis errores comunes cuando el logo pasa por otras manos: imprentas, proveedores, plantillas de redes."
+      >
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {DONTS.map((d) => (
+            <figure key={d.label} className="m-0 grid gap-3">
+              <div className={`${s.dont} ${s.onBlack}`}>
+                <span className={s.cross} aria-hidden />
+                {d.node}
+              </div>
+              <figcaption className="grid gap-1">
+                <b className="font-sans text-body-sm font-bold">{d.label}</b>
+                <span className="font-sans text-body-sm text-muted-foreground">
+                  {d.why}
+                </span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </Section>
+
+      {/* ── cierre ── */}
+      <section
+        id="siguiente"
+        data-toc="Qué va dónde"
+        className="scroll-mt-24 border-t border-border py-14 md:py-20"
+      >
+        <div className={`${s.verdict} ${s.onBlack}`}>
+          <div className="grid content-start gap-6">
+            <p className="font-sans text-overline-sm font-bold uppercase text-[var(--color-accent-500)]">
+              Qué versión va dónde
+            </p>
+            <dl className={s.where}>
+              <dt>Línea</dt>
+              <dd>Sitio, correo, documentos, pie.</dd>
+              <dt>Bloque</dt>
+              <dd>Portadas, presentaciones, cierre de video.</dd>
+              <dt>Columna</dt>
+              <dd>Stories, merch, impresos verticales.</dd>
+              <dt>Monograma</dt>
+              <dd>Favicon, avatar, marca de agua.</dd>
+            </dl>
+          </div>
+          <div className="grid content-start gap-8">
+            <div>
+              <h3 className="font-sans text-h4 font-bold">Para revisar con diseño</h3>
+              <ul className={s.list}>
+                <li>
+                  En el bloque, MEDIA está centrada sobre VPER más el ®, no sobre las
+                  cuatro letras: queda corrida a la derecha un 3 % del ancho. Confirmar si
+                  es a propósito.
+                </li>
+                <li>
+                  Los cuatro SVG traen el color en un <code>&lt;style&gt;</code> con la
+                  clase <code>.cls-1</code> y negro <code>#010101</code>. Pedir la
+                  exportación con <code>currentColor</code> y sin estilos, para
+                  inlinearlos sin choques.
+                </li>
+                <li>
+                  El ® en tamaños chicos: ¿hay una versión sin ® aprobada para usos
+                  menores a 120 px?
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-sans text-h4 font-bold">Siguiente paso en el sitio</h3>
+              <ul className={s.list}>
+                <li>
+                  Favicon conectado (octubre 2026): el monograma sobre una placa amber en{" "}
+                  <code>app/icon.svg</code> y <code>app/apple-icon.png</code>. La placa
+                  hace que se lea igual en pestañas claras y oscuras.
+                </li>
+                <li>
+                  El header ya usa la línea (<code>logo-vper-media.svg</code>). Si diseño
+                  aprueba <code>logo-horizontal-2.svg</code> como la fuente, se regeneran
+                  los trazos de <code>lib/vper-wordmark.ts</code> desde ahí.
+                </li>
+                <li>
+                  Ver en el cliente si el recorrido BTL en el logo entra como acento de
+                  video.
+                </li>
+              </ul>
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </main>
   );
 }

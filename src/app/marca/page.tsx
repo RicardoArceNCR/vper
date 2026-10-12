@@ -1,179 +1,285 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ArrowRight } from "lucide-react";
-import { Logo } from "./logo/marks";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Bot,
+  Download,
+  Mail,
+  Pipette,
+  type LucideIcon,
+} from "lucide-react";
+import { Swatch } from "./live";
+import { MARCA, hasOwner, ownerLabel } from "./lib/config";
+import { PageHero, Section } from "./lib/ui";
 
 export const metadata: Metadata = {
-  title: { absolute: "Marca VPER" },
+  title: { absolute: MARCA.name },
 };
 
 /**
- * Inicio de Marca VPER. Presenta las tres capas del portal (como los portales de
- * marca de empresas grandes: lineamientos, design system y recursos) y lo que lo
- * distingue: se arma con el mismo código que el sitio.
+ * Inicio de Marca VPER: portada de tareas. Primero lo que el equipo viene a
+ * buscar (logo, firma, un color, vpercito), después los colores listos para
+ * copiar y los lineamientos; el sistema y el lab quedan en una franja para
+ * diseño y desarrollo. Los colores se pintan con `var(--…)` y el hex que se
+ * muestra y se copia es el que resolvió el navegador (Swatch, ./live).
  */
 
-const RAMP = [
-  "--brand-sky",
-  "--color-accent-600",
-  "--brand-action",
-  "--brand-leaf",
-] as const;
+const ring =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--focus-ring-offset)]";
 
-function Area({
+const TAREAS: { href: string; title: string; body: string; icon: LucideIcon }[] = [
+  {
+    href: "/marca/logo#descargas",
+    title: "Descargar el logo",
+    body: "SVG y PNG en las cuatro versiones, en negro, blanco y Amber.",
+    icon: Download,
+  },
+  {
+    href: "/marca/firmas",
+    title: "Armar mi firma de correo",
+    body: "Escribí tus datos y copiala en Gmail u Outlook.",
+    icon: Mail,
+  },
+  {
+    href: "#colores",
+    title: "Copiar un color",
+    body: "Amber, Clay, Sky y Jade, con un toque.",
+    icon: Pipette,
+  },
+  {
+    href: "/marca/personaje#descargas",
+    title: "Bajar a vpercito",
+    body: "PNG para presentaciones, avatar y emoji para Slack.",
+    icon: Bot,
+  },
+];
+
+const COLORES: { token: string; name: string; uso: string }[] = [
+  { token: "--brand-action", name: "Amber", uso: "Botones y la palabra que golpea." },
+  { token: "--color-accent-600", name: "Clay", uso: "Cejas, etiquetas y errores." },
+  { token: "--brand-sky", name: "Sky", uso: "Enlaces, información y el 3D." },
+  { token: "--brand-leaf", name: "Jade", uso: "Confirmaciones y detalles." },
+];
+
+const LINEAMIENTOS: { href: string; title: string; body: string }[] = [
+  {
+    href: "/marca/logo",
+    title: "Logo",
+    body: "Qué versión va dónde, en qué color y qué no hacerle.",
+  },
+  {
+    href: "/marca/voz",
+    title: "Voz y tono",
+    body: "Cómo escribe VPER, con ejemplos del sitio.",
+  },
+  {
+    href: "/marca/imagen",
+    title: "Imagen",
+    body: "Cómo elegir fotos e íconos.",
+  },
+  {
+    href: "/marca/personaje",
+    title: "Personaje",
+    body: "Dónde va vpercito y dónde no.",
+  },
+];
+
+const DISENO: { href: string; title: string; body: string }[] = [
+  {
+    href: "/marca/sistema",
+    title: "Sistema",
+    body: "Escalas, tipo y componentes, leídos en vivo del sitio.",
+  },
+  {
+    href: "/lab/proceso",
+    title: "Lab 3D",
+    body: "Los íconos de vidrio del proceso, en movimiento.",
+  },
+];
+
+function Tarea({
   href,
-  over,
   title,
   body,
-  items,
-  visual,
+  icon: Icon,
 }: {
   href: string;
-  over: string;
   title: string;
   body: string;
-  items: readonly string[];
-  visual: ReactNode;
+  icon: LucideIcon;
 }) {
-  return (
-    <Link
-      href={href}
-      className="group grid min-w-0 content-start gap-5 rounded-[var(--radius-xl)] border border-border bg-[var(--surface-raised)] p-5 transition-colors hover:border-[var(--border-strong)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--focus-ring-offset)] md:p-6"
-    >
-      <div className="grid aspect-[16/9] place-items-center overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-neutral-950)] text-[var(--color-neutral-50)]">
-        {visual}
-      </div>
-      <div className="grid gap-2">
-        <p className="font-sans text-overline-sm font-bold uppercase text-[var(--text-eyebrow)]">
-          {over}
-        </p>
-        <h2 className="flex items-center gap-2 font-display text-h2 font-black uppercase">
+  const className = `group grid min-w-0 content-start gap-4 rounded-[var(--radius-xl)] border border-border bg-[var(--surface-raised)] p-5 transition-colors hover:border-[var(--border-strong)] md:p-6 ${ring}`;
+  const inner: ReactNode = (
+    <>
+      <span className="grid size-12 place-items-center rounded-[var(--radius-md)] bg-[var(--brand-action)] text-[var(--text-on-brand)]">
+        <Icon aria-hidden className="size-6" />
+      </span>
+      <span className="grid gap-1.5">
+        <span className="flex items-center gap-2 font-sans text-h4 font-bold">
           {title}
           <ArrowRight
             aria-hidden
-            className="size-5 transition-transform group-hover:translate-x-1"
+            className="size-4 shrink-0 transition-transform group-hover:translate-x-1"
           />
-        </h2>
-        <p className="font-sans text-body-sm font-medium text-[var(--text-secondary)]">
-          {body}
-        </p>
-      </div>
-      <ul className="flex flex-wrap gap-1.5">
-        {items.map((i) => (
-          <li
-            key={i}
-            className="rounded-[var(--pill-radius)] border border-border px-2.5 py-0.5 font-sans text-label-xs font-bold uppercase text-[var(--text-secondary)]"
-          >
-            {i}
-          </li>
-        ))}
-      </ul>
+        </span>
+        <span className="font-sans text-body-sm text-[var(--text-secondary)]">{body}</span>
+      </span>
+    </>
+  );
+  return href.startsWith("#") ? (
+    <a href={href} className={className}>
+      {inner}
+    </a>
+  ) : (
+    <Link href={href} className={className}>
+      {inner}
     </Link>
   );
 }
 
 export default function MarcaHome() {
+  const contacto = ownerLabel();
+  const aContacto = contacto.startsWith("el ") ? `al ${contacto.slice(3)}` : `a ${contacto}`;
   return (
-    <main className="wrap mx-auto max-w-[1217px] pb-24">
-      <div className="@container min-w-0 py-12 md:py-20">
-        <p className="font-sans text-overline-sm font-bold uppercase text-[var(--text-eyebrow)]">
-          Portal de marca · Uso interno
+    <main className="wrap mx-auto max-w-[1217px] pt-4 pb-24 md:pt-8">
+      <PageHero
+        over="Uso interno · Equipo VPER Media"
+        title="Marca"
+        accent="VPER."
+        lede="El logo, los colores, la voz y las firmas de VPER Media, listos para usar."
+      />
+
+      <Section
+        id="tareas"
+        toc="Tareas"
+        over="Atajos"
+        title="¿Qué necesitás?"
+        className="border-t-0"
+      >
+        <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {TAREAS.map((t) => (
+            <li key={t.href} className="grid min-w-0">
+              <Tarea {...t} />
+            </li>
+          ))}
+        </ul>
+      </Section>
+
+      <Section
+        id="colores"
+        toc="Colores"
+        over="Paleta"
+        title="Los colores de VPER"
+        lede="Tocá un color para copiar su código hex."
+      >
+        <ul className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+          {COLORES.map((c) => (
+            <li key={c.token} className="grid min-w-0 content-start gap-2">
+              <Swatch token={c.token} label={c.name} />
+              <p className="font-sans text-body-sm text-[var(--text-secondary)]">{c.uso}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-8 font-sans text-body-sm font-medium text-[var(--text-secondary)]">
+          ¿Necesitás la escala completa?{" "}
+          <Link
+            href="/marca/sistema"
+            className="rounded-[var(--radius-xs)] font-bold text-[var(--interaction-link-default)] underline underline-offset-4 hover:text-[var(--interaction-link-hover)]"
+          >
+            Está en Sistema
+          </Link>
+          .
         </p>
-        <h1 className="mt-3 font-display display-title font-black uppercase tracking-tight">
-          Marca <span className="title-brand-gradient">VPER.</span>
-        </h1>
-        <p className="mt-6 max-w-2xl font-sans text-body-lg font-medium text-muted-foreground">
-          Todo lo que hace falta para que VPER se vea como VPER, en un solo lugar: el
-          sistema con el que está hecho el sitio, cómo se usa el logo y los recursos que
-          el equipo instala o descarga.
-        </p>
-      </div>
+      </Section>
+
+      <Section
+        id="lineamientos"
+        toc="Lineamientos"
+        over="Lineamientos"
+        title="Cómo se ve, cómo suena"
+      >
+        <ul className="grid gap-px overflow-hidden rounded-[var(--radius-xl)] border border-border bg-border sm:grid-cols-2 xl:grid-cols-4">
+          {LINEAMIENTOS.map((l) => (
+            <li key={l.href} className="grid min-w-0">
+              <Link
+                href={l.href}
+                className={`group grid content-start gap-1.5 bg-background p-5 transition-colors hover:bg-[var(--background-subtle)] md:p-6 ${ring}`}
+              >
+                <span className="flex items-center gap-2 font-display text-h4 font-black uppercase">
+                  {l.title}
+                  <ArrowRight
+                    aria-hidden
+                    className="size-4 shrink-0 transition-transform group-hover:translate-x-1"
+                  />
+                </span>
+                <span className="font-sans text-body-sm text-[var(--text-secondary)]">
+                  {l.body}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </Section>
 
       <section
-        id="areas"
-        data-toc="Las tres capas"
-        aria-label="Áreas de la marca"
-        className="grid scroll-mt-20 gap-5 md:grid-cols-3"
+        id="diseno-y-desarrollo"
+        data-toc="Para diseño y desarrollo"
+        aria-labelledby="diseno-y-desarrollo-title"
+        className="grid scroll-mt-24 gap-4 rounded-[var(--radius-xl)] bg-[var(--background-subtle)] p-5 md:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] md:items-center md:gap-8 md:p-6"
       >
-        <Area
-          href="/marca/sistema"
-          over="Design system"
-          title="Sistema"
-          body="Escalas, tipografía, superficies y componentes, leídos en vivo desde el sitio, con su contraste medido."
-          items={["Color", "Tipo", "Componentes", "Movimiento"]}
-          visual={
-            <div className="grid w-3/4 gap-3">
-              <div className="grid grid-cols-4 gap-1.5">
-                {RAMP.map((t) => (
-                  <span
-                    key={t}
-                    className="aspect-square rounded-[var(--radius-sm)]"
-                    style={{ backgroundColor: `var(${t})` }}
+        <h2
+          id="diseno-y-desarrollo-title"
+          className="font-sans text-label-sm font-bold uppercase tracking-widest text-[var(--text-secondary)]"
+        >
+          Para diseño y desarrollo
+        </h2>
+        <ul className="grid gap-3 sm:grid-cols-2">
+          {DISENO.map((d) => (
+            <li key={d.href} className="min-w-0">
+              <Link
+                href={d.href}
+                className={`group grid gap-0.5 rounded-[var(--radius-md)] ${ring}`}
+              >
+                <span className="flex items-center gap-1.5 font-sans text-body-md font-bold">
+                  {d.title}
+                  <ArrowUpRight
+                    aria-hidden
+                    className="size-4 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                   />
-                ))}
-              </div>
-              <span className="font-display text-h3 font-black uppercase">
-                Aa · 96/64/48
-              </span>
-            </div>
-          }
-        />
-        <Area
-          href="/marca/logo"
-          over="Lineamientos"
-          title="Marca"
-          body="Cómo se ve, cómo suena y cómo se usa: el logo con sus descargas, la voz del copy, el estilo de fotos e íconos y vpercito, el personaje."
-          items={["Logo", "Voz y tono", "Imagen", "Personaje"]}
-          visual={<Logo k="h1" decorative className="h-auto w-3/5" />}
-        />
-        <Area
-          href="/marca/firmas"
-          over="Recursos"
-          title="Firmas"
-          body="Ocho propuestas de firma de correo listas para copiar en Gmail u Outlook, con el kit de imágenes para publicar."
-          items={["Gmail", "Outlook", "Kit .zip"]}
-          visual={
-            <div className="grid w-3/4 grid-cols-[auto_1fr] items-center gap-3 rounded-[var(--radius-md)] bg-[var(--color-neutral-50)] p-3 text-[var(--color-neutral-950)]">
-              <span className="grid size-12 place-items-center rounded-[var(--radius-sm)] bg-[var(--brand-action)]">
-                <Logo k="v" decorative className="h-auto w-8" />
-              </span>
-              <span className="grid gap-1">
-                <span className="h-2 w-3/5 rounded-full bg-[var(--color-neutral-900)]" />
-                <span className="h-1.5 w-4/5 rounded-full bg-[var(--color-neutral-300)]" />
-                <span className="h-1.5 w-2/3 rounded-full bg-[var(--color-neutral-300)]" />
-              </span>
-            </div>
-          }
-        />
+                </span>
+                <span className="font-sans text-body-sm text-[var(--text-secondary)]">
+                  {d.body}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section
-        id="como"
-        aria-labelledby="como-title"
-        className="mt-16 grid gap-6 border-t border-border pt-12 md:mt-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-12"
+        id="estado"
+        data-toc="Estado"
+        aria-label="Estado"
+        className="mt-16 grid scroll-mt-24 gap-1 border-t border-border pt-8 font-sans text-body-sm text-[var(--text-secondary)] md:mt-20"
       >
-        <h2 id="como-title" className="font-display text-h3 font-black uppercase">
-          Cómo se mantiene
-        </h2>
-        <ul className="grid gap-4 font-sans text-body-sm text-[var(--text-secondary)] sm:grid-cols-3">
-          <li>
-            <b className="block font-bold text-foreground">Mismo código que el sitio</b>
-            Cada color y tamaño se lee del sitio mientras se mira. No hay un manual aparte
-            que se desactualice.
-          </li>
-          <li>
-            <b className="block font-bold text-foreground">Un cambio, un lugar</b>
-            La marca se ajusta en Figma y en{" "}
-            <code className="font-mono text-body-xs">brand.css</code>; el sitio y este
-            portal cambian juntos.
-          </li>
-          <li>
-            <b className="block font-bold text-foreground">Recursos con dueño</b>
-            Lo que se descarga (firmas, kits) sale de acá, con instrucciones y una
-            verificación de que está publicado.
-          </li>
-        </ul>
+        <p className="font-bold text-foreground">
+          {MARCA.name} v{MARCA.version} · Actualizado {MARCA.updated}
+        </p>
+        {hasOwner() ? (
+          <p>
+            Responsable: {MARCA.owner.name}
+            {MARCA.owner.role ? ` · ${MARCA.owner.role}` : ""} ·{" "}
+            <a
+              href={`mailto:${MARCA.owner.email}`}
+              className="text-[var(--interaction-link-default)] underline underline-offset-4 hover:text-[var(--interaction-link-hover)]"
+            >
+              {MARCA.owner.email}
+            </a>
+          </p>
+        ) : null}
+        <p>¿Falta algo o algo está mal? Escribile {aContacto}.</p>
       </section>
     </main>
   );

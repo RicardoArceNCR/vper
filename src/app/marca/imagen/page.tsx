@@ -11,7 +11,7 @@ import {
   Sun,
   type LucideIcon,
 } from "lucide-react";
-import { Crumbs, Findings, PageHero, Rich, Section, Sources } from "../lib/ui";
+import { Crumbs, Findings, Numeral, PageHero, Pending, Rich, Section, Sources } from "../lib/ui";
 import { IMAGEN, type Icono } from "./imagen-content";
 
 export const metadata: Metadata = { title: "Imagen e iconografía" };
@@ -58,7 +58,7 @@ export default function ImagenPage() {
     <main className="wrap mx-auto max-w-[1217px] pb-24">
       <Crumbs
         trail={["Lineamientos", "Imagen e iconografía"]}
-        note="Derivada del material del sitio · Octubre 2026"
+        note="En revisión · Actualizado oct. 2026"
       />
       <PageHero
         over="Imagen e iconografía"
@@ -73,6 +73,7 @@ export default function ImagenPage() {
         over="Fotografía"
         title="Clave baja, un solo color"
         lede="Seis decisiones que se repiten en todo el material del sitio."
+        className="border-t-0"
       >
         <ol className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {foto.principios.map((p, n) => (
@@ -80,9 +81,7 @@ export default function ImagenPage() {
               key={p.titulo}
               className="grid content-start gap-2 rounded-[var(--radius-xl)] border border-border p-5"
             >
-              <span className="font-display text-h3 font-black text-[var(--text-brand)]">
-                {String(n + 1).padStart(2, "0")}
-              </span>
+              <Numeral n={n + 1} pad />
               <h3 className="font-sans text-h5 font-bold">{p.titulo}</h3>
               <p className="font-sans text-body-sm text-[var(--text-secondary)]">
                 <Rich text={p.regla} />
@@ -229,16 +228,14 @@ export default function ImagenPage() {
         </ul>
       </Section>
 
-      <Section
-        id="corregir"
-        toc="Para corregir"
-        over="Revisión del sitio"
-        title="Para corregir en el sitio"
-        lede="Lo que la revisión del material encontró fuera de estilo o roto. Ninguno está cambiado todavía: es la lista de trabajo."
+      <Pending
+        className="pb-0 md:pb-0"
+        count={IMAGEN.inconsistencias.length}
+        lede="Lo que la revisión del material encontró fuera de estilo o roto en el sitio. No es parte de la guía: es la lista de trabajo del equipo web, y nada está cambiado todavía."
       >
         <Findings items={IMAGEN.inconsistencias} />
-        <Sources items={IMAGEN.fuentes} />
-      </Section>
+      </Pending>
+      <Sources items={IMAGEN.fuentes} />
     </main>
   );
 }
