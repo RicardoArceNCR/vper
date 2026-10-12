@@ -55,8 +55,7 @@ export default async function IngresarPage({
               Portal de <span className="title-brand-gradient">marca.</span>
             </h1>
             <p className="font-sans text-body-md font-medium text-[var(--text-secondary)]">
-              Logo, sistema, voz, imagen y firmas de VPER Media. Si no tenés la
-              contraseña, pedísela a quien te pasó el enlace.
+              Logo, sistema, voz, imagen y firmas de VPER Media.
             </p>
           </div>
 
