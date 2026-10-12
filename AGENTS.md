@@ -76,6 +76,11 @@ redirige acá (`next.config.ts`).
 - Voz e imagen salen de archivos de contenido (`marca/voz/voz-content.ts`,
   `marca/imagen/imagen-content.ts`) derivados del copy y el material reales;
   sus "Para corregir" son la lista de trabajo del sitio, no están aplicados.
+- **vpercito (personaje):** lineamientos y kit en `/marca/personaje`
+  (`marca/personaje/personaje-content.ts`). En el sitio se usa solo con
+  `src/components/vpercito.tsx` (AVIF/WebP de `public/images/vpercito/`,
+  halo sky para el modo oscuro); el PNG master no se sirve. Va en
+  transiciones (404, envío de formulario), nunca en hero, trabajos ni equipo.
 - Una página nueva se suma en `marca/lib/nav.ts` y aparece sola en el sidebar
   y en el menú de mobile; su índice se arma desde sus `<section id>` (con
   `data-toc` si el h2 es largo).

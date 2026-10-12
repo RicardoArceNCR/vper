@@ -1,4 +1,5 @@
 import {
+  Bot,
   Home,
   Image,
   Mail,
@@ -65,6 +66,12 @@ export const MARCA_GROUPS: readonly NavGroup[] = [
         label: "Imagen",
         hint: "Fotografía e iconografía",
         icon: Image,
+      },
+      {
+        href: "/marca/personaje",
+        label: "Personaje",
+        hint: "vpercito: dónde va, cómo se usa y su kit",
+        icon: Bot,
       },
     ],
   },

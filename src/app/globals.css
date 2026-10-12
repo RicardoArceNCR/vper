@@ -513,3 +513,77 @@ html:not(.dark) .nav-glass-scrolled {
     background-color: var(--nav-bg);
   }
 }
+
+/* vpercito (mascota). El halo existe por el modo oscuro: el cuerpo es negro
+   mate y sobre --background-page negro desaparece. Sky al 22 % detrás lo
+   recorta sin tocar el render. En claro baja a 14 % y suma sombra de
+   contacto para que no flote. Flotado: 6 px en 4 s, solo transform. */
+.vpercito-halo {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--brand-sky) 14%, transparent),
+    transparent
+  );
+}
+
+.dark .vpercito-halo {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--brand-sky) 22%, transparent),
+    transparent
+  );
+}
+
+.vpercito-shadow {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-neutral-950) 35%, transparent),
+    transparent
+  );
+}
+
+.dark .vpercito-shadow {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--brand-sky) 13%, transparent),
+    transparent
+  );
+}
+
+@keyframes vpercito-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+@keyframes vpercito-shadow {
+  0%,
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scaleX(0.85);
+    opacity: 0.7;
+  }
+}
+
+.vpercito-float {
+  animation: vpercito-float 4s ease-in-out infinite;
+}
+
+/* La sombra respira con el flotado: cuando el robot sube, se achica. */
+.vpercito-float + .vpercito-shadow {
+  animation: vpercito-shadow 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vpercito-float,
+  .vpercito-float + .vpercito-shadow {
+    animation: none;
+  }
+}

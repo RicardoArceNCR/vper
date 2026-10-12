@@ -24,6 +24,14 @@ import { useToc, type Toc } from "./lib/use-toc";
 const focus =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--focus-ring-offset)]";
 
+/** Movimiento del hover: tokens del DS (150ms, ease-enter). Sin él con reduce motion. */
+const motion =
+  "duration-[var(--motion-duration-normal)] ease-enter motion-reduce:transition-none";
+
+/** Hover y foco de teclado se ven igual: el foco suma el anillo. */
+const lift =
+  "hover:bg-[var(--background-subtle)] hover:text-[var(--text-primary)] focus-visible:bg-[var(--background-subtle)] focus-visible:text-[var(--text-primary)]";
+
 function Item({
   item,
   active,
@@ -42,29 +50,48 @@ function Item({
         href={item.href}
         aria-current={active ? "page" : undefined}
         className={cn(
-          "group relative flex items-center gap-3 rounded-[var(--radius-md)] px-3 py-2 font-sans text-body-sm font-bold transition-colors",
+          "group relative flex items-center gap-3 rounded-[var(--radius-md)] px-3 py-2 font-sans text-body-sm font-bold transition-[background-color,color]",
+          motion,
           focus,
           active
             ? "bg-[var(--background-subtle)] text-[var(--text-primary)]"
-            : "text-[var(--text-secondary)] hover:bg-[var(--background-subtle)] hover:text-[var(--text-primary)]",
+            : cn("text-[var(--text-secondary)]", lift),
         )}
       >
-        {/* Barra de marca: amber es decoración acá, no texto, así que vale en claro. */}
+        {/* Barra: activa, amber de marca a todo el alto (decoración, no texto: vale
+            en claro). En hover/foco, un riel neutro que crece desde el centro hasta
+            la mitad — se ve, pero no compite con la página activa. */}
         <span
           aria-hidden
           className={cn(
-            "absolute inset-y-1.5 left-0 w-[3px] rounded-full bg-[var(--brand-action)] transition-opacity",
-            active ? "opacity-100" : "opacity-0",
+            "absolute inset-y-1.5 left-0 w-[3px] rounded-full transition-[scale]",
+            motion,
+            active
+              ? "bg-[var(--brand-action)]"
+              : "scale-y-0 bg-[var(--text-tertiary)] group-hover:scale-y-50 group-focus-visible:scale-y-50",
           )}
         />
         <Icon
           aria-hidden
           className={cn(
-            "size-4 shrink-0",
-            active ? "text-[var(--text-primary)]" : "text-[var(--text-tertiary)]",
+            "size-4 shrink-0 transition-[color,translate]",
+            motion,
+            active
+              ? "translate-x-0.5 text-[var(--text-primary)]"
+              : "text-[var(--text-tertiary)] group-hover:translate-x-0.5 group-hover:text-[var(--text-primary)] group-focus-visible:translate-x-0.5 group-focus-visible:text-[var(--text-primary)] motion-reduce:translate-x-0",
           )}
         />
-        <span className="min-w-0 truncate">{item.label}</span>
+        <span
+          className={cn(
+            "min-w-0 truncate transition-[translate]",
+            motion,
+            active
+              ? "translate-x-0.5"
+              : "group-hover:translate-x-0.5 group-focus-visible:translate-x-0.5 motion-reduce:translate-x-0",
+          )}
+        >
+          {item.label}
+        </span>
       </Link>
 
       {active && toc.length > 0 ? (
@@ -80,11 +107,12 @@ function Item({
                   href={`#${t.id}`}
                   aria-current={on ? "location" : undefined}
                   className={cn(
-                    "-ml-px block border-l py-1 pl-4 pr-2 font-sans text-body-xs transition-colors",
+                    "-ml-px block border-l py-1 pl-4 pr-2 font-sans text-body-xs transition-[border-color,color]",
+                    motion,
                     focus,
                     on
                       ? "border-[var(--text-primary)] font-bold text-[var(--text-primary)]"
-                      : "border-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)]",
+                      : "border-transparent text-[var(--text-secondary)] hover:border-[var(--text-tertiary)] hover:text-[var(--text-primary)] focus-visible:border-[var(--text-tertiary)] focus-visible:text-[var(--text-primary)]",
                   )}
                 >
                   {t.label}
@@ -164,12 +192,21 @@ export default function MarcaSidebar({ protegido }: { protegido: boolean }) {
             key={l.href}
             href={l.href}
             className={cn(
-              "flex items-center justify-between rounded-[var(--radius-md)] px-3 py-1.5 font-sans text-body-sm font-bold text-[var(--text-secondary)] transition-colors hover:bg-[var(--background-subtle)] hover:text-[var(--text-primary)]",
+              "group flex items-center justify-between rounded-[var(--radius-md)] px-3 py-1.5 font-sans text-body-sm font-bold text-[var(--text-secondary)] transition-[background-color,color]",
+              lift,
+              motion,
               focus,
             )}
           >
             {l.label}
-            <ArrowUpRight aria-hidden className="size-4" />
+            <ArrowUpRight
+              aria-hidden
+              className={cn(
+                "size-4 transition-[translate]",
+                motion,
+                "group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-focus-visible:translate-x-0.5 group-focus-visible:-translate-y-0.5 motion-reduce:translate-none",
+              )}
+            />
           </Link>
         ))}
         <div className="flex items-center justify-between px-3 pt-1">
@@ -183,7 +220,9 @@ export default function MarcaSidebar({ protegido }: { protegido: boolean }) {
             <button
               type="submit"
               className={cn(
-                "flex w-full items-center justify-between rounded-[var(--radius-md)] px-3 py-1.5 font-sans text-body-sm font-bold text-[var(--text-secondary)] transition-colors hover:bg-[var(--background-subtle)] hover:text-[var(--text-primary)]",
+                "flex w-full items-center justify-between rounded-[var(--radius-md)] px-3 py-1.5 font-sans text-body-sm font-bold text-[var(--text-secondary)] transition-[background-color,color]",
+                lift,
+                motion,
                 focus,
               )}
             >

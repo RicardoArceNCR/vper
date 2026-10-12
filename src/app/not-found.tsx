@@ -1,42 +1,65 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowRight, Home } from "lucide-react";
 import { Button } from "@ui/components/button";
-import { Card } from "@ui/components/card";
-import { AlertCircle, Home } from "lucide-react";
+import { Vpercito } from "@/components/vpercito";
+import Header from "@/sections/header";
 
-// Convención de Next (app/not-found.tsx) en vez del NotFound.tsx + wouter
-// original — no hace falta enrutador propio para esto en App Router.
+export const metadata: Metadata = { title: "Página no encontrada — VPER Media" };
+
+// Convención de Next (app/not-found.tsx). Copy: guía de voz
+// (marca/voz/voz-content.ts, "404"). vpercito reemplaza al ícono de alerta:
+// la guía pide un guiño acá, no una alarma — por eso la ceja dice "404" y no
+// "Error". El titular manda y el robot acompaña (marca/personaje): display-title
+// en el h1, robot a 200 px como techo. Header para que quien se perdió tenga
+// salida; el footer sobra.
 export default function NotFound() {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-background">
-      <Card className="w-full max-w-lg mx-4 shadow-lg">
-        <div className="pt-8 pb-8 text-center">
-          <div className="flex justify-center mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-destructive/20 rounded-full animate-pulse" />
-              <AlertCircle className="relative h-16 w-16 text-destructive" />
-            </div>
+    <div className="flex min-h-dvh flex-col overflow-x-clip bg-background text-foreground">
+      <Header />
+      <main className="flex flex-1 items-center justify-center px-4 pt-28 pb-16">
+        <div className="grid w-full max-w-2xl justify-items-center gap-8 text-center">
+          <Vpercito
+            size={200}
+            float
+            eager
+            sizes="(min-width: 768px) 200px, 128px"
+            className="w-[128px] md:w-[200px]"
+          />
+
+          <div className="@container grid w-full min-w-0 gap-4">
+            <p className="font-sans text-overline-sm font-bold uppercase text-[var(--text-eyebrow)]">
+              404
+            </p>
+            <h1 className="font-display display-title font-black uppercase tracking-tight">
+              Esta página <span className="title-brand-gradient">se nos escapó.</span>
+            </h1>
+            <p className="mx-auto max-w-md font-sans text-body-md font-medium text-[var(--text-secondary)]">
+              Las buenas ideas nunca se quedan quietas; por lo visto, esta página tampoco.
+            </p>
           </div>
 
-          <h1 className="text-4xl font-bold text-foreground mb-2">404</h1>
-
-          <h2 className="text-xl font-semibold text-foreground/80 mb-4">Página no encontrada</h2>
-
-          <p className="text-foreground/60 mb-8 leading-relaxed">
-            La página que buscás no existe.
-            <br />
-            Puede que se haya movido o eliminado.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button variant="default" size="lg" asChild>
+          <div className="flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row">
+            <Button size="lg" asChild>
               <Link href="/">
-                <Home className="w-4 h-4 mr-2" />
+                <Home aria-hidden />
                 Volver al inicio
+              </Link>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              asChild
+              className="border-[var(--border-strong)]"
+            >
+              <Link href="/work">
+                Ver proyectos
+                <ArrowRight aria-hidden />
               </Link>
             </Button>
           </div>
         </div>
-      </Card>
+      </main>
     </div>
   );
 }
