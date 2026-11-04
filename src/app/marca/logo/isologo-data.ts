@@ -9,7 +9,8 @@
  * sí. El hex vive en el SVG que entregó diseño, no en un componente.
  *
  * `media` y `registered` describen el archivo tal como llegó: las cuatro no
- * son iguales y la lámina lo dice (ver "Para revisar con diseño").
+ * son iguales. Es una pregunta para diseño ("Para revisar con diseño"), no un
+ * aviso para el equipo: la lámina no lo muestra en las muestras ni en el LEEME.
  */
 
 export type IsoKey = "clay" | "amber" | "jade" | "sky";
@@ -29,7 +30,7 @@ export interface Isologo {
 
 const BASE = "/images/isologo/";
 
-/** Orden de la lámina: primero las dos completas, la clay es la de referencia. */
+/** Orden de la lámina: el del toolkit no importa, los cuatro valen igual. */
 const CLAY: Isologo = {
   key: "clay",
   name: "Clay",
@@ -39,7 +40,7 @@ const CLAY: Isologo = {
   registered: true,
 };
 
-/** La que se muestra cuando hay lugar para una sola: completa, con MEDIA y ®. */
+/** La que se muestra cuando hay lugar para una sola (miniaturas, reducción). */
 export const ISOLOGO_REF = CLAY;
 
 /** Orden de la lámina: primero las dos con MEDIA en pantalla. */

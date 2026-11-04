@@ -94,7 +94,6 @@ CUÁL ES CUÁL
 QUÉ VERSIÓN VA DÓNDE
   Logotipo horizontal  por defecto: documentos, co-branding, video, una tinta
   Isologo              redes, portadas, presentaciones, merch, piezas a color
-                       (preferí clay o jade: son las completas, con MEDIA y ®)
   Logotipo en línea    sitio, firma de correo, pie, barras bajas
   Logotipo vertical    stories, impresos verticales, sellos
   Favicon              favicon, avatar, marca de agua (también sobre placa amber)

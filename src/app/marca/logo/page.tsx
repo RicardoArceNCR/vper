@@ -519,8 +519,8 @@ export default function LogoPage() {
               </p>
               <p className="font-sans text-body-md font-bold">
                 La marca expresiva. Redes, portadas, presentaciones, merch, fondos, piezas
-                BTL a color. Mientras diseño unifica las cuatro, preferí la clay o la
-                jade: son las completas.
+                BTL a color. Los cuatro colores valen igual: elegí el que mejor conviva
+                con la pieza.
               </p>
               <ul className={s.pros}>
                 <li>
@@ -549,10 +549,8 @@ export default function LogoPage() {
                       decoding="async"
                     />
                   </div>
-                  <figcaption className="flex flex-wrap gap-x-2 font-sans text-label-xs font-bold uppercase text-[var(--text-tertiary)]">
-                    <span>{iso.name}</span>
-                    {!iso.media ? <span className={s.flag}>sin MEDIA</span> : null}
-                    {!iso.registered ? <span className={s.flag}>sin ®</span> : null}
+                  <figcaption className="font-sans text-label-xs font-bold uppercase text-[var(--text-tertiary)]">
+                    {iso.name}
                   </figcaption>
                 </figure>
               ))}
@@ -861,12 +859,10 @@ export default function LogoPage() {
                   principal, se cambia acá.
                 </li>
                 <li>
-                  Definir una casetera de referencia. La lámina recomienda la clay y la
-                  jade porque son las únicas completas, con MEDIA y ®.
-                </li>
-                <li>
                   Las caseteras no son iguales: la sky no trae MEDIA y la amber trae un
                   punto en lugar del ®. ¿Son variantes a propósito o hay que corregirlas?
+                  Si se corrigen, se reemplazan los SVG en{" "}
+                  <code>public/images/isologo/</code> y la lámina no cambia.
                 </li>
                 <li>
                   La casetera sky y el fondo a color usan <code>#89C9CD</code>, un verde

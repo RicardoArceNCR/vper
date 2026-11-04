@@ -50,10 +50,6 @@
   max-height: 140px;
   object-fit: contain;
 }
-/* Diferencia del archivo entregado (sin MEDIA, sin ®): a revisar con diseño. */
-.flag {
-  color: var(--feedback-warning-text);
-}
 
 .sw {
   border-radius: var(--radius-md);
