@@ -6,6 +6,7 @@ import {
   ArrowUpRight,
   Bot,
   Download,
+  Layers,
   Mail,
   Pipette,
   type LucideIcon,
@@ -33,8 +34,14 @@ const TAREAS: { href: string; title: string; body: string; icon: LucideIcon }[] 
   {
     href: "/marca/logo#descargas",
     title: "Descargar el logo",
-    body: "SVG y PNG en las cuatro versiones, en negro, blanco y Amber.",
+    body: "Logotipo, isologo en sus cuatro colores y favicon, en SVG y PNG.",
     icon: Download,
+  },
+  {
+    href: "/marca/fondos",
+    title: "Bajar un fondo",
+    body: "Las caseteras a color o en blanco y negro, para portadas y redes.",
+    icon: Layers,
   },
   {
     href: "/marca/firmas",
@@ -67,7 +74,7 @@ const LINEAMIENTOS: { href: string; title: string; body: string }[] = [
   {
     href: "/marca/logo",
     title: "Logo",
-    body: "Qué versión va dónde, en qué color y qué no hacerle.",
+    body: "Logotipo, isologo y favicon: cuál va dónde y qué no hacerle.",
   },
   {
     href: "/marca/voz",
@@ -148,7 +155,7 @@ export default function MarcaHome() {
         over="Uso interno · Equipo VPER Media"
         title="Marca"
         accent="VPER."
-        lede="El logo, los colores, la voz y las firmas de VPER Media, listos para usar."
+        lede="El logo, los fondos, los colores, la voz y las firmas de VPER Media, listos para usar."
       />
 
       <Section
@@ -158,7 +165,7 @@ export default function MarcaHome() {
         title="¿Qué necesitás?"
         className="border-t-0"
       >
-        <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {TAREAS.map((t) => (
             <li key={t.href} className="grid min-w-0">
               <Tarea {...t} />

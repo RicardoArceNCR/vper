@@ -4,6 +4,7 @@ import {
   Download,
   Home,
   Image,
+  Layers,
   Mail,
   Package,
   MessageSquareQuote,
@@ -48,7 +49,7 @@ export const MARCA_GROUPS: readonly NavGroup[] = [
       {
         href: "/marca/logo",
         label: "Logo",
-        hint: "Versiones, color, reducción y descargas",
+        hint: "Logotipo, isologo y favicon: cuál va dónde",
         icon: Shapes,
       },
       {
@@ -82,9 +83,15 @@ export const MARCA_GROUPS: readonly NavGroup[] = [
       },
       {
         href: "/marca/logo#descargas",
-        label: "Descargas del logo",
-        hint: "SVG y PNG en negro, blanco y amber",
+        label: "Descargar el logo",
+        hint: "Todas las versiones y colores, en SVG y PNG",
         icon: Download,
+      },
+      {
+        href: "/marca/fondos",
+        label: "Fondos",
+        hint: "Caseteras a color y en blanco y negro",
+        icon: Layers,
       },
       {
         href: "/marca/personaje#descargas",

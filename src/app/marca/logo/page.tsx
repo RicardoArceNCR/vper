@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Pair } from "../live";
 import { Crumbs, PageHero, Section } from "../lib/ui";
+import { ISOLOGOS, ISOLOGO_REF } from "./isologo-data";
 import LogoDownload from "./logo-download";
 import { Logo, ratio } from "./marks";
 import { MARKS, type MarkKey } from "./marks-data";
@@ -17,10 +18,11 @@ export const metadata: Metadata = {
  * (/marca/logo): las versiones en los mismos fondos, prueba de
  * reducción y aplicaciones reales lado a lado.
  *
- * Diferencia: allá se elegía entre seis propuestas. Acá hay UN logo en
- * cuatro versiones que entregó diseño, y la pregunta es otra: cuál va
- * dónde. Por eso cada aplicación usa la versión que le toca, no las
- * cuatro en columna.
+ * Diferencia: allá se elegía entre seis propuestas. Acá está lo que
+ * entregó diseño en el toolkit (TOOLKIT VPER MEDIA.ai): el ISOLOGO (la
+ * casetera, en cuatro colores) y el LOGOTIPO en sus versiones, y la pregunta es cuál va dónde. Los nombres visibles son los
+ * del toolkit; los internos de la primera lámina (Bloque, Línea, Columna,
+ * Monograma) quedan como «antes …» para el equipo.
  *
  * Los mockups (pestaña, teléfono, correo) imitan interfaces ajenas: sus
  * medidas están en logo.module.css y no son escalones del DS a propósito.
@@ -31,12 +33,22 @@ const KEYS: MarkKey[] = ["h1", "h2", "v", "iso"];
 
 const VERSION: Record<
   MarkKey,
-  { name: string; file: string; use: string; works: string[]; suffers: string[] }
+  {
+    /** Rótulo del toolkit de diseño: es lo que la gente busca. */
+    name: string;
+    /** Nombre interno de la primera lámina, para el equipo. */
+    alias: string;
+    file: string;
+    use: string;
+    works: string[];
+    suffers: string[];
+  }
 > = {
   h1: {
-    name: "Bloque",
+    name: "Logotipo horizontal",
+    alias: "Bloque",
     file: "logo-horizontal-1.svg",
-    use: "Portadas, presentaciones, cierre de video, cualquier lugar con aire.",
+    use: "La firma por defecto: si no sabés cuál usar, bajá esta, en negro (o en blanco sobre oscuro). Documentos, co-branding, cierre de video, impresión a una tinta.",
     works: [
       "Es la versión con más presencia.",
       "MEDIA se lee como firma, no como apellido.",
@@ -44,7 +56,8 @@ const VERSION: Record<
     suffers: ["En una barra baja, MEDIA queda a un cuarto del alto y se pierde."],
   },
   h2: {
-    name: "Línea",
+    name: "Logotipo en línea",
+    alias: "Línea",
     file: "logo-horizontal-2.svg",
     use: "Header del sitio, firma de correo, pie, documentos.",
     works: [
@@ -54,18 +67,21 @@ const VERSION: Record<
     suffers: ["Bajo 160 px de ancho el ® mide 5 px y es un punto."],
   },
   v: {
-    name: "Columna",
+    name: "Logotipo vertical",
+    alias: "Columna",
     file: "logo-vertical.svg",
     use: "Stories, merch, sellos, perfiles cuadrados.",
     works: ["Es casi cuadrado (1.06:1): llena un formato vertical sin aire muerto."],
     suffers: ["Bajo 48 px de alto, MEDIA se empasta."],
   },
   iso: {
-    name: "Monograma",
+    name: "Favicon",
+    alias: "Monograma",
     file: "favicon.svg",
     use: "Favicon, avatar, ícono de app, marca de agua.",
     works: [
-      "Es la columna sin MEDIA ni ®: el mismo dibujo, así que la familia se reconoce.",
+      "Es el vertical sin MEDIA ni ®: el mismo dibujo, así que la familia se reconoce.",
+      "Hace de isotipo: VPER no tiene un símbolo sin letras, y el VP/ER es lo que cumple ese papel.",
       "A 16 px se sigue leyendo VP/ER como una forma.",
     ],
     suffers: ["Solo dice VPER. Necesita que la marca ya esté presentada en otro lado."],
@@ -78,6 +94,19 @@ const SURFACES = [
   [s.onWhite, "Blanco"],
   [s.onAmber, "Amber"],
 ] as const;
+
+/**
+ * El toolkit no declara una versión principal: isologo y logotipo son dos
+ * familias del mismo nivel. «Por defecto» marca solo la descarga segura para
+ * quien no sabe cuál usar (funciona a una tinta y en chico), no una jerarquía.
+ */
+function PorDefecto() {
+  return (
+    <span className="inline-flex w-fit items-center rounded-[var(--pill-radius)] bg-[var(--brand-action)] px-2.5 py-0.5 font-sans text-label-xs font-bold uppercase text-[var(--text-on-brand)]">
+      Por defecto
+    </span>
+  );
+}
 
 function Tag({ k }: { k: MarkKey }) {
   return (
@@ -121,7 +150,7 @@ const APPS: { title: string; k: MarkKey[]; tests: string; mock: ReactNode }[] = 
     title: "Avatar en redes",
     k: ["iso"],
     tests:
-      "Recorte circular a 40 px en el feed y a 96 px en el perfil. El monograma es casi cuadrado y entra en el círculo con aire.",
+      "Recorte circular a 40 px en el feed y a 96 px en el perfil. El favicon es casi cuadrado y entra en el círculo con aire.",
     mock: (
       <div className="grid gap-3 sm:grid-cols-2">
         <div className={`${s.feed} ${s.chromeLight}`}>
@@ -149,7 +178,7 @@ const APPS: { title: string; k: MarkKey[]; tests: string; mock: ReactNode }[] = 
     title: "Header del sitio",
     k: ["h2"],
     tests:
-      "La barra real: 64 px en desktop y 56 px en un teléfono de 390. La línea entra sin achicar el nav.",
+      "La barra real: 64 px en desktop y 56 px en un teléfono de 390. El logotipo en línea entra sin achicar el nav.",
     mock: (
       <div className="grid gap-3">
         <div className={`${s.siteBar} ${s.onBlack}`}>
@@ -228,7 +257,7 @@ const APPS: { title: string; k: MarkKey[]; tests: string; mock: ReactNode }[] = 
     title: "Firma de correo",
     k: ["h2"],
     tests:
-      "120 px de ancho en el cuerpo de un correo blanco. Es el tamaño más chico al que va la línea.",
+      "120 px de ancho en el cuerpo de un correo blanco. Es el tamaño más chico al que va el logotipo en línea.",
     mock: (
       <div className={`${s.mail} ${s.chromeLight}`}>
         <div className={s.mailHead}>
@@ -268,7 +297,7 @@ const APPS: { title: string; k: MarkKey[]; tests: string; mock: ReactNode }[] = 
     title: "Tarjeta de presentación",
     k: ["v", "h2"],
     tests:
-      "85 × 55 mm. Frente en amber con la columna; dorso en negro con la línea. Las dos caras usan versiones distintas a propósito.",
+      "85 × 55 mm. Frente en amber con el vertical; dorso en negro con el de una línea. Las dos caras usan versiones distintas a propósito.",
     mock: (
       <div className="grid gap-3 sm:grid-cols-2">
         <div className={`${s.card} ${s.onAmber}`}>
@@ -313,12 +342,15 @@ const APPS: { title: string; k: MarkKey[]; tests: string; mock: ReactNode }[] = 
 
 /* ───────────────────────── reducción ───────────────────────── */
 
+/** El isologo, por ancho: abajo de 120 px MEDIA y el ® dejan de leerse. */
+const ISO_SIZES = [64, 96, 120, 160, 240];
+
 /** Cada fila mide por el lado que limita a esa versión: alto o ancho. */
 const SCALE: { label: string; k: MarkKey; by: "alto" | "ancho"; sizes: number[] }[] = [
-  { label: "Monograma · alto", k: "iso", by: "alto", sizes: [16, 24, 32, 48, 96] },
-  { label: "Columna · alto", k: "v", by: "alto", sizes: [32, 48, 64, 96, 128] },
-  { label: "Bloque · ancho", k: "h1", by: "ancho", sizes: [64, 96, 120, 160, 200] },
-  { label: "Línea · ancho", k: "h2", by: "ancho", sizes: [96, 120, 160, 240] },
+  { label: "Favicon · alto", k: "iso", by: "alto", sizes: [16, 24, 32, 48, 96] },
+  { label: "Vertical · alto", k: "v", by: "alto", sizes: [32, 48, 64, 96, 128] },
+  { label: "Horizontal · ancho", k: "h1", by: "ancho", sizes: [64, 96, 120, 160, 200] },
+  { label: "En línea · ancho", k: "h2", by: "ancho", sizes: [96, 120, 160, 240] },
 ];
 
 /* ───────────────────────── usos incorrectos ───────────────────────── */
@@ -338,7 +370,7 @@ const DONTS: { label: string; why: string; node: ReactNode }[] = [
   },
   {
     label: "Rotar",
-    why: "La línea no va en diagonal ni de costado.",
+    why: "El logotipo no va en diagonal ni de costado.",
     node: <Logo k="h2" decorative className={s.rotate} />,
   },
   {
@@ -359,6 +391,19 @@ const DONTS: { label: string; why: string; node: ReactNode }[] = [
     label: "Sombra o brillo",
     why: "Sobre foto se resuelve con una capa oscura detrás, no con efectos sobre el logo.",
     node: <Logo k="h2" decorative className={s.shadow} />,
+  },
+  {
+    label: "Recolorear el isologo",
+    why: "La casetera va en sus cuatro colores de paleta, tal cual. Ni otros tonos ni el cuerpo en un color y la pantalla en otro.",
+    node: (
+      <img
+        src={ISOLOGO_REF.src}
+        alt=""
+        className={s.recolor}
+        loading="lazy"
+        decoding="async"
+      />
+    ),
   },
   {
     label: "Recomponer",
@@ -387,9 +432,25 @@ export default function LogoPage() {
         over="Logo · versiones y descargas"
         title="Cuál va"
         accent="dónde."
-        lede="El logo de VPER vive en lugares muy distintos: la barra del sitio, una pestaña de 16 px, un avatar redondo, el cierre de un reel. Estas son las cuatro versiones que entregó diseño, probadas en los mismos contextos para decidir cuál usar en cada uno."
+        lede="El logo de VPER vive en lugares muy distintos: una portada, la barra del sitio, una pestaña de 16 px, un avatar redondo. VPER tiene dos familias del mismo nivel: el logotipo es la firma, el isologo es la marca expresiva."
       >
-        <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4">
+        <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-5">
+          <a
+            href="#v-isologo"
+            className="group col-span-2 grid min-w-0 gap-2 md:col-span-1"
+          >
+            <div className={`${s.tile} ${s.tileWide} ${s.onWhite}`}>
+              <img src={ISOLOGO_REF.src} alt="" className={s.isoTile} decoding="async" />
+            </div>
+            <span className="flex flex-wrap items-center gap-2">
+              <span className="font-sans text-label-sm font-bold uppercase group-hover:underline">
+                Isologo
+              </span>
+            </span>
+            <span className="font-sans text-body-xs text-[var(--text-secondary)]">
+              La casetera · 4 colores
+            </span>
+          </a>
           {KEYS.map((k) => (
             <a key={k} href={`#v-${k}`} className="group grid min-w-0 gap-2">
               <div className={`${s.tile} ${s.onBlack}`}>
@@ -399,12 +460,38 @@ export default function LogoPage() {
                   style={{ width: k === "h2" ? "78%" : k === "h1" ? "70%" : "46%" }}
                 />
               </div>
-              <span className="font-sans text-label-sm font-bold uppercase group-hover:underline">
-                {VERSION[k].name}
+              <span className="flex flex-wrap items-center gap-2">
+                <span className="font-sans text-label-sm font-bold uppercase group-hover:underline">
+                  {VERSION[k].name}
+                </span>
+                {k === "h1" ? <PorDefecto /> : null}
+              </span>
+              <span className="font-sans text-body-xs text-[var(--text-secondary)]">
+                antes «{VERSION[k].alias}»
               </span>
             </a>
           ))}
         </div>
+        <aside
+          id="terminos"
+          aria-labelledby="terminos-title"
+          className="mt-8 grid max-w-3xl gap-2 rounded-[var(--radius-lg)] border border-border bg-[var(--surface-raised)] p-5"
+        >
+          <h2 id="terminos-title" className="font-sans text-h4 font-bold">
+            ¿Buscás el isologo, el logotipo o el isotipo?
+          </h2>
+          <p className="font-sans text-body-sm text-[var(--text-secondary)]">
+            VPER tiene dos familias del mismo nivel. El{" "}
+            <b className="text-foreground">logotipo</b> (horizontal, vertical y en una
+            línea) es la firma: identifica a la agencia en web, correo, documentos y a
+            cualquier tamaño. El <b className="text-foreground">isologo</b> (las cuatro
+            caseteras) es la marca expresiva: protagoniza piezas, fondos y redes, siempre
+            a color y a 120 px o más. VPER no tiene un isotipo sin letras: el{" "}
+            <b className="text-foreground">favicon</b> (VP/ER) hace ese papel en avatares,
+            pestañas y marcas de agua. ¿No sabés cuál usar? El logotipo horizontal en
+            negro.
+          </p>
+        </aside>
       </PageHero>
 
       <LogoDownload />
@@ -414,11 +501,63 @@ export default function LogoPage() {
         id="versiones"
         toc="Versiones"
         over="Las versiones"
-        title="Cuatro formas del mismo dibujo"
-        lede="Cada versión sobre los tres soportes de la marca: negro, blanco y amber. Sobre negro el logo va blanco; sobre blanco y amber, negro."
+        title="El isologo y sus logotipos"
+        lede="Las dos familias: el isologo a color y el logotipo en sus tres formas, más el favicon, cada uno sobre los tres soportes de la marca: negro, blanco y amber. Sobre negro el logotipo va blanco; sobre blanco y amber, negro."
         className="border-t-0"
       >
         <div className="grid gap-12">
+          <article
+            id="v-isologo"
+            className="grid scroll-mt-20 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-10"
+          >
+            <div className="grid content-start gap-3">
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <h3 className="font-display text-h2 font-black uppercase">Isologo</h3>
+              </div>
+              <p className="font-sans text-label-sm font-bold uppercase text-[var(--text-eyebrow)]">
+                La casetera · clay, amber, jade y sky
+              </p>
+              <p className="font-sans text-body-md font-bold">
+                La marca expresiva. Redes, portadas, presentaciones, merch, fondos, piezas
+                BTL a color. Mientras diseño unifica las cuatro, preferí la clay o la
+                jade: son las completas.
+              </p>
+              <ul className={s.pros}>
+                <li>
+                  Es lo que hace reconocible a VPER: la palabra vive dentro del aparato.
+                </li>
+                <li>El contorno negro grueso la separa de casi cualquier fondo.</li>
+                <li className={s.con}>
+                  Abajo de 120 px de ancho MEDIA y el ® no se leen: ahí va el logotipo o
+                  el favicon.
+                </li>
+                <li className={s.con}>
+                  No va sobre su mismo color (la amber sobre amber) ni sobre fotos
+                  cargadas.
+                </li>
+              </ul>
+            </div>
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
+              {ISOLOGOS.map((iso) => (
+                <figure key={iso.key} className="m-0 grid gap-2">
+                  <div className={`${s.sw} ${s.onWhite}`}>
+                    <img
+                      src={iso.src}
+                      alt={`Isologo VPER en ${iso.name}`}
+                      className={s.isoImg}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <figcaption className="flex flex-wrap gap-x-2 font-sans text-label-xs font-bold uppercase text-[var(--text-tertiary)]">
+                    <span>{iso.name}</span>
+                    {!iso.media ? <span className={s.flag}>sin MEDIA</span> : null}
+                    {!iso.registered ? <span className={s.flag}>sin ®</span> : null}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </article>
           {KEYS.map((k) => {
             const v = VERSION[k];
             return (
@@ -432,10 +571,14 @@ export default function LogoPage() {
                     <h3 className="font-display text-h2 font-black uppercase">
                       {v.name}
                     </h3>
+                    {k === "h1" ? <PorDefecto /> : null}
                     <code className="font-mono text-body-xs text-[var(--text-tertiary)]">
                       {v.file} · {ratio(k).toFixed(2)}:1
                     </code>
                   </div>
+                  <p className="font-sans text-label-sm font-bold uppercase text-[var(--text-eyebrow)]">
+                    antes «{v.alias}»
+                  </p>
                   <p className="font-sans text-body-md font-bold">{v.use}</p>
                   <ul className={s.pros}>
                     {v.works.map((t) => (
@@ -545,9 +688,27 @@ export default function LogoPage() {
         toc="Reducción"
         over="Prueba de reducción"
         title="Qué queda cuando se achica"
-        lede="A tamaño real en pantalla, sin escalar la imagen. La última columna de la línea es la misma sin ®, para ver cuánto ayuda quitarlo en tamaños chicos — es una pregunta para el cliente, no una versión entregada."
+        lede="A tamaño real en pantalla, sin escalar la imagen. La última columna del logotipo en línea es el mismo sin ®, para ver cuánto ayuda quitarlo en tamaños chicos — es una pregunta para el cliente, no una versión entregada."
       >
         <ul className={s.scale}>
+          <li className={s.scaleRow}>
+            <h3 className={s.scaleLabel}>Isologo · ancho</h3>
+            <ul className={s.scaleItems}>
+              {ISO_SIZES.map((px) => (
+                <li key={px}>
+                  <img
+                    src={ISOLOGO_REF.src}
+                    alt=""
+                    width={px}
+                    height={Math.round((px * ISOLOGO_REF.size[1]) / ISOLOGO_REF.size[0])}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <small>{px}</small>
+                </li>
+              ))}
+            </ul>
+          </li>
           {SCALE.map((row) => (
             <li key={row.label} className={s.scaleRow}>
               <h3 className={s.scaleLabel}>{row.label}</h3>
@@ -580,9 +741,9 @@ export default function LogoPage() {
           ))}
         </ul>
         <p className="mt-6 max-w-2xl font-sans text-body-sm text-muted-foreground">
-          Mínimos propuestos: monograma 16 px de alto, columna 48 px de alto, bloque 120
-          px de ancho, línea 120 px de ancho. Por debajo de eso, se cambia de versión en
-          vez de achicar.
+          Mínimos propuestos: isologo 120 px de ancho, favicon 16 px de alto, logotipo
+          vertical 48 px de alto, horizontal y en línea 120 px de ancho. Por debajo de
+          eso, se cambia de versión en vez de achicar.
         </p>
       </Section>
 
@@ -592,7 +753,7 @@ export default function LogoPage() {
         toc="Área de respeto"
         over="Área de respeto"
         title="El aire que viene con el logo"
-        lede="Nada entra en la línea punteada. La unidad x, el cuadrado sky de la esquina, es el alto de MEDIA: en la línea coincide con el alto del logo. El monograma no tiene MEDIA y ahí x es media fila de VP/ER. Propuesta del estudio, para confirmar con diseño."
+        lede="Nada entra en la línea punteada. La unidad x, el cuadrado sky de la esquina, es el alto de MEDIA: en el logotipo en línea coincide con su alto. El favicon no tiene MEDIA y ahí x es media fila de VP/ER. Es para los logotipos; el isologo trae su aire en el contorno negro. Propuesta del estudio, para confirmar con diseño."
       >
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {KEYS.map((k) => (
@@ -645,7 +806,7 @@ export default function LogoPage() {
         toc="Usos incorrectos"
         over="Usos incorrectos"
         title="Lo que no se hace"
-        lede="Seis errores comunes cuando el logo pasa por otras manos: imprentas, proveedores, plantillas de redes."
+        lede="Siete errores comunes cuando el logo pasa por otras manos: imprentas, proveedores, plantillas de redes."
       >
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {DONTS.map((d) => (
@@ -677,14 +838,16 @@ export default function LogoPage() {
               Qué versión va dónde
             </p>
             <dl className={s.where}>
-              <dt>Línea</dt>
-              <dd>Sitio, correo, documentos, pie.</dd>
-              <dt>Bloque</dt>
-              <dd>Portadas, presentaciones, cierre de video.</dd>
-              <dt>Columna</dt>
-              <dd>Stories, merch, impresos verticales.</dd>
-              <dt>Monograma</dt>
-              <dd>Favicon, avatar, marca de agua.</dd>
+              <dt>Isologo</dt>
+              <dd>Marca expresiva. Redes, portadas, merch, piezas a color.</dd>
+              <dt>Horizontal</dt>
+              <dd>Por defecto. Documentos, co-branding, cierre de video, una tinta.</dd>
+              <dt>En línea</dt>
+              <dd>Sitio, correo, pie, barras bajas.</dd>
+              <dt>Vertical</dt>
+              <dd>Stories, impresos verticales, sellos.</dd>
+              <dt>Favicon</dt>
+              <dd>Hace de isotipo: pestaña, avatar, marca de agua.</dd>
             </dl>
           </div>
           <div className="grid content-start gap-8">
@@ -692,9 +855,40 @@ export default function LogoPage() {
               <h3 className="font-sans text-h4 font-bold">Para revisar con diseño</h3>
               <ul className={s.list}>
                 <li>
-                  En el bloque, MEDIA está centrada sobre VPER más el ®, no sobre las
-                  cuatro letras: queda corrida a la derecha un 3 % del ancho. Confirmar si
-                  es a propósito.
+                  El toolkit no marca jerarquía, así que la lámina presenta isologo y
+                  logotipo como dos familias del mismo nivel, con el logotipo horizontal
+                  en negro como descarga por defecto. Si diseño declara una versión
+                  principal, se cambia acá.
+                </li>
+                <li>
+                  Definir una casetera de referencia. La lámina recomienda la clay y la
+                  jade porque son las únicas completas, con MEDIA y ®.
+                </li>
+                <li>
+                  Las caseteras no son iguales: la sky no trae MEDIA y la amber trae un
+                  punto en lugar del ®. ¿Son variantes a propósito o hay que corregirlas?
+                </li>
+                <li>
+                  La casetera sky y el fondo a color usan <code>#89C9CD</code>, un verde
+                  agua fuera de la paleta (jade es <code>#74BDB7</code>). Pedir los
+                  archivos corregidos.
+                </li>
+                <li>
+                  El toolkit dice «RECURSOS VPER MERDIA»: corregir la lámina antes de
+                  compartirla.
+                </li>
+                <li>
+                  Falta el isologo a una tinta (blanco y negro) para sellos, grabados e
+                  impresión de un color.
+                </li>
+                <li>
+                  El logotipo en línea aparece en el toolkit en «Recursos», sin rótulo.
+                  Confirmar que es una versión oficial.
+                </li>
+                <li>
+                  En el logotipo horizontal, MEDIA está centrada sobre VPER más el ®, no
+                  sobre las cuatro letras: queda corrida a la derecha un 3 % del ancho.
+                  Confirmar si es a propósito.
                 </li>
                 <li>
                   Los cuatro SVG traen el color en un <code>&lt;style&gt;</code> con la
@@ -712,14 +906,14 @@ export default function LogoPage() {
               <h3 className="font-sans text-h4 font-bold">Siguiente paso en el sitio</h3>
               <ul className={s.list}>
                 <li>
-                  Favicon conectado (octubre 2026): el monograma sobre una placa amber en{" "}
+                  Favicon conectado (octubre 2026): el VP/ER sobre una placa amber en{" "}
                   <code>app/icon.svg</code> y <code>app/apple-icon.png</code>. La placa
                   hace que se lea igual en pestañas claras y oscuras.
                 </li>
                 <li>
-                  El header ya usa la línea (<code>logo-vper-media.svg</code>). Si diseño
-                  aprueba <code>logo-horizontal-2.svg</code> como la fuente, se regeneran
-                  los trazos de <code>lib/vper-wordmark.ts</code> desde ahí.
+                  El header ya usa el logotipo en línea (<code>logo-vper-media.svg</code>
+                  ). Si diseño aprueba <code>logo-horizontal-2.svg</code> como la fuente,
+                  se regeneran los trazos de <code>lib/vper-wordmark.ts</code> desde ahí.
                 </li>
                 <li>
                   Ver en el cliente si el recorrido BTL en el logo entra como acento de

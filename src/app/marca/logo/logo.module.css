@@ -29,6 +29,32 @@
   height: auto;
 }
 
+/* ── isologo: ilustración a color, va como <img> y no se tiñe ── */
+.isoTile {
+  width: auto;
+  max-width: 82%;
+  max-height: 72%;
+}
+/* En mobile la tarjeta del isologo ocupa dos columnas: 2:1 para no pesar el doble. */
+.tileWide {
+  aspect-ratio: 2;
+}
+@media (min-width: 768px) {
+  .tileWide {
+    aspect-ratio: 1;
+  }
+}
+.isoImg {
+  width: 86%;
+  height: auto;
+  max-height: 140px;
+  object-fit: contain;
+}
+/* Diferencia del archivo entregado (sin MEDIA, sin ®): a revisar con diseño. */
+.flag {
+  color: var(--feedback-warning-text);
+}
+
 .sw {
   border-radius: var(--radius-md);
   display: grid;
@@ -604,6 +630,13 @@
   fill: none !important;
   stroke: currentColor;
   stroke-width: 0.6;
+}
+.recolor {
+  width: auto;
+  max-width: 86%;
+  max-height: 84px;
+  /* El error a mostrar: la casetera girada de tono, fuera de paleta. */
+  filter: hue-rotate(150deg) saturate(1.4);
 }
 .shadow {
   filter: drop-shadow(0 0 6px var(--brand-action))
