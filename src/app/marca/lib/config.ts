@@ -20,6 +20,15 @@ export const MARCA = {
   },
 } as const;
 
+/**
+ * Interruptor del acceso al portal. En `true`, /marca queda abierto para
+ * cualquiera con el link (sigue con noindex): el middleware deja pasar, no se
+ * muestra "Salir" y /ingresar redirige al portal. En `false` vuelve el ingreso
+ * con correo y contraseña de siempre (MARCA_USERS + MARCA_SESSION_SECRET en
+ * Vercel); el mecanismo no se tocó, solo está apagado.
+ */
+export const MARCA_PUBLICO = true;
+
 /** true cuando hay un contacto real cargado. */
 export const hasOwner = () => Boolean(MARCA.owner.name && MARCA.owner.email);
 

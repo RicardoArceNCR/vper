@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import MarcaMobileNav from "./marca-mobile-nav";
 import MarcaSidebar from "./marca-sidebar";
 import { CopyToast } from "./live";
+import { MARCA_PUBLICO } from "./lib/config";
 import { isOpenForDev } from "./lib/session";
 
 /**
@@ -14,7 +15,8 @@ import { isOpenForDev } from "./lib/session";
  *   /marca/logo     Lineamientos: versiones, color, reducción, aplicaciones.
  *   /marca/firmas   Recursos: firmas de correo y su kit de imágenes.
  *
- * Uso interno: noindex, con contraseña (src/middleware.ts) y fuera de `src/sections/` para que el port a Vite
+ * Uso interno: noindex, hoy abierto (MARCA_PUBLICO en lib/config.ts; el ingreso
+ * con contraseña de src/middleware.ts está apagado, no borrado) y fuera de `src/sections/` para que el port a Vite
  * (docs/guia-desarrollador.md) no la arrastre. /design-preview redirige acá
  * (next.config.ts).
  */
@@ -29,7 +31,8 @@ export default function MarcaLayout({ children }: { children: React.ReactNode })
   // prerenderizan, así que esto se evalúa al compilar; por eso NO depende de
   // MARCA_USERS (que puede no estar en el build) sino de NODE_ENV, que en
   // `next build` siempre es "production" → en producción, "Salir" siempre está.
-  const protegido = !isOpenForDev();
+  // Con el portal público (MARCA_PUBLICO) no hay sesión que cerrar.
+  const protegido = !MARCA_PUBLICO && !isOpenForDev();
   return (
     <div className="min-h-dvh bg-background text-foreground lg:grid lg:grid-cols-[17rem_minmax(0,1fr)]">
       {/* Primer foco de la página: salta el sidebar y el menú. El envoltorio es

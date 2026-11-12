@@ -61,7 +61,11 @@ lineamientos (`/marca/logo`, `/marca/voz`, `/marca/imagen`) y recursos
 redirige acá (`next.config.ts`).
 
 - Vive en `src/app/marca/`, fuera de `src/sections/`: **no se porta a Vite**.
-- **Pide correo y contraseña, una por persona.** `src/middleware.ts` cuida
+- **Hoy es público** (sigue con noindex): `MARCA_PUBLICO = true` en
+  `marca/lib/config.ts` apaga el ingreso — el middleware deja pasar, no hay
+  "Salir" y `/ingresar` redirige al portal. Para cerrarlo de nuevo, ponerlo en
+  `false`; todo lo que sigue vuelve a regir tal cual.
+- **Con el ingreso encendido, pide correo y contraseña, una por persona.** `src/middleware.ts` cuida
   `/marca` y todo lo de abajo; el ingreso es `/ingresar` (fuera de `/marca`
   para no heredar su layout). Quién entra está en la variable `MARCA_USERS` de
   Vercel (correo + hash, nunca la contraseña en claro) y las cookies se firman

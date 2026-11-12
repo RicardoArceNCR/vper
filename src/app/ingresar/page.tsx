@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import ThemeToggle from "@/components/theme-toggle";
 import { Logo } from "@/app/marca/logo/marks";
-import { MARCA, hasOwner } from "@/app/marca/lib/config";
+import { MARCA, MARCA_PUBLICO, hasOwner } from "@/app/marca/lib/config";
 import { aOwner } from "@/app/marca/lib/owner-copy";
 import { isConfigured, isOpenForDev, safeNext } from "@/app/marca/lib/session";
 import LoginForm from "./login-form";
@@ -23,6 +24,8 @@ export default async function IngresarPage({
   searchParams: Promise<{ next?: string }>;
 }) {
   const next = safeNext((await searchParams).next);
+  // Portal público: no hay nada que ingresar, se va directo a donde iba.
+  if (MARCA_PUBLICO) redirect(next);
   const configured = isConfigured();
   const devOpen = isOpenForDev();
   if (!configured && !devOpen) {

@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { MARCA_PUBLICO } from "@/app/marca/lib/config";
 import {
   LOGIN_PATH,
   SESSION_COOKIE,
@@ -13,7 +14,8 @@ import {
  * públicos. Detalle del mecanismo en src/app/marca/lib/session.ts.
  */
 export async function middleware(req: NextRequest) {
-  if (isOpenForDev()) return NextResponse.next();
+  // Portal abierto (MARCA_PUBLICO en marca/lib/config.ts): no se pide nada.
+  if (MARCA_PUBLICO || isOpenForDev()) return NextResponse.next();
 
   // verifySession también confirma que el correo siga en MARCA_USERS: sacar a
   // alguien de la lista lo deja afuera en el próximo pedido.
